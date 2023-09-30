@@ -30,3 +30,5 @@ function App() {}
 //* hi
 
 //* hoi
+
+//*$ git config --global core.pager 'less -r'
