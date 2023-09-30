@@ -1,9 +1,7 @@
-
 <div>
-   <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-   <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-</div>
-
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+</div>;
 
 //* first script tag here is basically the core React library.
 //* this one is the one that works with components, state, and really all the React stuff.
@@ -18,10 +16,7 @@
 //? ReactDOM.createRoot
 
 //* React is based on components. And a component is basically just a function that starts with an upper case
-function App() {
-  
-}
-
+function App() {}
 
 //* To check your node version
 //* node -v
@@ -32,5 +27,6 @@ function App() {
 //* to start react project:
 //* npm run start or just npm start
 
+//* hi
 
-
+//* hoi
