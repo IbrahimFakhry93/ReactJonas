@@ -124,9 +124,9 @@ pizzaData.map((pizza) => <Pizza pizzaObj={pizza} />);
 //* Using forEach:
 pizzaData.forEach((pizza) => <Pizza pizzaObj={pizza} />); // This will not work
 
-//? Note: The reason why using forEach will not work is because forEach returns undefined.
-//? Note: In order to render a list, we need to create a new array containing the JSX elements.
-//? Note: The map method creates a new array populated with the results of calling a provided function on every element in the calling array.
+//? Notes: The reason why using forEach will not work is because forEach returns undefined.
+//? Notes: In order to render a list, we need to create a new array containing the JSX elements.
+//? Notes: The map method creates a new array populated with the results of calling a provided function on every element in the calling array.
 
 //* React doesn't render true or false or boolean values
 //* React renders truthy values
