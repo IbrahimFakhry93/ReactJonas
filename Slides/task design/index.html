@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trial File</title>
+
+    <link rel="stylesheet" href="CSS/all.min.css" />
+    <link rel="stylesheet" href="CSS/bootstrap.min.css" />
+    <link rel="stylesheet" href="CSS/style.css" />
+    <style>
+      * {
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+      }
+
+      header {
+        background-color: #333;
+        color: white;
+        padding: 20px;
+        text-align: center;
+      }
+
+      h1 {
+        margin: 0;
+      }
+
+      form {
+        margin: 20px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+
+      input,
+      select,
+      button {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+
+      input[type="date"] {
+        width: 200px;
+      }
+
+      input[type="text"],
+      textarea {
+        width: 400px;
+      }
+
+      select {
+        width: 100px;
+      }
+
+      button {
+        width: 100px;
+        background-color: #333;
+        color: white;
+      }
+
+      ul {
+        list-style: none;
+        margin: 20px;
+        padding: 0;
+      }
+
+      li {
+        margin: 10px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        display: flex;
+        align-items: center;
+      }
+
+      li span {
+        margin: 10px;
+      }
+
+      li input[type="checkbox"] {
+        margin-left: auto;
+      }
+
+      li button {
+        margin-right: 10px;
+      }
+
+      .filter {
+        margin: 20px;
+        display: flex;
+        align-items: center;
+      }
+
+      .filter select,
+      .filter button {
+        margin-left: 10px;
+      }
+
+      footer {
+        background-color: #333;
+        color: white;
+        padding: 20px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Task Tracker</h1>
+    </header>
+    <form>
+      <input type="text" name="title" placeholder="Task title" required />
+      <textarea
+        name="description"
+        placeholder="Task description"
+        rows="4"
+        required
+      ></textarea>
+      <select name="priority">
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+      </select>
+      <input type="date" name="due_date" required />
+      <button type="submit">Add Task</button>
+    </form>
+    <div class="filter">
+      <label for="filter_by">Filter by:</label>
+      <select id="filter_by">
+        <option value="all">All</option>
+        <option value="priority">Priority</option>
+        <option value="due_date">Due Date</option>
+      </select>
+      <button id="clear_all">Clear All</button>
+    </div>
+    <ul id="task_list">
+      <!-- Sample tasks -->
+      <li>
+        <span>Buy groceries</span>
+        <span>Need to buy milk, eggs, bread, and cheese</span>
+        <span>Low</span>
+        <span>2024-01-05</span>
+        <button>Delete</button>
+        <input type="checkbox" />
+      </li>
+      <li>
+        <span>Finish project</span>
+        <span>Work on the UI design and the backend logic</span>
+        <span>High</span>
+        <span>2024-01-10</span>
+        <button>Delete</button>
+        <input type="checkbox" />
+      </li>
+      <li>
+        <span>Call mom</span>
+        <span>Wish her a happy birthday and ask how she is doing</span>
+        <span>Medium</span>
+        <span>2024-01-15</span>
+        <button>Delete</button>
+        <input type="checkbox" />
+      </li>
+    </ul>
+    <footer>
+      <p>Task Tracker © 2024</p>
+    </footer>
+
+    <script
+      src="https://kit.fontawesome.com/88efa2d0a1.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

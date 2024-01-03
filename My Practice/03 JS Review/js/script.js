@@ -1,4 +1,3 @@
-
 //* data is array of books objects
 
 const data = [
@@ -149,62 +148,73 @@ function getBook(id) {
 const books = getBooks();
 books;
 
+//& Destructing:
+
+//? Object Destruction:
+//* Object Destruction relies on the property names
 const book = getBook(2);
-const title1 =book.title;
+const title1 = book.title;
 title1;
 
 const { title } = book;
 title;
 
-const { author, pages, genres,publicationDate, hasMovieAdaptation } = book;
+const { author, pages, genres, publicationDate, hasMovieAdaptation } = book;
 
 author;
 genres;
 pages;
 console.log(author, pages);
 
-const [primaryGenre,secondary, ...otherGenres] = genres;
+//? Array Destruction:
+//* Array Destruction relies on the elements order
+const [primaryGenre, secondary, ...otherGenres] = genres;
 primaryGenre;
 otherGenres;
 
 const allGenres = [primaryGenre, ...otherGenres];
 console.log(allGenres);
-const getYear = str => str.split('-')[0];
+const getYear = (str) => str.split("-")[0];
 
-const summary = `${title}, a ${pages} long was written by ${author} and published in ${getYear(publicationDate)} and has ${hasMovieAdaptation? '':'not'} been adapted as movie`;
+const summary = `${title}, a ${pages} long was written by ${author} and published in ${getYear(
+  publicationDate
+)} and has ${hasMovieAdaptation ? "" : "not"} been adapted as movie`;
 summary;
 
-const pagesRange = pages > 1000 ? 'over 1000 pages' : 'less than 1000 pages';
+const pagesRange = pages > 1000 ? "over 1000 pages" : "less than 1000 pages";
 pagesRange;
 
-
-const langTranslation = book.translations.spanish || 'No Translation';
+const langTranslation = book.translations.spanish || "No Translation";
 langTranslation;
 
-const reviewCounts = book.reviews.librarything.reviewsCount || 'No data';
+const reviewCounts = book.reviews.librarything.reviewsCount || "No data";
 reviewCounts;
-
-
 
 //* Map Method:
 const titles = books.map(({ title }) => title);
 console.log(titles);
 
-const essentialData = books.map(({ title, author }) => { return { title, author } });
+const essentialData = books.map(({ title, author }) => {
+  return { title, author };
+});
 essentialData;
 console.log(essentialData);
 
 //! Or  without using return (implicit return) by using wrapping the object in two parenthesis ()
 //* because without the two (), the Javascript will think the two curly braces are declaration block not they are object literal as we want
 
-const essentialDataShort = books.map(({ title, author }) => ({ title, author }));
+const essentialDataShort = books.map(({ title, author }) => ({
+  title,
+  author,
+}));
 console.log(essentialDataShort);
 
-
-const longBooks = books.filter(book => book.pages > 500);
+const longBooks = books.filter((book) => book.pages > 500);
 longBooks;
 
-const adventuresBook = books.filter(book => book.genres.includes('adventure')).map(book => book.title);
+const adventuresBook = books
+  .filter((book) => book.genres.includes("adventure"))
+  .map((book) => book.title);
 adventuresBook;
 
 const totalPages = books.reduce((cur, book) => cur + book.pages, 0);
@@ -213,33 +223,31 @@ totalPages;
 const sortedPages = books.slice().sort((a, b) => b.pages - a.pages);
 sortedPages;
 
-
 //* Add new book object to the array
 const newBook = {
   id: 6,
-  title: 'Learn German',
-  pages:1212
-}
+  title: "Learn German",
+  pages: 1212,
+};
 const booksAfterAdd = [...books, newBook];
 
 //* Delete new book object from an array
-const booksAfterDelete = booksAfterAdd.filter(book => book.id !== 3);
+const booksAfterDelete = booksAfterAdd.filter((book) => book.id !== 3);
 
 //* Update book object in the array
-const booksAfterUpdate = booksAfterDelete.map(book => book.id === 1 ? { ...book, page: 12 } : book);
-
-
+const booksAfterUpdate = booksAfterDelete.map((book) =>
+  book.id === 1 ? { ...book, page: 12 } : book
+);
 
 // fetch('https://jsonplaceholder.typicode.com/todos').then(res=>res.json()).then(data=>console.log(data));
 
-
 async function getData() {
-  const res = await fetch('https://jsonplaceholder.typicode.com/todos');
-  const data = await res.json();  
-  return data
+  const res = await fetch("https://jsonplaceholder.typicode.com/todos");
+  const data = await res.json();
+  return data;
 }
 
 const returnData = getData();
 console.log(returnData);
 
-console.log('Jonas');
+console.log("Jonas");

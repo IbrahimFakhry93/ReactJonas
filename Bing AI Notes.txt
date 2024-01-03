@@ -1,0 +1,79 @@
+I want to convert a script of javascript video tutorial into titles and note.
+
+I want you to remove line breaks of a paragraph that I will provide you
+
+
+
+give a code snippet that demonstrate
+
+make the code snippet at this format
+//& Title: title name
+
+//? Note
+//* 1) subnote
+//* 2) subnote
+
+make the code snippet of this explanation at this format
+//& Title: title name
+
+//? Note
+//*  subnote
+//*  subnote
+
+give me a suitable title for this code snippet
+
+
+give me a code snippet that provide me a list of all 
+
+add this as note comments in the code snippet
+
+extract me from this code snippet the important ideas that I should keep in mind to revise later with simple line code example of these ideas and put that in a code snippet to study
+make all the explanation you provided in the code snippet add the notes as comments in this code snippet
+give a title for this code snippet, make it start like this //& and put all the title, the notes and the code inside IIFE, don't miss important points please  add also some important notes of yours if there are
+
+and make the notes more digestable and somehow concise without losing the important points
+
+ rewrite these notes in clear way that is suitable to study and revise later and keep their format
+
+
+I will provide you a text and I want you to turn into notes and make it suitable for studying without losing any important point format the code snippet as that  //& Title: title name Note //* subnote //* subnote
+
+I will provide you a script of javascript video and I want you to turn into notes and make it suitable for studying without losing any important point format the code snippet as that  //& Title: title name //? Note //* subnote //* subnote
+
+put all that the explanation as comments notes in code snippet and 
+ rewrite these notes in a code snippet clear way that is suitable to study and revise later and make the code snippet of this explanation at this format
+//& Title: title name
+
+//? Note
+//*  subnote
+//*  subnote
+
+
+
+(function () {})()
+
+rewrite these notes in clear way that is suitable to study and revise later make all the explanation you provided in the code snippet add the notes as comments in this code snippet give a title for this code snippet, make it start like this //& and put all the title, the notes and the code inside IIFE, don't miss important points please add also some important notes of yours if there are
+
+rewrite this notes as comments notes in code snippet and make them suitable for study later without losing the important details
+would you make it more concise without losing important information or key information or points?
+reformat your prompt to be more digestable and easy to study later and memorize without losing the key informations
+
+put your explanation in the code snippet as comments and make it suitable and easier to study and revise and format the code snippet as that  //& Title: title name Note //* subnote //* subnote
+
+give examples and suitable title for these notes
+
+rewrite these comments notes in a code snippet as vs comments and in more suitable way to make it easier to study later without losing important information  and start the comment by this //* after each line break
+
+rewrite these comments notes in more suitable way to make it easier to study later without losing important information //& Title: title name  //?Note //* subnote //* subnote
+
+give me a javascript code snippet of a general syntax of using ... and explain it in a clear way to study and revise it late and put your explanation inside the code snippet as comments and make the whole code snippet format as this //& Title: title name //? Note //* subnote //* subnote
+
+rewrite your latest prompt  above in a code snippet clear way that is suitable to study and revise later and make the code snippet of this explanation at this format //& Title: title name //? Note //* subnote //* subnote
+
+Summarize all your prompts using throw in try and catch, providing the general syntax and clear reasonable example in one code snippet and format it like that //& Title: title name //? Note //* subnote //* subnote explain in your code snippet notes what is throw keyword? when and why we use throw? and make the explanation notes in a digestable way.
+
+reform and rephrase these notes to make it more digestable to understand and to study, feel free to modify it or add necessary info to it and check the corrrectness of the info
+then put them in one code snippet as that //& Title: title name Note //* subnote //* subnote
+
+
+ Immediately Invoked Function Expressions. //* sometimes in JavaScript, we need a function that is only executed once.And then never again. //* So basically a function that disappears right after it's called once. //* we actually need this technique with something called async / await. const runOnce = function () { console.log('This will never run again'); } runOnce(); //* function () { //! error function statements require a function name //* console.log('This will never run again'); //* } //? so trick JavaScript into thinking that this is just an expression. //? And we do that by simply wrapping all of this into parentheses. ( function () { console.log('This IIFE will never run again'); const isPrivate = 22; } )() //* console.log(isPrivate); //* undefined //! why? // *And that's because the scope chain only works the other way around. //* So the inner scope would have access to anything defined outside here in the global scope. //* But the other way around, the global scope does not have access to anything, that is inside of a scope. //* Therefore, we say that all data defined inside a scope is private. //? Or this data is encapsulated //* So many times we actually need to protect our variables, //* from being accidentally overwritten by some other part of the program. //* Or even with external scripts or libraries. //* So it's important to hide variables. //* And that scopes are a good tool for doing this. //? And this is also the reason why The Immediately Invoked Function Expressions were invented. //* IIFE is not really a feature, of the JavaScript language. //* It's more of a pattern, that some developers came up with. extract me from this code snippet the important ideas that I should keep in mind to revise later with simple line code example of these ideas and put that in a code snippet to study make all the explanation you provided in the code snippet add the notes as comments in this code snippet give a title for this code snippet

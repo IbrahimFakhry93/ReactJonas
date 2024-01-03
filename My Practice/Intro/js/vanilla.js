@@ -1,4 +1,3 @@
-
 //& Title: Comparing React and Vanilla JavaScript
 //? Note: React keeps the user interface in sync with state, while Vanilla JavaScript requires manual synchronization.
 //* The advice app built with React is compared to a Vanilla JavaScript implementation of the same app.
@@ -9,6 +8,14 @@
 //* In Vanilla JavaScript, an event listener must be attached manually to the button, while in React this is done using the on-click attribute.
 //* In Vanilla JavaScript, updating state values does not automatically update the user interface, while in React it does.
 
+// <!DOCTYPE html>
+// <html lang="en">
+// <body>
+//     <h1 class="advice"></h1>
+//     <button class="btn">Get advice</button>
+//     <p>You have read <strong class="count"></strong> pieces of advice</p>
+// </body>
+// </html>
 
 // Manually selecting DOM elements (which require a class or ID in markup)
 const adviceEl = document.querySelector(".advice");
@@ -35,4 +42,3 @@ getAdvice();
 
 // Attaching an event listener
 btnEl.addEventListener("click", getAdvice);
-

@@ -1,0 +1,10 @@
+body {
+  font-family: sans-serif;
+}
+
+.App {
+  width: 50%;
+  margin: 300px auto;
+  border: 2px solid;
+  padding: 10px;
+}
