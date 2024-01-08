@@ -730,3 +730,33 @@ function Form() {
 //~ Example:
 //* const [value, setValue] = useState('');
 //* <input type="text" value={value} onChange={(e) => setValue(e.target.value)} />
+
+//*=====================================================================================================================================
+
+//& Title: Prop Drilling
+
+//* prop drilling means pass some prop through several nested child components
+//* in order to get that data into some deeply nested component,
+
+//! solution:
+//? prop composition
+
+//*=====================================================================================================================================
+//* When we build a reusable component,  we should carefully think about what props the component needs.
+//*=====================================================================================================================================
+//* When working on components, it's important to remember that every component is created by someone and consumed by someone else.
+//* The creator is the one who builds the component and defines what props it can accept.
+//* The consumer, on the other hand, uses the component in the application by specifying values for the props.
+
+//* As a component creator, the props we allow consumers to pass in define the public interface of our component.
+//* By choosing these props, we decide how much of the component's complexity we expose to the API consumer.
+//* Essentially, a component is an abstraction where we encapsulate a part of the UI and its associated logic.
+//* Consumers interact with this encapsulated UI and logic through the props of the component.
+
+//*=====================================================================================================================================
+//* You may have heard that we should never initialize state from props.
+//* This is generally true if you want the state to stay in sync with the props, i.e.,
+//* if the state value should update when the prop value updates.
+//* However, in this case, we're using 'defaultRating' as seed data for the initial state,
+//* and we don't care if this prop value changes elsewhere in the application.
+//* Therefore, initializing state from props in this context is perfectly acceptable and normal.
