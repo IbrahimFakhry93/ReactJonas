@@ -760,3 +760,106 @@ function Form() {
 //* However, in this case, we're using 'defaultRating' as seed data for the initial state,
 //* and we don't care if this prop value changes elsewhere in the application.
 //* Therefore, initializing state from props in this context is perfectly acceptable and normal.
+
+//*=====================================================================================================================================
+
+//& Components vs instances vs elements
+//! Interview Question, what is the difference among them?
+
+//*=====================================================================================================================================
+//& Title: Understanding React's Security Measures
+//? React's Use of Symbols for Security
+//* React uses a special property `$$typeof` in every React element
+//* `$$typeof` is a JavaScript symbol, which is a unique and non-duplicable primitive value
+//* This symbol is a security feature implemented by React to protect against cross-site scripting attacks
+
+//? Symbols and JSON
+//* Symbols cannot be transmitted via JSON
+//* This means a symbol cannot come from an API call
+//* If a hacker tries to send a fake React element from an API, React will not recognize it as a valid React element because the `$$typeof` property will not be a symbol
+
+//? Example of a React Element
+```jsx
+const element = {
+  $$typeof: Symbol.for('react.element'),
+  type: 'div',
+  props: { children: 'Hello, world!' }
+};  ```;
+
+//*=====================================================================================================================================
+
+//& Title: Understanding Reconciliation in React
+//? The Role of the Reconciler
+//* Reconciliation is processed by a reconciler
+//* The reconciler is the engine of React, like the heart of React
+
+//? The Purpose of the Reconciler
+//* The reconciler allows us to never touch the DOM directly
+//* Instead, we simply tell React what the next snapshot of the UI should look like based on state
+
+//? The Current Reconciler in React
+//* The current reconciler in React is called Fiber
+
+//*=====================================================================================================================================
+
+//& Title: Understanding Fibers in React
+//? Fibers and Re-rendering
+//* Fibers are not recreated on every render
+//* The Fiber tree is never destroyed, but is a mutable data structure
+//* Once created during the initial render, it's mutated over and over again in future reconciliation steps
+
+//? Role of Fibers
+//* Fibers are the perfect place for keeping track of various component details
+//* This includes the current component state, props, side effects, list of used hooks and more
+
+//*=====================================================================================================================================
+
+//& Title: Understanding the Commit Phase in React
+//? Commit Phase vs Rendering Phase
+//* The commit phase is synchronous, unlike the rendering phase, which can be paused
+//* Committing cannot be interrupted, ensuring that the DOM never shows partial results
+//* This ensures that the UI always stays consistent
+
+//? Purpose of Dividing the Process
+//* The entire process is divided into the render phase and the commit phase
+//* This allows rendering to be paused, resumed, and discarded
+//* The results of all that rendering can then be flushed to the DOM in one go
+
+//? Post-Commit Phase
+//* Once the commit phase is completed, the work in progress fiber tree becomes the current tree for the next render cycle
+//* Fiber trees are never discarded and never recreated from scratch
+//* Instead, they are reused to save precious rendering time
+
+//? Closing the Commit Phase
+//* After the commit phase, the browser will notice that the DOM has been changed
+//* As a result, it will repaint the screen
+
+//*=====================================================================================================================================
+
+//& Title: Understanding Key Usage in React
+//? React's Efficiency
+//* React performs updates efficiently by batching them and applying them whenever it has some idle time
+
+//? Resetting State
+//* If you need to reset state, ensure that you give the element a key
+//* Make sure that the key changes across renders, this will trigger a state reset
+
+//*=====================================================================================================================================
+
+//& Title: Understanding Side Effects in React
+//? Focus on useEffect Hook
+//* We learn all about side effects
+//* The focus is on the useEffect Hook
+
+//? Execution of Effects
+//* We explore how and when effects are executed
+
+//? Cleaning Up Effects
+//* We learn how we can clean effects up
+
+//? Loading External Data
+//* We delve into loading external data into our applications
+
+//*=========================================================================
+
+//! we should never update state in render logic instead updated inside eventhanlders or useEffects

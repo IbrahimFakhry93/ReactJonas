@@ -32,14 +32,17 @@ function Tabbed({ content }) {
   return (
     <div>
       <div className="tabs">
-        <Tab num={0} activeTab={activeTab} onClick={setActiveTab} />
-        <Tab num={1} activeTab={activeTab} onClick={setActiveTab} />
-        <Tab num={2} activeTab={activeTab} onClick={setActiveTab} />
-        <Tab num={3} activeTab={activeTab} onClick={setActiveTab} />
+        <Tab num={0} activeTab={activeTab} onActive={setActiveTab} />
+        <Tab num={1} activeTab={activeTab} onActive={setActiveTab} />
+        <Tab num={2} activeTab={activeTab} onActive={setActiveTab} />
+        <Tab num={3} activeTab={activeTab} onActive={setActiveTab} />
       </div>
 
       {activeTab <= 2 ? (
-        <TabContent item={content.at(activeTab)} />
+        <TabContent
+          item={content.at(activeTab)}
+          key={content.at(activeTab).summary}
+        />
       ) : (
         <DifferentContent />
       )}
@@ -47,11 +50,11 @@ function Tabbed({ content }) {
   );
 }
 
-function Tab({ num, activeTab, onClick }) {
+function Tab({ num, activeTab, onActive }) {
   return (
     <button
       className={activeTab === num ? "tab active" : "tab"}
-      onClick={() => onClick(num)}
+      onClick={() => onActive(num)}
     >
       Tab {num + 1}
     </button>
@@ -63,7 +66,23 @@ function TabContent({ item }) {
   const [likes, setLikes] = useState(0);
 
   function handleInc() {
-    setLikes(likes + 1);
+    setLikes((likes) => likes + 1);
+  }
+
+  function handleTripleInc() {
+    setLikes((likes) => likes + 1);
+    setLikes((likes) => likes + 1);
+    setLikes((likes) => likes + 1);
+  }
+
+  function handleUndo() {
+    setShowDetails(false);
+    setLikes(0);
+  }
+
+  function handleUndoLater() {
+    setShowDetails(false);
+    setLikes(0);
   }
 
   return (
@@ -79,13 +98,13 @@ function TabContent({ item }) {
         <div className="hearts-counter">
           <span>{likes} ❤️</span>
           <button onClick={handleInc}>+</button>
-          <button>+++</button>
+          <button onClick={handleTripleInc}>+++</button>
         </div>
       </div>
 
       <div className="tab-undo">
-        <button>Undo</button>
-        <button>Undo in 2s</button>
+        <button onClick={handleUndo}>Undo</button>
+        <button onClick={handleUndoLater}>Undo in 2s</button>
       </div>
     </div>
   );

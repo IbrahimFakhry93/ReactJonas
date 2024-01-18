@@ -11,3 +11,24 @@
 
 
 I will provide you some react code projects of a React course I'm studying now into number of prompts, I want to you to tell me what is the ReactJS learing aim of this project and what subjects, keypoints, important takeawyas, special and new React, programming and coding concepts, coding tricks, coding and programming critical thinking techniques that the tutor want to deliever by this project , make your answer clear useful and concise and write your analysis in this format:  //& Title: title name  //?Note  //* subnote  //* subnote
+
+
+
+
+
+
+extract the important and critical thinking and programming tricks coding snippets from the whole code I provided  in my last  prompts put your answer in code snippet
+combine your answer with some code s examples of my project
+
+
+I will provide you some react code projects of a React course I'm studying now into number of prompts, I want you to tell me the user story of this code of that simple react app and the data flow in this App and this App features,  write your answer you may mention some codes that corresponds to your note and put your whole answer in a code snippet this format:  //& Title: title name  give subtitles as in this format //? and rest of notes as in this format //*
+
+
+just wait please don't analyze until I tell I have finished providing the complete code
+
+Just wait, don't analyze immediately wait until I provide the rest of the project in the next couple of prompts
+
+Just wait, don't analyze immediately wait until I provide the rest of project in the next prompt
+
+
+you can analyze now the whole code as I provided you in my last couple of prompts

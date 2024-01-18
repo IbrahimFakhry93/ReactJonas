@@ -1,0 +1,9 @@
+//* git status: to show untracked files that were not added to the stage area.
+//* git add -A: add all files to the repo.  (pre-step before the commit, always do that before commiting)
+
+//* commit the files means save all the modification of the files in the repo
+//* git commit -m 'initial commit'
+//* git push origin main
+
+//* Github password:  bebokepeer93
+//* email:ibrahim.fakhry93@yahoo.com
