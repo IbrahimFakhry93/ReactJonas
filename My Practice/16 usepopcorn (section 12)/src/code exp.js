@@ -16,7 +16,8 @@
 
 //& Title: Data Flow
 //? State Management
-//* The `App` component maintains the state of the application, including the search query, the list of movies fetched from the API, the list of watched movies, and the selected movie.
+//* The `App` component maintains the state of the application,
+//* including the search query, the list of movies fetched from the API, the list of watched movies, and the selected movie.
 
 //? Search Functionality
 //* When the user types in the search bar, the `setQuery` function is called to update the search query state in the `App` component.
@@ -24,13 +25,17 @@
 
 //? Movie Selection and Details
 //* The `MoviesList` component receives the `movies` state as a prop and renders a list of `Movie` components.
-//* When a movie is clicked in the `MoviesList`, the `handleIdSelection` function is called to update the `selectedId` state in the `App` component. This triggers the `MovieDetails` component to fetch and display more details about the selected movie.
+//* When a movie is clicked in the `MoviesList`,
+//* the `handleIdSelection` function is called to update the `selectedId` state in the `App` component.
+//* This triggers the `MovieDetails` component to fetch and display more details about the selected movie.
 
 //? Watched List Management
 //* In the `MovieDetails` component, the user can rate the movie and add it to their watched list.
 //*  This calls the `handleAddWatchedMovie` function to update the `watched` state in the `App` component.
 //* The `WatchedMoviesList` component receives the `watched` state as a prop and renders a list of `WatchedMovie` components.
-//* Each `WatchedMovie` can be removed from the watched list by clicking the delete button, which calls the `handleDeleteWatchedMovie` function to update the `watched` state in the `App` component.
+//* Each `WatchedMovie` can be removed from the watched list by clicking the delete button,
+//* which calls the `handleDeleteWatchedMovie` function to update the `watched` state in the `App` component
+//* by filtering the id that corresponds to the movie who we click on its list the close button
 
 //!=======================================================================================================================================
 
@@ -55,4 +60,5 @@
 //? Error Handling and Loading State
 //! Error handling:
 //* The app handles errors such as failed API requests and displays an error message to the user.
-//* Loading state: The app shows a loading message while it is fetching data from the API.
+//~ Loading state:
+//* The app shows a loading message while it is fetching data from the API.

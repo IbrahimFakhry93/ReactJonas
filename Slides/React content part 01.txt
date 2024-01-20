@@ -1,0 +1,208 @@
+1- setting up a react project using npx create-react-app.
+
+I have not studied the building too Vite
+
+2- using function components including parent component, child component.
+
+3- using jsx and rules of jsx and differences between JSX and html
+
+4- using local state in practice by useState, have NOT studied yet the global state using useReducer and context API 
+
+5- using props to configure and customize components, so parent component control how child components look and work.
+
+6- In react, One way data flow from parent to child
+
+7- Rendering multiple components at once using the JavaScript.map() method
+
+8-  Components can be conditionally rendered using JS tools: &&, ?, and multiple return
+
+9- state, events, forms, interactive components
+
+10- state for dyanimc part in a component or data that should trigger component whenever this component re-renders
+
+11- I studied also derive state, a state that can be computed from existing state/props
+
+12- using lift stateup to first common parent so this state can be used by one or a few sibling components
+
+13- I haven't study anything about global state or useRef.
+
+14- using children prop which allows to pass JSX into an element, make reusable and configurable components (espescially component content) , usually used for generic components that we don't know their content before being used like modal and button text content
+
+15- I have NOT studied Redux or global state or context api or routing or axios or asynchoronis operations
+
+16- The only react hook I have studied was useState
+
+17- I have not studied useEffect or any other React hook except only useState 
+
+
+
+Pizza Application:
+
+1. React Components: The project uses functional components (`Header`, `Menu`, `Pizza`, `Footer`) to structure the application. This teaches how to create and use React components.
+
+2. Props in React**: The `Pizza` component receives properties (props) and uses them to display each pizza's information. This demonstrates how to pass and use props in React.
+
+3. JavaScript Array Methods**: The `map` method is used to create a list of `Pizza` components. This shows how to use JavaScript array methods in React.
+
+4. Conditional Rendering**: The `Menu` component uses a conditional (`numOfPizzas > 1`) to decide whether to render the list of pizzas. This introduces conditional rendering in React.
+
+5. Working with Data**: The project uses an array of pizza objects, each with properties like `name`, `ingredients`, `price`, etc. This teaches how to work with data in React.
+
+6. Dynamic Styling**: The `Footer` component uses a condition to dynamically render content based on the current time. This shows how to apply dynamic styling in React.
+
+
+Personal Profile:
+
+1. React Components: The project uses functional components (`App`, `ImgProfile`, `Intro`, `SkillList`, `Skill`) to structure the application. This teaches how to create and use React components.
+
+2. Props in React: The `Skill` component receives properties (props) and uses them to display each skill's information. This demonstrates how to pass and use props in React.
+
+3. JavaScript Array Methods: The `map` method is used to create a list of `Skill` components. This shows how to use JavaScript array methods in React.
+
+4. Conditional Rendering: The `Skill` component uses conditionals to decide which emoji to render based on the skill level. This introduces conditional rendering in React.
+
+5. Working with Data: The project uses an array of skill objects, each with properties like `skill`, `level`, `color`, etc. This teaches how to work with data in React.
+
+6. Dynamic Styling: The `Skill` component uses inline styles to dynamically set the background color of each skill. This shows how to apply dynamic styling in React.
+
+
+step Application:
+This React project appears to be a step-by-step guide or tutorial application. Here are the key learning objectives and concepts that this project is likely designed to teach:
+
+1. React Components: The project uses functional components (`App`, `StepMessage`, `Button`, `Card`) to structure the application. This teaches how to create and use React components.
+
+2. Props in React: The `StepMessage`, `Button`, and `Card` components receive properties (props) and use them to display each step's information and button actions. This demonstrates how to pass and use props in React.
+
+3. State in React: The `useState` hook is used to manage the state of the application (`step`, `isOpen`). This introduces state management in React.
+
+4. Event Handling in React: The `handleBack` and `handleNext` functions are used as event handlers for the `onClick` events of the `Button` components. This teaches how to handle events in React.
+
+5. Conditional Rendering: The `App` and `Button` components use conditionals to decide what to render based on the current state. This introduces conditional rendering in React.
+D
+6. hildren Prop in React: The `children` prop is used in the `StepMessage` and `Card` components to pass elements directly into components, which are then rendered through the component. This shows how to use the `children` prop for component reusability in React.
+
+7. Dynamic Styling: The `Button` component uses inline styles to dynamically set the background color and text color of each button. This shows how to apply dynamic styling in React.
+
+Flashcards App
+This React project appears to be a flashcard application. Here are the key learning objectives and concepts that this project is likely designed to teach:
+
+1. React Components: The project uses functional components (`App`, `FlashCards`) to structure the application. This teaches how to create and use React components.
+
+2. State in React: The `useState` hook is used to manage the state of the application (`selectedId`). This introduces state management in React.
+
+3. Event Handling in React: The `handleClick` function is used as an event handler for the `onClick` events of the flashcards. This teaches how to handle events in React.
+
+4. Conditional Rendering: The `FlashCards` component uses conditionals to decide what to render based on the current state. This introduces conditional rendering in React.
+
+5. Working with Data: The project uses an array of question objects, each with properties like `id`, `question`, `answer`, etc. This teaches how to work with data in React.
+
+6. Lifting State Up: The `selectedId` state is lifted up to the `FlashCards` component. This allows the parent component to control the state of all cards and reset the state of the previously selected card when a new card is selected. This introduces the concept of lifting state up in React.
+
+
+Date counter:
+
+This React project appears to be a counter application with the following features:
+
+1. React Components: The project uses functional components (`App`, `Counter`) to structure the application. This teaches how to create and use React components.
+
+2. State in React: The `useState` hook is used to manage the state of the application (`count`, `step`). This introduces state management in React.
+
+3. vent Handling in React: The `handleStep` and `handleCount` functions are used as event handlers for the `onChange` events of the input elements. The `reset` function is used as an event handler for the `onClick` event of the reset button. This teaches how to handle events in React.
+
+4. Conditional Rendering: The `Counter` component uses conditionals to decide what to render based on the current state. This introduces conditional rendering in React.
+
+5. Working with Data: The project uses the `Date` object to calculate and display the date `count` days from today. This teaches how to work with data in React.
+
+6. Dynamic Styling: The `Counter` component uses inline styles to set the margin of the buttons. This shows how to apply dynamic styling in React.
+
+
+
+Tip Calculator: 
+
+This ReactJS project is a simple tip calculator application. Here are the learning objectives and key takeaways:
+
+learning Objectives:
+1. Understanding and using React hooks:The `useState` hook is used to manage state in functional components. This project helps you understand how to declare state variables and update them using the setter functions provided by `useState`.
+2. Component Composition: The application is broken down into smaller, reusable components (`Bill`, `Service`, `Output`, `Reset`). This demonstrates how to compose complex UIs from simpler components.
+3. Props Handling: The project shows how to pass data from parent components to child components using props. It also demonstrates how to pass callback functions via props to allow child components to update the state of parent components.
+
+Key Points:
+1. State Management:The `bill`, `tipPer1`, and `tipPer2` states are managed using the `useState` hook. The state is updated using the respective setter functions (`setBill`, `setTipPer1`, `setTipPer2`).
+2. Event Handling: The `onChange` event handlers in the `Bill` and `Service` components demonstrate how to handle user inputs in React. The `onClick` event handler in the `Reset` component shows how to handle click events.
+3. Conditional Rendering: The `{bill > 0 && (<Output bill={bill} tip={tip} /><Reset onRest={handleReset} />)}` line demonstrates conditional rendering in React. The `Output` and `Reset` components are only rendered if the `bill` state is greater than zero.
+
+Special Ideas:
+1. Average Tip Calculation: The tip is calculated as the average of `tipPer1` and `tipPer2`, demonstrating a simple way to incorporate inputs from multiple users.
+2. Reset Functionality: The `handleReset` function demonstrates how to reset the state of the application to its initial state.
+
+Code Tricks:
+1. Number Conversion: The `Number(e.target.value)` expressions in the `onChange` handlers ensure that the input values are converted from strings to numbers before updating the state.
+2. Destructuring Props: The `{ bill, onSetBill }`, `{ children, onSetTipPer, tipPer }`, `{ bill, tip }`, and `{ onRest }` in the function parameters are examples of destructuring props, which is a concise way to access properties of the `props` object.
+3. Children Prop: The `children` prop is used to pass and render arbitrary content between the opening and closing tags of the `Service` component. This is a powerful feature of React that promotes component reusability. 
+
+
+
+split bill application
+
+Learning Objectives:
+1. Understanding and using React hooks: The `useState` hook is used to manage state in functional components. This project helps you understand how to declare state variables and update them using the setter functions provided by `useState`.
+2. Component Composition: The application is broken down into smaller, reusable components (`Button`, `FriendsList`, `Friend`, `FormAddFriend`, `FormSplitBill`). This demonstrates how to compose complex UIs from simpler components.
+3. Props Handling: The project shows how to pass data from parent components to child components using props. It also demonstrates how to pass callback functions via props to allow child components to update the state of parent components.
+4. Form Handling: The project demonstrates how to handle form submissions in React. It shows how to prevent the default form submission, how to gather data from multiple inputs, and how to use that data to update the state.
+
+Key Points:
+1. State Management: The `bill`, `myExpense`, `payer`, and other states are managed using the `useState` hook. The state is updated using the respective setter functions.
+2. Event Handling: The `onChange` and `onSubmit` event handlers in the `FormAddFriend` and `FormSplitBill` components demonstrate how to handle user inputs and form submissions in React.
+3. Conditional Rendering: The `{bill ? bill - myExpense : ""}` line demonstrates conditional rendering in React. The friend's expense is only calculated if the `bill` state is truthy.
+
+Special Ideas:
+1. Splitting Bills: The application provides a simple and intuitive interface for splitting bills between friends. It allows each person to input their expenses and calculates how much each person owes.
+2. Random ID Generation:The `Math.floor(Math.random() * 900000) + 100000` line in the `FormAddFriend` component is a simple way to generate a random ID for each friend.
+
+Code Tricks:
+1.Number Conversion The `Number(e.target.value)` expressions in the `onChange` handlers ensure that the input values are converted from strings to numbers before updating the state.
+2.Destructuring Props: The `{ friend, onFriendSelection, selectedFriend }`, `{ selectedFriend, onSplitBill }`, and other instances in the function parameters are examples of destructuring props, which is a concise way to access properties of the `props` object.
+3. Optional Chaining: The `selectedFriend?.id === friend.id` line in the `Friend` component uses optional chaining (`?.`) to prevent errors when trying to access properties of `null` or `undefined`.
+4.Conditional Rendering: The bill ? bill - myExpense : "" line demonstrates conditional rendering in React. The friend’s expense is only calculated if the bill state is truthy.
+5.Preventing Overpayment: The Number(e.target.value) > bill ? myExpense : Number(e.target.value) line ensures that a user cannot enter an expense that is greater than the total bill.
+
+
+
+
+Travel App application:
+
+Learning Aim: The main aim of this project is to learn how to build a functional React application that manages state and handles events. The application is a packing list where users can add, delete, and check off items.
+
+Learning Objectives & Key Points:
+
+1. Understanding State: The project demonstrates the use of React's `useState` hook to manage state within functional components. This is seen in the `App`, `Form`, `PackingList`, and `Stats` components.
+
+2. Event Handling: The project shows how to handle events such as form submission, button clicks, and checkbox changes. This is seen in the `Form` and `Item` components.
+
+3. Parent-Child Communication: The project illustrates how to pass data and functions from parent components to child components via props. This is seen in the `App` component passing state and state-updating functions to the `Form`, `PackingList`, and `Stats` components.
+
+4. Conditional Rendering: The project demonstrates how to conditionally render components based on state. This is seen in the `Stats` component where different messages are displayed based on the percentage of packed items.
+
+5. Array Methods: The project uses JavaScript array methods like `map`, `filter`, and `sort` to manipulate lists of items. This is seen in the `PackingList` and `Stats` components.
+
+important Takeaways:
+
+- Immutability: The project emphasizes the importance of not mutating state directly. Instead, it uses the `setItems` function provided by `useState` to update state.
+
+- Function Scopes and Closures: The project demonstrates how JavaScript handles function scopes and closures. When a function is defined inside another function, the inner function has access to the variables in the outer function’s scope.
+
+Special & New React Concepts:
+
+- React Hooks: The project uses React Hooks (`useState`) which is a newer feature in React for managing state and side effects in functional components.
+
+- Controlled Components: The project uses controlled components (where the component's state is controlled by React) in the `Form` component.
+
+coding Tricks & Critical Thinking Techniques:
+
+- early Return: The project uses the "early return" pattern in the `Stats` component to exit the function early if there are no items.
+
+- Ternary Operator: The project uses the ternary operator for conditional rendering in the `Item` and `Stats` components.
+
+- Spread Operator: The project uses the spread operator to create new arrays or objects without mutating the original state.
+
+
