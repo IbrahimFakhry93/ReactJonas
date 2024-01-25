@@ -273,9 +273,8 @@ function MovieDetails({
   watched,
 }) {
   const [movieDetails, setMovieDetails] = useState({}); //* type of {} because that is the returned type from api call in fetchMovieDetails
- 
+
   const [userRating, setUserRating] = useState();
-  
 
   //& Display another content after clicking on same element
   //* By producing boolean value using looping and includes then use this boolean value for conditional rendering
@@ -313,7 +312,7 @@ function MovieDetails({
       poster, //* poster:poster (the one above loo up)
       title,
       imdbRating: Number(imdbRating), //! convert string to number
-      runtime: runtime.split(" ").at(0), //!
+      runtime: runtime.split(" ").at(0), //! extract the number from the string (runtime = '120 min')
       userRating,
       imdbID,
     };

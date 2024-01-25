@@ -862,4 +862,13 @@ const element = {
 
 //*=========================================================================
 
-//! we should never update state in render logic instead updated inside eventhanlders or useEffects
+//! we should never update state in render logic instead updated inside event handlers or useEffects
+//*=========================================================================
+
+//& Custom Hook:
+//* So there are basically two strategies to decide if we want to create a new custom hook.
+//* So the first one is that we want to reuse some part of our non-visual logic,
+//* so just as we learned in the previous lecture. And the second factor might be
+//* that we simply want to extract a huge part of our component out into some custom hook.
+//* so in this lecture, I will show you how we can extract all the stateful logic
+//* that belongs together into a nice and well-packaged custom hook.
