@@ -6,7 +6,7 @@ function MyComponent() {
   // ...
 }
 
-//* Rule 2: The function must return some markup, usually in the form of JSX.
+//* Rule 2: The function must (return) some markup, usually in the form of JSX.
 function MyComponent2() {
   return <div>My Component</div>;
 }
@@ -27,7 +27,7 @@ function App() {
   return (
     <div>
       <h1>Hello React</h1>
-      <Pizzas /> //* call Pizza component inside App component
+      <Pizzas /> //* call Pizza component inside App component (possible)
     </div>
   );
 }
@@ -58,7 +58,7 @@ import { useEffect, useState } from "react";
 //* One is the state itself and other is the state function that updates the state.
 //* Whenever the state is updated, the user interface is updated.
 
-//? useEffect:
+//? useEffect:  to call some logic function as (getAdvice) in the first initial rendering when dep array is empty
 //! useEffect takes two arguments:
 //* 1) A function that we want to get executed at the beginning. So when this component first gets loaded.
 //* 2) Empty array which is called the dependency array.
@@ -107,21 +107,26 @@ function Message(props) {
 //* Over time, developers started writing more JavaScript code for the browser, leading to fully-fledged web applications (single-page applications).
 //* Single-page applications are rendered on the client-side, not on the server.  (became web application instead of web pages in server rendering )
 //* The application consumes data from an API and renders a screen for each view of the application.
-//* Single-page applications feel like using a native desktop or phone application (e.g. clicking links or submitting forms without reloading the page).
-//* Server-side rendering is making a comeback with frameworks built on top of modern client-side rendering frameworks (e.g. Next.js, Remix).
+//* Single-page applications feel like using a native desktop or phone application
+//* (e.g. clicking links or submitting forms without reloading the page).
+//* Server-side rendering is making a comeback with frameworks built on top of modern client-side rendering frameworks
+//* (e.g. Next.js, Remix).
 
 //? Note: Building a front-end application is about handling data and displaying it in a user interface.
-//* The most important task is to keep the user interface in sync with the data (i.e. make sure the UI displays the current state of the data).
+//* The most important task is to keep the user interface in sync with the data
+//* (i.e. make sure the UI displays the current state of the data).
 //* Displaying the correct data and keeping it correct over time is a hard problem to solve.
 
 //* In a complex interface like Airbnb, there are many pieces of data (e.g. list of apartments, search bar, filters, map).
-//* All this data needs to be kept in sync with the user interface and other pieces of data (e.g. changing location or dates updates the list of apartments and the map).
+//* All this data needs to be kept in sync with the user interface and other pieces of data
+//* (e.g. changing location or dates updates the list of apartments and the map).
 //* Each piece of data is called a piece of state.
 //* Without a framework, it would be virtually impossible to keep a large amount of data in sync with a complex UI.
 
 //? Note: There are two big problems with using Vanilla JavaScript to build large scale applications.
 //! Building a complex front end with Vanilla JavaScript alone requires:
-//* large amounts of direct DOM traversing and manipulation(e.g.manual element selection, class toggling, DOM traversing, manipulation of text and CSS styles).
+//* large amounts of direct DOM traversing and manipulation
+//* (e.g.manual element selection, class toggling, DOM traversing, manipulation of text and CSS styles).
 //* This can result in complex, hard-to-understand code (i.e. spaghetti code).
 
 //* In typical Vanilla JavaScript apps, state is often stored in the DOM (i.e. HTML elements) rather than in a central place in the application.
@@ -133,7 +138,8 @@ function Message(props) {
 //* Frameworks like Angular, React, or Vue take this hard work away from developers by synchronizing data with the user interface.
 //* Different frameworks have different approaches, but they all keep the UI and data in sync over time.
 //* Frameworks enforce a correct way of structuring and writing code, reducing spaghetti code.
-//* Frameworks give developers and teams a consistent way of building web applications, resulting in a more consistent codebase and product.
+//* Frameworks give developers and teams a consistent way of:
+//* building web applications, resulting in a more consistent codebase and product.
 
 //*========================================================================================================================
 
@@ -252,7 +258,7 @@ function Message(props) {
 //* 2) Keeping the user interface in sync with state by re-rendering when the state of one of the components changes
 
 //*========================================================================================================================
-
+//! interview
 //& Title: Understanding React.StrictMode
 //? Note: React.StrictMode is a tool for highlighting potential problems in an application during development.
 //* Example:
@@ -260,8 +266,9 @@ function Message(props) {
   <App />
 </React.StrictMode>;
 
-//* React.StrictMode renders components twice during development to find certain bugs, such as unexpected side effects.
-//* It also checks if the application is using outdated parts of the React API and warns about their usage.
+//* React.StrictMode renders components twice during development to
+//* 1) find certain bugs, such as unexpected side effects.
+//* 2) checks if the application is using outdated parts of the React API and warns about their usage.
 
 //*========================================================================================================================
 
@@ -285,6 +292,9 @@ function Message(props) {
 //? To stop and restart a program:
 //* ^c: to stop, npm start
 
+//* sometimes you need to install node modules in a pre created react app
+//* by: npm install or npm i
+
 //*======================================================================================================================================
 
 //& in Debugging:
@@ -306,7 +316,7 @@ function Message(props) {
 //* web pack that will take care of the styles out of the CSS file and injecting them into our application.
 
 //*========================================================================================================================
-
+//! interview
 //& Title: Understanding the Role of index.js in a React Project
 //? Note: The index.js file is typically located in the src folder and serves as the entry point for the application.
 //~ Example:
@@ -332,7 +342,8 @@ function Message(props) {
 //* Functions that start with 'use', such as useEffect or useReducer, and useState, are React hooks.
 
 //? Note
-//* We will learn in detail what a React hook is later. For now, it's important to know that we can only call hooks like useState at the top level of the function.
+//* We will learn in detail what a React hook is later.
+//*For now, it's important to know that we can only call hooks like useState at the top level of the function.
 
 //? Note
 //* Hooks like useState are not allowed to be called inside an if statement, another function, or inside a loop.
@@ -365,6 +376,7 @@ function Message(props) {
 //~ Note:
 //* This mechanism allows for efficient updates and predictable behavior,
 //* as the state update and the subsequent re-render are managed by React in a consistent and optimized manner.
+//! interview:
 //* It also allows for state updates to be asynchronous, as React may batch multiple updates together for performance reasons.
 
 //*========================================================================================================================
@@ -407,7 +419,7 @@ function Message(props) {
   //* State is a built-in object that stores property values that belong to a component.
   //* When the state object changes, the component re-renders.
 
-  const Counter = () => {
+  function Counter() {
     //* Here we declare a new state variable called 'count'
     //* 'useState' is called with the initial state argument and returns a pair of values: the current state and a function that updates it
     const [count, setCount] = useState(0);
@@ -422,7 +434,7 @@ function Message(props) {
         </button>
       </div>
     );
-  };
+  }
 
   // export default Counter;
 
@@ -512,6 +524,7 @@ function Pizza(props) {
   );
 }
 
+//! interview
 //* Using map:
 pizzaData.map((pizza) => <Pizza pizzaObj={pizza} />);
 
@@ -522,8 +535,8 @@ pizzaData.forEach((pizza) => <Pizza pizzaObj={pizza} />); //! This will not work
 //* React doesn't render true or false or boolean values
 //* React renders truthy values
 
-//? Notes: In order to render a list, we need to create a new array containing the JSX elements.
-//? Notes: The map method creates a new array populated with the results of calling a provided function on every element in the calling array.
+//* In order to render a list, we need to create a new array containing the JSX elements.
+//* The map method creates a new array populated with the results of calling a provided function on every element in the calling array.
 
 //*=====================================================================================
 
@@ -570,13 +583,13 @@ function WelcomeMessage({ isLoggedIn }) {
 
 //& Clean Ternary operator:
 
-//? not clean code
+//? not clean code: rendering two span elements
 
 {
   pizzaObj.soldOut ? <span>SOLD OUT</span> : <span>{pizzaObj.price}</span>;
 }
 
-//? Clean code:
+//? Clean code: rendering content of one single span element
 <span>{pizzaObj.soldOut ? "SOLD OUT" : pizzaObj.price}</span>;
 
 //*========================================================================================================================
