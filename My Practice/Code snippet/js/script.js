@@ -1281,7 +1281,7 @@ function FormSplitBill({ selectedFriend, onSplitBill }) {
  //! use disabled attribute
  <input type="text" disabled value={friendExpense} />
 
-//*===========================================================================================================================================================
+//^===========================================================================================================================================================
 
 
 
@@ -1300,7 +1300,6 @@ export default function App() {
   return (
     <>
      <Navbar>
-
       //& Composition
         <Search />
         <SearchResults movies={movies} />     //* we pass movies prop directly to SearchResults comp without prop drilling
@@ -1348,7 +1347,6 @@ function Box({ children }) {
 //& usePopCorn App:
 
 //& using composition to achieve component 
-
 
 
 export default function App() {
@@ -1512,15 +1510,14 @@ function WatchedMovie({ movie }) {
 }
 
 
-c
 
 //& Section 10: Thinking in React: Components, Composition, and Reusability
 
 //& StarRating App
 
-//* The consumer might need to access the 'rating' state outside of the 'StarRating' component.
-//* For instance, in a 'Test' component that includes the 'StarRating', they might want to display the rating in their UI.
-//* To do this, they need access to the 'rating' state inside the 'StarRating' component, but from within the 'Test' component.
+//* The consumer might need to access the 'movieRating' state outside of the 'StarRating' component.
+//* For instance, in a 'Test' component that includes the 'StarRating', they might want to display the movieRating in their UI.
+//* To do this, they need access to the 'movieRating' state inside the 'StarRating' component, but from within the 'Test' component.
 //* They need some state, say 'movieRating', which is initially set to zero.
 //* However, 'movieRating' won't change when we rate the movie in the 'StarRating' component.
 //* To update 'movieRating' when the state inside 'StarRating' is updated, we allow the consumer to pass in a set function, 'onSetRating'.
@@ -1540,9 +1537,7 @@ function Test() {
 //const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    {/* <App2 /> */}
     <Test />
-
     <StarRating
       maxRating={5}
       messages={["terrible", "Bad", "okay", "Good", "Amazing"]}
@@ -1619,7 +1614,7 @@ export default function StarRating({
   //! create handling state function
   function handleRating(rating) {
     setRating(rating);
-    onMovieRating(rating); //* set the movie Rating that is needed outside Star Component check Test comp in index.js file
+    onMovieRating(rating); //* set the movie Rating that is needed outside Star Component check Test comp above
   }
 
   return (
@@ -1639,9 +1634,8 @@ export default function StarRating({
               onRating={() => handleRating(i + 1)}
               onHoverIn={() => setTempRating(i + 1)}
               onHoverOut={() => setTempRating(0)}
-              full={tempRating ? tempRating >= i + 1 : rating >= i + 1} //* >= to insure all the current star (temp rating) and the behind stars are highlighted by render the full solid star
+              full={tempRating ? tempRating >= i + 1 : rating >= i + 1} //* >= to insure all the current star (temp rating) and the stars behind are highlighted by render the full solid star
               //* same concept of steps button in steps App in fundamental section (check it)
-              // full={tempRating >= i + 1 || rating >= i + 1}
               size={size}
               color={color}
             />
@@ -1826,7 +1820,7 @@ function closeMovieDetails() {
 ) ```;
 
 //*===========================================================================================================================
-//& Update list of items such as movies:
+//& Update list of items such as movies: using spread operator
 const [watched, setWatched] = useState([]);
 function handleAddWatchedMovie(movie) {
   setWatched((watched) => [...watched, movie]);
@@ -2039,9 +2033,9 @@ function MovieDetails({
   } = movieDetails;
 
   console.log(title, year); //* at first it will give undefined,undefined (in case dependency array was [] as in the beginning of the tutorial)
-  //* because useEffect executed after (render + commit + broswer paint)
+  //* because useEffect executed after (render + commit + browser paint)
 
-  //& Creating a new object based on other proeprties
+  //& Creating a new object based on other properties
   function handleAdd() {
     const newWatchedMovie = {
       poster, //* poster:poster (the one above loo up)
@@ -2057,8 +2051,8 @@ function MovieDetails({
     onCloseMovieDetails(); //* close the movie details window after adding the movie to watched list
   }
 
-  //& Changing a browser tab title when ,ounting a certain component
-  //* use Useffect inside this mounted component
+  //& Changing a browser tab title when ,mounting a certain component
+  //* use UseEffect inside this mounted component
   useEffect(
     function () {
       // document.title = "test";
@@ -2309,7 +2303,7 @@ function formatDay(dateStr) {
   }).format(new Date(dateStr));
 }
 
-//& Condtional render based on property existence of a state object (weather)
+//& Conditional render based on property existence of a state object (weather)
 const [weather, setWeather] = useState({});
 {
   weather.weathercode && (
