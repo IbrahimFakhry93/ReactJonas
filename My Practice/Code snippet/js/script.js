@@ -2366,3 +2366,50 @@ function Day({ day, max, min, code, isToday }) {
 
 
 //*==================================================================================================================
+
+
+//& Vite Project:
+
+// npm create vite@latest
+// or for jonas course
+// npm create vite@4
+
+// Project-name: worldWise
+// choose react
+// choose javascript
+
+// npm i
+
+// npm run dev
+
+
+// npm install eslint vite-plugin-eslint eslint-config-react-app --save-dev
+
+// .eslintrc.json
+
+// {
+ 
+//   extends: 
+//     "react-app",
+// }
+
+// vite.config.js
+
+// import { defineConfig } from "vite";
+// import react from "@vitejs/plugin-react";
+// import eslint from "vite-plugin-eslint";
+
+// https://vitejs.dev/config/
+// export default defineConfig({
+//   plugins: [react(), eslint()],
+// });
+
+//*==================================================================================================================
+// npm i react-router-dom@latest
+// npm i react-router-dom@6
+//*==================================================================================================================
+
+
+//& Routing
+
+//* <NavLink></NavLink> to highlighted the selected link with class='active'
