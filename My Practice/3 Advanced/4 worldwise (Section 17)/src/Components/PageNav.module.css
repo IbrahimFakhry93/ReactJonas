@@ -1,0 +1,60 @@
+.nav {
+  /* background-color: red; */
+}
+
+.nav :global(.active) {
+}
+.nav ul {
+  display: flex;
+  justify-content: space-between;
+  list-style: none;
+}
+
+/** every css class inside css modules is added to react with unique id to avoid naming class clashes with other classes in other css modules  */
+
+/* 
+this global function here is usually,
+
+mostly important when we are working
+
+with some classes that are provided from external sources.
+
+So in this case, the active class is given
+
+to us by React Router. */
+
+/* ================================================================================================= */
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav ul {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 4rem;
+}
+
+.nav a:link,
+.nav a:visited {
+  text-decoration: none;
+  color: var(--color-light--2);
+  text-transform: uppercase;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+/* CSS Modules feature */
+.nav a:global(.active) {
+  color: var(--color-brand--2);
+}
+
+a.ctaLink:link,
+a.ctaLink:visited {
+  background-color: var(--color-brand--2);
+  color: var(--color-dark--0);
+  padding: 0.8rem 2rem;
+  border-radius: 7px;
+}
