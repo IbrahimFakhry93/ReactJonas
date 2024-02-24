@@ -108,3 +108,21 @@
 // which in this case are these sub URLs.
 
 // So with the sub routes of cities and countries.
+
+//*=====================
+//& another usefulness of react router
+//* storing state in the URL so that we can use it in different places of the application.
+
+//*=================
+
+//& React Route with params
+
+// So to use params with React Router,
+
+// we basically do it in three steps.
+
+// So first we create a new route,
+
+// then we link to that route,
+
+// and then in that route we read the state from the URL.
