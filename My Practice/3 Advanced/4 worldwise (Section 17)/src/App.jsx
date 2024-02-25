@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import HomePage from "./pages2/Homepage.jsx";
 import Product from "./pages2/Product.jsx";
@@ -9,9 +9,10 @@ import AppLayout from "./pages2/AppLayout.jsx";
 import PageNotFound from "./pages2/PageNotFound.jsx";
 import CityList from "./Components/CityList.jsx";
 import CountryList from "./Components/CountryList.jsx";
-
-import "./index.css";
 import City from "./Components/City.jsx";
+import Form from "./Components/Form.jsx";
+import "./index.css";
+
 function App() {
   const Base_URL = `http://localhost:9000`;
   const [cities, setCities] = useState([]);
@@ -44,11 +45,14 @@ function App() {
         <Route path="pricing" element={<Pricing />} />
         <Route path="login" element={<Login />} />
         <Route path="app" element={<AppLayout />}>
-          <Route
+          {/* <Route
             index
             path="cities"
             element={<CityList cities={cities} isLoading={isLoading} />}
-          />
+          /> */}
+
+          {/* Consider Navigate component as redirect, use replace so you can go back by back button in the browser */}
+          <Route index element={<Navigate replace to="cities" />} />
           <Route
             path="cities"
             element={<CityList cities={cities} isLoading={isLoading} />}
@@ -58,7 +62,7 @@ function App() {
             path="countries"
             element={<CountryList cities={cities} isLoading={isLoading} />}
           />
-          <Route path="form" element={<p>form</p>} />
+          <Route path="form" element={<Form />} />
         </Route>
         <Route path="*" element={<PageNotFound />} />
       </Routes>

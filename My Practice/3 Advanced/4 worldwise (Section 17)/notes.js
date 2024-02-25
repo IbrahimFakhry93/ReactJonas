@@ -126,3 +126,47 @@
 // then we link to that route,
 
 // and then in that route we read the state from the URL.
+
+//*==================
+//&  programmatic navigation
+//! imperative way:
+// So programmatic navigation basically means
+
+// to move to a new URL
+
+// without the user having to click on any link.
+
+// And a common use case of this behavior
+
+// is right after submitting a form.
+
+// So many times when the user submits a form,
+
+// we want them to move to a new page
+
+// in our application automatically.
+
+// So without having to click on any link.
+
+// And so then we can use programmatic navigation
+
+// to achieve that.
+
+//! declarative way:
+//* Navigate component
+
+// the Navigate component that we're going to learn about now
+
+// is not so much used anymore,
+
+// but there is still one very important use case for it,
+
+// which is inside nested routes.
+
+{
+  /* <Route
+index
+path="cities"
+element={<Navigate replace to="cities" />}
+/> */
+}
