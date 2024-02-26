@@ -1,8 +1,14 @@
+//! Video 212
+
 //& Usage of nested routes:
 
 //* we need nested routes when we want a part of the user interface to be controlled by a part of the URL.
 
 //* show a part of the UI  based on some part of the URL.
+
+// in the URL, we have slash app and then slash cities.
+
+// And so basically this cities part here is displayed because in the URL we have cities.
 
 // eslint-disable-next-line no-lone-blocks
 {
@@ -19,149 +25,142 @@
 */
 }
 
+//=====================================================================
+
 //& Usage of Outlet Component routes:  <Outlet />
 //* how to display one component or one element inside another component
 //* that's where the outlet component provided by React Router comes into play.
+
+//* as in sidebar (outlet)
+
+//=====================================================================
 
 //& Usage of index route:
 //* index route is the default child route that is going to be matched
 //* if none of these other routes here matches.
 
-// Now if we think about this,
+//*=====================================================================
 
-// then what we just implemented here
+//& Title: React Router vs Use state hook
 
-// is actually very similar to something like a tabs component,
+//* Now if we think about this, what we just implemented here is actually very similar to something like a tabs component, but implemented in a very different way.
 
-// but implemented in a very different way.
+//? Implementing a Tab Component
+//* So before, if we wanted to implement a tab component where we have these tabs here and then the content changes according to which is the active tab
+//* we would've implemented that using the Use state hook to manage the currently active tab.
 
-// So before, if we wanted to implement a tab component
+//? Using React Router
+//* But here with React Router, we do the same thing, but in a very different way. So instead of using the Use state hook to manage state,
+//* we basically allow React Router enter URL to store that state of the active tab.
+//* And so then whenever this URL here changes, then we change which tab is currently active.
 
-// where we have these tabs here
+//? React Router: A New Way of Thinking
+//* So React Router is a whole new way of thinking about how we built an application.
 
-// and then the content changes
+//? The Value of Previous Learning
+//* So we still build components like accordions or tabbed components like the one I just mentioned using the U state hook all the time.
 
-// according to which is the active tab,
+//? Navigation in Real World Applications
+//* But from now on, the overall navigation of the application is in the real world always managed by something like React Router.
+//* And so that includes a small sub navigation like this one.  (cities and countries tabs)
 
-// we would've implemented that using the U state hook
+//*=====================================================================
+//& Title: Implementing Nested Routes
 
-// to manage the currently active tab.
+//? Implementing Nested Routes
+//* So how we implemented our nested routes here inside another route element.
+//*  Then we rendered whatever the nested route wants to render inside the outlet component here.
 
-// But here with React Router, we do the same thing,
+//? Switching Between Nested Routes
+//* And then to actually switch between the nested routes we implemented
+//* yet another navigation with these Nav link components to basically link between the different URLs, which in this case are these sub URLs.
 
-// but in a very different way.
+//? Sub Routes Example
+//* So with the sub routes of cities and countries.
 
-// So instead of using the U state hook to manage state,
-
-// we basically allow React Router
-
-// enter URL to store that state of the active tab.
-
-// And so then whenever this URL here changes,
-
-// then we change which tab is currently active.
-
-// So React Router is a whole new way
-
-// of thinking about how we built an application.
-
-// Now of course that doesn't mean at all
-
-// that all we have learned before is useless.
-
-// So we still build components like accordions
-
-// or tabbed components like the one I just mentioned
-
-// using the U state hook all the time.
-
-// But from now on, the overall navigation of the application
-
-// is in the real world always managed
-
-// by something like React Router.
-
-// And so that includes a small sub navigation like this one.
+//*=====================================================================
+//& another usefulness of react router
+//* storing state in the URL so that we can use it in different places of the application (use it globally)
 
 //*=====================================================================
 
-// So hopefully this wasn't too confusing
+//! Video 216
+//& Title: React Route with Params
 
-// but just make sure to review all we just did.
+//? Using Params with React Router
+//! To use params with React Router, we basically do it in three steps.
 
-// So how we implemented our nested routes here
+//* Step 1: Create a New Route
+//~ <Route path="cities/:id" element={<City />} />
 
-// inside another route element.
+//~ path="cities/:parameter"  above parameter is id
 
-// Then we rendered whatever the nested route
+//* Step 2: Link to the Route
+//~ const { cityName, emoji, date, id, position } = city;
+// eslint-disable-next-line no-lone-blocks
+{
+  /* <li>
+<Link
+  className={styles.cityItem}
+  to={`${id}?lat=${position.lat}&lng=${position.lng}`}
+>
+  <h3 className={styles.name}>{cityName}</h3>
+</Link>
+</li> */
+}
 
-// wants to render inside the outlet component here.
+//* Step 3: Read the State from the URL  ( get that data from the URL)
+//~ const { id } = useParams();
 
-// And then to actually switch between the nested routes
+//~ id variable name in destruction, must match the name in the path in Route
+//~ <Route path="cities/:id" element={<City />} />
 
-// we implemented yet another navigation
+//*=====================================================================
+//! Video 217
+//& Query String
 
-// with these Nav link components to basically link
+//^ Create query string by passing it to (to prop) in the link
+//~ general form: to={`${parameter}?querystring1=${value1}&querystring2=${value2}`} >
 
-// between the different URLs,
+//? CityItem Comp
+//* <Link
+//*  className={styles.cityItem}
+//*  to={`${id}?lat=${position.lat}&lng=${position.lng}`} >
 
-// which in this case are these sub URLs.
+//^ to read the query string in other component, use hook (useParams)
+//? Map Comp and also in City Comp
+//* const [searchParams, setSearchParams] = useSearchParams();
+//   const navigate = useNavigate();
+//! 'lat' inside get, must match the parameter name in the to attribute in link jsx element in CityItem (to={`${id}?${position.lat}&${position.lng}`})
+//   const lat = searchParams.get("lat");
+//   const lng = searchParams.get("lng");
 
-// So with the sub routes of cities and countries.
+//^ set or update Query string
+//* by setSearchParams, we pass new query string in an object as follows
 
-//*=====================
-//& another usefulness of react router
-//* storing state in the URL so that we can use it in different places of the application.
+// eslint-disable-next-line no-lone-blocks
+{
+  /* <button
+onClick={() => {
+  setSearchParams({ lat: 23, lng: 50 });
+}}
+>
+Change Pos
+</button> */
+}
 
-//*=================
+//*=====================================================================
+//& Title: Programmatic Navigation
 
-//& React Route with params
+//? Imperative Way
+//* Programmatic navigation basically means to move to a new URL without the user having to click on any link.
+//* A common use case of this behavior is right after submitting a form.
+//* Many times when the user submits a form, we want them to move to a new page in our application automatically, without having to click on any link.
+//* We can use programmatic navigation to achieve that.
 
-// So to use params with React Router,
-
-// we basically do it in three steps.
-
-// So first we create a new route,
-
-// then we link to that route,
-
-// and then in that route we read the state from the URL.
-
-//*==================
-//&  programmatic navigation
-//! imperative way:
-// So programmatic navigation basically means
-
-// to move to a new URL
-
-// without the user having to click on any link.
-
-// And a common use case of this behavior
-
-// is right after submitting a form.
-
-// So many times when the user submits a form,
-
-// we want them to move to a new page
-
-// in our application automatically.
-
-// So without having to click on any link.
-
-// And so then we can use programmatic navigation
-
-// to achieve that.
-
-//! declarative way:
-//* Navigate component
-
-// the Navigate component that we're going to learn about now
-
-// is not so much used anymore,
-
-// but there is still one very important use case for it,
-
-// which is inside nested routes.
+//? Declarative Way: Navigate Component
+//* The Navigate component that we're going to learn about now is not so much used anymore,
+//* but there is still one very important use case for it, which is inside nested routes.
 
 {
   /* <Route

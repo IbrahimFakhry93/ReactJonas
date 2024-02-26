@@ -40,6 +40,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         {/* <Route index element={<HomePage />} />   //& index route */}
+        {/* //! OR: <Route path="/" element={<HomePage />} />  as down  */}
         <Route path="/" element={<HomePage />} />
         <Route path="product" element={<Product />} />
         <Route path="pricing" element={<Pricing />} />
@@ -72,7 +73,42 @@ function App() {
 
 export default App;
 
+//& Role of App component:
+//* Our app component basically deciding which page should be displayed in the UI.
+
+// So that's all this component here is going to do.
+
+// It will not really have its own output.
+
+// All it will do is, yeah, as I just said, displaying here one
+
+// of the pages, which is the one that matches the route.
+
+//! Download React router package:
+//* npm i react-router-dom   (latest version)
+//* for Jonas course download this:
+//* npm i react-router-dom@6
+
+//! Call <PageNav/> in every page component (homePage, pricing, product), not in <App/>
+
+//& NavLink instead of Link when??
+//* to display the visited link, use NavLink
+
+//! note:
+//* Pages are structural components that will match the URLs in the path in Route and in (to) in Link
+
 //! note:
 //* It is better to derive countries from the cities array inside CountryList not inside the App
 //* because this deriving process of countries from the cities will happen everytime App component re-rendered
 //* but if it's derived inside CountryList comp, the process will happen only there.
+
+{
+  /* //* <a></a> anchor element will cause page reload  */
+}
+{
+  /* <a href="/pricing">Pricing</a> */
+}
+//! insteadÖ
+{
+  /* <Link to="/pricing">Pricing</Link> */
+}

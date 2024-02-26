@@ -17,6 +17,8 @@ function CountryList({ cities, isLoading }) {
       {countries.map((country) => (
         <CountryItem country={country} key={country.country} />
       ))}
+
+      {/* key={country.country}: country here is unique as a result of reduce method above  */}
     </div>
   );
 }

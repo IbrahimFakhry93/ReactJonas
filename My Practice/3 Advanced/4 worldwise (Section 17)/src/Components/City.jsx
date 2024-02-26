@@ -9,6 +9,9 @@ const formatDate = (date) =>
     weekday: "long",
   }).format(new Date(date));
 
+//& Here is an application of:
+//* 1) Reading the data from the URL
+
 function City() {
   const { id } = useParams();
 
@@ -32,9 +35,9 @@ function City() {
     </>
   );
 
-  // we were now able to pass this data here
+  // we were now able to pass this data (position (lat,lng)) here
 
-  // into all kinds of different components
+  // into all kinds of different components (Map, City)
 
   // without having to store it
 

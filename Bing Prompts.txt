@@ -1,7 +1,8 @@
 
 
 
- rewrite these comments notes in a code snippet in a more suitable way to make it easier to study later without losing important information and put these comments in this format as this: //& Title: title name  //?Note //* subnote //* subnote 
+ rewrite these comments notes in a code snippet in a more suitable way to make it easier to study later without losing important information and put these comments in this format as this: //& Title: title name  give subtitles as in this format //? and rest of notes as in this format //*
+
 
 
 
