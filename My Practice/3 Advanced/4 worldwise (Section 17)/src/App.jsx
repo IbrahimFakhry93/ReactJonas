@@ -108,7 +108,7 @@ export default App;
 {
   /* <a href="/pricing">Pricing</a> */
 }
-//! insteadÖ
+//! instead:
 {
   /* <Link to="/pricing">Pricing</Link> */
 }

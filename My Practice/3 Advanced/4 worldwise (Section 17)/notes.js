@@ -150,6 +150,7 @@ Change Pos
 }
 
 //*=====================================================================
+//! Video 218
 //& Title: Programmatic Navigation
 
 //? Imperative Way
@@ -158,9 +159,102 @@ Change Pos
 //* Many times when the user submits a form, we want them to move to a new page in our application automatically, without having to click on any link.
 //* We can use programmatic navigation to achieve that.
 
-//? Declarative Way: Navigate Component
+//! const navigate = useNavigate();
+
+//~ EXAMPLE 1:
+//* Move to form comp to enter city details of a location when click on that location on the Map
+
+//^ imperative way to move to form
+//* navigate("form"); "form" must match same value of Path in route element in App.jsx
+//! <Route path="form" element={<Form />} />
+// eslint-disable-next-line no-lone-blocks
+{
+  /* <div
+className={styles.mapContainer}
+onClick={() => {
+  navigate("form");
+}}
+>
+<h1>Map</h1>
+<h1>
+  Position: {lat},{lng}
+</h1>
+<button
+  onClick={() => {
+    setSearchParams({ lat: 23, lng: 50 });
+  }}
+>
+  Change Pos
+</button>
+</div> */
+}
+
+//~ EXAMPLE 2:
+//* Back button
+// eslint-disable-next-line no-lone-blocks
+{
+  /*
+ 
+<Button
+type="back"
+onClick={(e) => {
+  e.preventDefault(); //* to prevent form reload
+  //* navigate(-1);   (-1) one step backwards
+}}
+>  &larr; Back
+</Button> 
+
+*/
+}
+
+//*===================================================================
+//! Video 218
+//& Customized button component:
+
+//* children represents the content
+//* onClick
+//* type for custom css style ( to conditionally add a CSS class )
+
+//~ import styles from "./Button.module.css";
+
+// .btn {
+//   color: inherit;
+//   text-transform: uppercase;
+//   padding: 0.8rem 1.6rem;
+//   font-family: inherit;
+//   font-size: 1.5rem;
+//   border: none;
+//   border-radius: 5px;
+//   cursor: pointer;
+// }
+
+// .primary {
+//   font-weight: 700;
+//   background-color: var(--color-brand--2);
+//   color: var(--color-dark--1);
+// }
+
+// .back {
+//   font-weight: 600;
+//   background: none;
+//   border: 1px solid currentColor;
+// }
+
+//* function Button({ children, onClick, type }) {
+//*   return (
+//!     <button onClick={onClick} className={`${styles.btn} ${styles[type]}`}>
+//*       {children}
+//*     </button>
+//*   );
+//* }
+
+//*=====================================================================
+//! Video 219
+//& Declarative Way: Navigate Component
 //* The Navigate component that we're going to learn about now is not so much used anymore,
 //* but there is still one very important use case for it, which is inside nested routes.
+
+// eslint-disable-next-line no-lone-blocks
 
 {
   /* <Route
@@ -169,3 +263,5 @@ path="cities"
 element={<Navigate replace to="cities" />}
 /> */
 }
+
+//* replace prop is : replace the current element in the history stack.
