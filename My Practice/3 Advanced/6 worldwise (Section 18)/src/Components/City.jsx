@@ -1,6 +1,9 @@
-import { useParams, useSearchParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import styles from "./City.module.css";
-
+import { useEffect } from "react";
+import { useCities } from "../Contexts/citiesContext";
+import Spinner from "./Spinner";
+import BackButton from "./BackButton";
 const formatDate = (date) =>
   new Intl.DateTimeFormat("en", {
     day: "numeric",
@@ -13,85 +16,67 @@ const formatDate = (date) =>
 //* 1) Reading the data from the URL
 
 function City() {
+  //! video 229:
+  // const [currentCity,setCurrentCity]=useState();
+  //! note: current city is global state because it's needed in cityItem comp.
+  //! to mark the active current city on the cities list (UI Feature)
+  //* so place currentCity in the context.
+
   const { id } = useParams();
+  const { getCity, currentCity, isLoading } = useCities();
 
-  const [searchParams, setSearchParams] = useSearchParams();
-  const lat = searchParams.get("lat"); //* 'lat' inside get, must match the parameter name in the to attribute in link jsx element in CityItem (to={`${id}?${position.lat}&${position.lng}`})
-  const lng = searchParams.get("lng");
+  // if(isLoading) return <Spinner/> //! this causes error
+  //* because React Hook "useEffect" is called conditionally. React Hooks must be called in the exact same order in every component render
 
-  // TEMP DATA
-  const currentCity = {
-    cityName: "Lisbon",
-    emoji: "🇵🇹",
-    date: "2027-10-31T15:59:59.138Z",
-    notes: "My favorite city so far!",
-  };
-
-  const { cityName, emoji, date, notes } = currentCity;
-  return (
-    <>
-      <h1> City {id} </h1>
-      <p>Position: {`${lat}, ${lng}`}</p>
-    </>
+  //* this effect could be placed in city comp when it's mounted but it's cleaner to be here in the context
+  useEffect(
+    function () {
+      getCity(id);
+    },
+    [id]
   );
 
-  // we were now able to pass this data (position (lat,lng)) here
+  if (isLoading) return <Spinner />; //* to solve the issue that previous city will appear for a half of second because the new current one
 
-  // into all kinds of different components (Map, City)
+  const { cityName, emoji, date, notes } = currentCity;
 
-  // without having to store it
+  return (
+    <div className={styles.city}>
+      <div className={styles.row}>
+        <h6>City name</h6>
+        <h3>
+          <span>{emoji}</span> {cityName}
+        </h3>
+      </div>
 
-  // anywhere inside a React application.
+      <div className={styles.row}>
+        <h6>You went to {cityName} on</h6>
+        <p>{formatDate(date || null)}</p>
+      </div>
 
-  // So we didn't have to create any new piece of state
+      {notes && (
+        <div className={styles.row}>
+          <h6>Your notes</h6>
+          <p>{notes}</p>
+        </div>
+      )}
 
-  // but instead we just stored it in the URL
+      <div className={styles.row}>
+        <h6>Learn more</h6>
+        <a
+          href={`https://en.wikipedia.org/wiki/${cityName}`}
+          target="_blank"
+          rel="noreferrer"
+        >
+          Check out {cityName} on Wikipedia &rarr;
+        </a>
+      </div>
 
-  // and then made it accessible everywhere,
-
-  // and so this is going to be really helpful
-
-  // here in the future to move the map
-
-  // to exactly the position of the city that was loaded here.
-
-  // return (
-  //   <div className={styles.city}>
-  //     <div className={styles.row}>
-  //       <h6>City name</h6>
-  //       <h3>
-  //         <span>{emoji}</span> {cityName}
-  //       </h3>
-  //     </div>
-
-  //     <div className={styles.row}>
-  //       <h6>You went to {cityName} on</h6>
-  //       <p>{formatDate(date || null)}</p>
-  //     </div>
-
-  //     {notes && (
-  //       <div className={styles.row}>
-  //         <h6>Your notes</h6>
-  //         <p>{notes}</p>
-  //       </div>
-  //     )}
-
-  //     <div className={styles.row}>
-  //       <h6>Learn more</h6>
-  //       <a
-  //         href={`https://en.wikipedia.org/wiki/${cityName}`}
-  //         target="_blank"
-  //         rel="noreferrer"
-  //       >
-  //         Check out {cityName} on Wikipedia &rarr;
-  //       </a>
-  //     </div>
-
-  //     <div>
-  //       {/* <ButtonBack /> */}
-  //     </div>
-  //   </div>
-  // );
+      <div>
+        <BackButton />
+      </div>
+    </div>
+  );
 }
 
 export default City;

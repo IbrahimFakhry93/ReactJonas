@@ -9,7 +9,11 @@ const citiesContext = createContext();
 function CitiesProvider({ children }) {
   const [cities, setCities] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-
+  //! video 229:
+  const [currentCity, setCurrentCity] = useState({}); //* if you forgot {}, currentCity will be undefined in City comp
+  //! note: current city is global state because it's needed in citiesList comp.
+  //! to mark the active current city on the list (UI Feature)
+  //* so place currentCity in the context.
   useEffect(function () {
     async function fetchCities() {
       try {
@@ -28,11 +32,28 @@ function CitiesProvider({ children }) {
     fetchCities();
   }, []);
 
+  //* GET CURRENT CITY
+  async function getCity(id) {
+    try {
+      setIsLoading(true);
+      const res = await fetch(`${Base_URL}/cities/${id}`);
+      const data = await res.json();
+      console.log(data);
+      setCurrentCity(data);
+    } catch {
+      alert("there is error");
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   return (
     <citiesContext.Provider
       value={{
         cities,
         isLoading,
+        currentCity,
+        getCity,
       }}
     >
       {children}
