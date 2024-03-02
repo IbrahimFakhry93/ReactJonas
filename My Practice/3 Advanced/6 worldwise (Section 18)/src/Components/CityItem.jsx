@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import styles from "./CityItem.module.css";
 import { useCities } from "../Contexts/citiesContext";
 function CityItem({ city }) {
-  const { currentCity } = useCities();
+  const { currentCity, deleteCity } = useCities();
   const { cityName, emoji, date, id, position } = city;
   const formatDate = (date) =>
     new Intl.DateTimeFormat("en", {
@@ -11,6 +11,11 @@ function CityItem({ city }) {
       year: "numeric",
       weekday: "long",
     }).format(new Date(date));
+
+  function handleDelete(e) {
+    e.preventDefault(); //* so the link is no longer clicked, only the button.
+    deleteCity(id);
+  }
 
   return (
     <li>
@@ -24,10 +29,34 @@ function CityItem({ city }) {
         <span className={styles.emoji}>{emoji}</span>
         <h3 className={styles.name}>{cityName}</h3>
         <time className={styles.date}>({formatDate(date)})</time>
-        <button className={styles.deleteBtn}>&times;</button>
+        <button className={styles.deleteBtn} onClick={handleDelete}>
+          &times;
+        </button>
       </Link>
     </li>
   );
 }
 
 export default CityItem;
+
+//! video 236: delete city (city item comp)
+
+// So, all that we need to do is to create a function
+
+// that will delete a city from the API
+
+// and here from the state, and then just call that function
+
+// when we click on this button.
+
+//! video 237:
+
+// to do next is to convert
+
+// this state management that we have going on here
+
+// to a reducer.
+
+// So, that's a common pattern that you will see together
+
+// with the context API.

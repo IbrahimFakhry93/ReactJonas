@@ -46,7 +46,39 @@ function CitiesProvider({ children }) {
       setIsLoading(false);
     }
   }
+  async function createCity(newCity) {
+    try {
+      setIsLoading(true);
+      const res = await fetch(`${Base_URL}/cities`, {
+        method: "POST",
+        body: JSON.stringify(newCity),
+        headers: { "Content-type": "application/json" },
+      });
 
+      const data = await res.json();
+      console.log(data);
+
+      setCities((cities) => [...cities, data]);
+    } catch {
+      alert("there is error creating the city");
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  async function deleteCity(id) {
+    try {
+      setIsLoading(true);
+      await fetch(`${Base_URL}/cities/${id}`, {
+        method: "DELETE",
+      });
+      setCities((cities) => cities.filter((city) => city.id !== id)); //* in delete sth we use filter, because we want our data array to be shorter so here we want all the cities where the city.id is different from the one that was passed in.
+    } catch {
+      alert("there is error deleting the city");
+    } finally {
+      setIsLoading(false);
+    }
+  } //* refresh the cities list page after clicking delete to make sure that this city is deleted from API after refetching
   return (
     <citiesContext.Provider
       value={{
@@ -54,6 +86,8 @@ function CitiesProvider({ children }) {
         isLoading,
         currentCity,
         getCity,
+        createCity, //* pass it into the context here so to be used in the form comp
+        deleteCity,
       }}
     >
       {children}

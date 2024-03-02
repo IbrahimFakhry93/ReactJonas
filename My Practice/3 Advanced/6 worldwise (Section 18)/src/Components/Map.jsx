@@ -12,6 +12,7 @@ import {
 import { useCities } from "../Contexts/citiesContext";
 import { useGeolocation } from "../Hooks/useGeoLocation";
 import Button from "./Button";
+import { useUrlPosition } from "../Hooks/useUrlPosition";
 
 //! Video 230:
 //* create MapPosition state
@@ -23,15 +24,13 @@ import Button from "./Button";
 function Map() {
   const { cities } = useCities();
   const [MapPosition, setMapPosition] = useState([40, 0]); //* when position changed , the map should be rendere
-  const [searchParams] = useSearchParams();
+  const [mapLat, mapLng] = useUrlPosition();
   //* rename isLoading and position because we have their names here before to avoid any confusion
   const {
     isLoading: isLoadingPosition,
     position: geoLocationPosition,
     getPosition,
   } = useGeolocation();
-  const mapLat = searchParams.get("lat");
-  const mapLng = searchParams.get("lng");
 
   //*  we want when click on back btn, map stays at the last selected city location
   // so we want our map component
@@ -295,3 +294,21 @@ export default Map;
 //* create Hooks folder and create custom hook useGeolocation
 
 // we can then use the get position function inside useGeolocation hook on any button to retrieve the current position of our user.
+
+//*==============================================
+
+//! video  234: fetching data city in the form (form component)
+
+// we're gonna use the position data
+
+// in order to fetch all necessary information
+
+// about the city where the user has clicked.
+
+// So for example, if the user clicks here on Rome,
+
+// then we want to automatically fetch that data here
+
+// from an API, so from a reverse geocoding API.
+
+//*=============================================
