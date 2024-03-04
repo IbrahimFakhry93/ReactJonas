@@ -3,7 +3,6 @@ const Base_URL = `http://localhost:9000`;
 const citiesContext = createContext();
 
 // Add children prop to the provider so we can then use this provider component
-
 // as the top level component in the app component.
 
 function CitiesProvider({ children }) {
