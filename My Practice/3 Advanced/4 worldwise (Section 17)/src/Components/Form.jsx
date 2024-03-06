@@ -6,6 +6,10 @@ import styles from "./Form.module.css";
 import Button from "./Button";
 import { useNavigate } from "react-router-dom";
 
+//* The aim of this code lecture:
+//* apply customization for Button Comp
+//* Apply back button feature by navigate (-1)
+
 export function convertToEmoji(countryCode) {
   const codePoints = countryCode
     .toUpperCase()
@@ -56,7 +60,7 @@ function Form() {
           type="back"
           onClick={(e) => {
             e.preventDefault(); //* to prevent form reload
-            navigate(-1);
+            navigate(-1); //* to apply back feature
           }}
         >
           &larr; Back

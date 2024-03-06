@@ -1,6 +1,15 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { faker } from "@faker-js/faker";
 
+//! video 225: Advanced Pattern: A Custom Provider and Hook (App v-3 )
+
+//* Lecture first part:  (Create PostProvider Comp)
+//* Lecture second part: (Create our own custom hook) inside
+
+//~ That's a very common pattern by developers:
+//* So basically placing this Context Provider component
+//* and then the corresponding hook all into the same file.
+
 function createRandomPost() {
   return {
     title: `${faker.hacker.adjective()} ${faker.hacker.noun()}`,
@@ -19,7 +28,6 @@ function PostProvider({ children }) {
     Array.from({ length: 30 }, () => createRandomPost())
   );
   const [searchQuery, setSearchQuery] = useState("");
-  const [isFakeDark, setIsFakeDark] = useState(false);
 
   //! Derived state
   const searchedPosts =
@@ -38,14 +46,6 @@ function PostProvider({ children }) {
   function handleClearPosts() {
     setPosts([]);
   }
-
-  //! App Effects
-  useEffect(
-    function () {
-      document.documentElement.classList.toggle("fake-dark-mode");
-    },
-    [isFakeDark]
-  );
 
   return (
     <PostContext.Provider
@@ -70,7 +70,3 @@ function usePosts() {
 }
 
 export { PostProvider, usePosts };
-
-//~ That's a very common pattern by developers:
-//* So basically placing this Context Provider component
-//* and then the corresponding hook all into the same file.

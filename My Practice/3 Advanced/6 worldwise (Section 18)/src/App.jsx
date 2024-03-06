@@ -14,32 +14,26 @@ import "./index.css";
 import { CitiesProvider } from "./Contexts/citiesContext.jsx";
 import { AuthProvider } from "./Contexts/fakeAuthContext.jsx";
 import ProtectedRoute from "./Components/ProtectedRoute.jsx";
+//& Title: Clean Application Component
 
-// how clean our application component now has become.
+//? Simplified Application Component
+//* Our application component has become quite clean.
+//* All it does for now is define these routes
+//*  and match them to the components, without any props. (because we created citiesContext)
 
-// So all it does really for now is to define these routes
-
-// and match them simply to the components.
-
-// So without any props.
 function App() {
   return (
-    //* order of providers doesn't matter but
-    //     Now in some situations,
+    //& Title: Context API Provider Order
 
-    // we might actually need inside the CitiesProvider
+    //? Rule of Thumb
+    //* In the Context API, provider order typically doesn't matter.
 
-    // some state from the AuthProvider,
+    //? Special Cases
+    //* Sometimes, `CitiesProvider` might need state from `AuthProvider`. In these cases, we can use a custom hook from `AuthProvider` inside `CitiesProvider`.
 
-    // which would perfectly be possible.
+    //? Provider Structure
+    //* If such a dependency exists, `AuthProvider` should be the parent of `CitiesProvider`.
 
-    // We could, of course, call that custom hook from here
-
-    // also inside the CitiesProvider.
-
-    // And so, in that case, the AuthProvider
-
-    // really would have to be the parent of this one,
     <AuthProvider>
       <CitiesProvider>
         <BrowserRouter>
@@ -74,49 +68,25 @@ function App() {
 
 export default App;
 
-//! Video 238: Fake Authentication:
-// in a typical front end application
+//! Title: Video 238 - Fake Authentication
+//? Typical Frontend Authentication
+//* In a typical frontend application like a React application, user authentication usually works in three steps.
 
-// like a typical React application,
+//? Step 1: User Credential Verification
+//* First, we get the user's email and password from a login form and check with an API endpoint if the password for the given user is correct.
 
-// user authentication usually works in three steps.
+//? Step 2: Redirect and State Update
+//* Then, if the credentials are correct, we redirect the user to our main application and save the user object in our state.
 
-// First we get the user's email and password
+//? Step 3: Protecting from Unauthorized Access
+//* Finally, we need to protect the application from unauthorized access, i.e., from users who are not currently logged in.
 
-// from a login form and check with an API endpoint
+//& Title: Storing User and Authentication State
+//? Storing User in State
+//* We're going to store the user that is logged in into state.
 
-// if the password for the given user is correct.
+//? Storing Authentication Status in State
+//* We will also store into state whether the user is currently logged in or not. This is to protect our application from unauthorized access.
 
-// Then in the second step,
-
-// if the credentials are actually correct,
-
-// we then redirect the user to our main application
-
-// and we save the user object in our state.
-
-// And finally, as a third step
-
-// we need to protect the application from unauthorized access,
-
-// so from users who are not currently logged in.
-///=========
-
-// So remember how I said earlier
-
-// that we're going to store the user
-
-// that is logged in into state
-
-// and we will also store into state
-
-// whether the user is currently logged in or not,
-
-// so that we can protect our application
-
-// from unauthorized access.
-// let's create another context
-
-// where we can store that state
-
-// and give the entire application tree access to that state.
+//? Creating Context for State
+//* Let's create another context where we can store that state and give the entire application tree access to that state.

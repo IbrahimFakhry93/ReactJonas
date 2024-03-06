@@ -2,8 +2,19 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import styles from "./Map.module.css";
 
 //& Here is an application of:
-//* 1) using of serSearchParams.
-//* 2) using of navigate to form after clicking on the map, to enter the details of the city in the form
+//* 1) using of setSearchParams.
+//* 2) using of navigate to form comp after clicking on the map, to enter the details of the city in the form
+
+//& Title: Data Management in React
+
+//? Passing Data to Components
+//* We were able to pass the position data (lat, lng) into various components (Map, City) without having to store it anywhere inside the React application.
+
+//? Avoiding New State Creation
+//* We didn't have to create any new piece of state. Instead, we stored the data in the URL and made it accessible everywhere.
+
+//? Future Use Case
+//* This approach will be really helpful in the future to move the map to the exact position of the city that was loaded.
 
 function Map() {
   const [searchParams, setSearchParams] = useSearchParams();

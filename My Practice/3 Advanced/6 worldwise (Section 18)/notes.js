@@ -1,110 +1,42 @@
-// now as you learned in the previous lecture
+//! video 227: Creating a CitiesContext
 
-// just because you now know how to use the context API
-
-// that doesn't mean that it's always the right tool
-
-// or the right solution
-
-// for managing the state in your applications.
-// when you have a small sized application
-
-// like this one that we are building right now and where
-"";
-// performance is never going to be an issue, then
-
-// the context API is a great tool indeed.
+//& Title: Context API Usage
+//* The context API is not always the ideal solution for state management.
+//* However, for small applications like our current project (worldWise),
+//* where performance isn't a concern, it's a great tool.
 
 //* 1) Create context folder
 //* 2) Create citiesContext.jsx
 //* 3) create CitiesContext and Cities provider function comp
-//* 4) Grab all state code and state updating code from App.jsx and place inside Cities provider function com
-
-//*==================
-
-// you might be wondering why we actually need
-
-// to do that if we could simply get this object
-
-// out of the array that we already have, right?
-
-// And that's actually true in this small application.
-
-// So technically we wouldn't have to create a new HTTP request
-
-// and fetch this data from the server again
-
-// because we do actually already have it in the cities array.
-
-// However, in real world web applications, it's quite common
-
-// that the single objects have a lot more data
-
-// than the entire collection.
-
-// So basically this array here
-
-// would only have a small amount of data in each object
-
-// while then the objects that we get individually
-
-// from the API have really all the data.
-
-// And so let's pretend that we really need to do this.
-
-// So making a request to this URL and then slash the ID.
+//* 4) Grab all state code and state updating code from App.jsx
+//* and place inside Cities provider function comp
 
 //*========================================
-//! video 229:  flow of getting and rendering current city
-// when we click here on this link here the URL will change.
+//! video 229:  Finishing the City View =>  flow of getting and rendering current city
 
-// So we get a new ID
+//& Title: Component Interaction and State Management
 
-// which we then read here into the city component.
+//? URL Change and ID Retrieval
+//* When we click on a link, the URL changes, giving us a new ID. This ID is read into the city component.
 
-// So then we have this ID
+//? Calling the getCity Function
+//* Upon component mounting, we call the `getCity` function, which comes from our context.
 
-// and we use it to call the get city function
+//? Fetching City Data
+//* The `getCity` function immediately starts fetching the city data for that ID.
 
-// as the component mounts.
+//? Storing Fetched Data
+//* When the data arrives, it gets stored into the `setCurrentCity` state.
+//* This state variable is also passed into the context value.
 
-// So immediately after mounting,
+//? Updating the City Component
+//* The city component immediately receives the updated value.
+//* We destructure it and display everything in the UI.
 
-// we start calling this function
+//? Child to Parent Communication
+//* We call a function that updates the current city.
+//* The updated city then comes back down into this component where we can use it.
 
-// which is coming from our context, remember?
-
-// So here we have the get city function,
-
-// which will then immediately start fetching
-
-// the city data for that ID.
-
-// Then when that arrives
-
-// it gets stored here into the set current city state.
-
-// So this state variable right here,
-
-// which we also paste into the context value.
-
-// And so then immediately here
-
-// this city component receives that value as it updates.
-
-// And then well here we de-structure it
-
-// and then display everything in the UI.
-
-// So basically here we do child to parent communication.
-
-// So we call this function here
-
-// which will then update the current city
-
-// and then the current city will come back down here
-
-// into this component where we can then use it.
 //*========================================
 
 //! video 230:
@@ -112,3 +44,76 @@
 //* npm i react-leaflet leaflet
 
 //* MapContainer is responsible for map rendering
+
+//**===========================================================================================
+//& Title: Context API Provider Order
+
+//? Rule of Thumb
+//* In the Context API, provider order typically doesn't matter.
+
+//? Special Cases
+//* Sometimes, `CitiesProvider` might need state from `AuthProvider`. In these cases, we can use a custom hook from `AuthProvider` inside `CitiesProvider`.
+
+//? Provider Structure
+//* If such a dependency exists, `AuthProvider` should be the parent of `CitiesProvider`.
+import React, { createContext, useContext, useState, useEffect } from "react";
+
+// Create two contexts
+const AuthContext = createContext();
+const CitiesContext = createContext();
+
+function AuthProvider({ children }) {
+  const [auth, setAuth] = useState({ user: "John Doe", isLoggedIn: true });
+
+  return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
+}
+
+function CitiesProvider({ children }) {
+  const auth = useContext(AuthContext);
+  const [cities, setCities] = useState(["New York", "Los Angeles", "Chicago"]);
+
+  // Imagine we have a function that fetches cities based on the user
+  function fetchCities(user) {
+    // Fetch cities for the user...
+  }
+
+  // If auth changes, we fetch the cities for the user
+  useEffect(() => {
+    fetchCities(auth.user);
+  }, [auth]);
+
+  return (
+    <CitiesContext.Provider value={cities}>{children}</CitiesContext.Provider>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <CitiesProvider>{/* Rest of the app */}</CitiesProvider>
+    </AuthProvider>
+  );
+}
+
+export default App;
+//**======================================================================================================
+
+//* Not important info down, skip if you want
+
+//! video 229: Finishing the City View
+
+//& Title: Fetching Data in Real World Applications
+
+//? Fetching Individual Objects
+//* You might be wondering why we need to fetch an object if we could simply get it from the array we already have.
+//*  In this small application, that's true.
+//* Technically, we wouldn't have to create a new HTTP request
+//*  and fetch this data from the server again because we do already have it in the cities array.
+
+//? More Data in Single Objects
+//* However, in real world web applications, it's quite common that the single objects have a lot more data than the entire collection.
+//* This array would only have a small amount of data in each object,
+//* while the objects that we get individually from the API have really all the data.
+
+//? Making a Request
+//* So let's pretend that we really need to do this. We would make a request to this URL and then slash the ID.

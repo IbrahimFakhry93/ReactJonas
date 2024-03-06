@@ -23,7 +23,7 @@ import { useUrlPosition } from "../Hooks/useUrlPosition";
 //!video 231: handle the popup
 function Map() {
   const { cities } = useCities();
-  const [MapPosition, setMapPosition] = useState([40, 0]); //* when position changed , the map should be rendere
+  const [MapPosition, setMapPosition] = useState([40, 0]); //* when position changed , the map should be rendered
   const [mapLat, mapLng] = useUrlPosition();
   //* rename isLoading and position because we have their names here before to avoid any confusion
   const {
@@ -33,23 +33,16 @@ function Map() {
   } = useGeolocation();
 
   //*  we want when click on back btn, map stays at the last selected city location
-  // so we want our map component
+  //& Title: State Management in Map Component
 
-  // to remember this latitude and longitude over time.
+  //? Remembering Latitude and Longitude
+  //* We want our map component to remember this latitude and longitude over time.
+  //*  That's why we created a state variable at the very beginning.
+  //*  This `mapPosition` is where we will want to remember the map's longitude and latitude.
 
-  // And so that's the reason
+  //? Synchronizing State and Component
+  //* We now need to synchronize the two of them. Let's use an effect for that.
 
-  // why we created a state variable here in the very beginning.
-
-  // So this map position right here.
-
-  // So this is where we will want to remember
-
-  // this map longitude and latitude.
-
-  // And so we now need to synchronize the two of them.
-
-  // So let's use an effect for that,
   useEffect(
     function () {
       if (mapLat && mapLng) setMapPosition([mapLat, mapLng]);
@@ -57,13 +50,8 @@ function Map() {
     [mapLat, mapLng]
   );
 
-  // we need to do the same thing as before,
-
-  // which is to synchronize this map position now
-
-  // with the geolocation position.
-
-  // So we will need another effect to do that.
+  //* to synchronize this map position with the geolocation position.
+  //*  we will need another effect to do that.
 
   useEffect(
     function () {
@@ -73,34 +61,19 @@ function Map() {
     },
     [geoLocationPosition]
   );
+  //& Title: Geolocation and Rendering in React
 
-  //   Okay, so at the beginning,
+  //? Initial State
+  //* At the beginning, the geolocation position will by default still be null, so this code doesn't run.
 
-  // the geolocation position will by default still be null,
+  //? Updating Geolocation
+  //* As we click this button, the geolocation gets retrieved and this state updates.
 
-  // and so then this code here doesn't run.
+  //? Running the Effect
+  //* This effect then runs, which in turn sets the map position. This causes the whole component to re-render once more, and finally, the map can move to that new position.
 
-  // But then, as we click this button,
-
-  // the geolocation will get retrieved,
-
-  // and then of course this state here will update.
-
-  // And so then this effect will run,
-
-  // which will then in turn set the map position,
-
-  // which will re-render the whole component once more,
-
-  // and then finally the map can move to that new position.
-
-  // So basically this effect here introduces another render,
-
-  // which is one of the reasons why we should avoid
-
-  // having too many effects.
-
-  // But we will learn more about that in the next section.
+  //? Effect on Rendering
+  //* This effect introduces another render, which is one of the reasons why we should avoid having too many effects. We will learn more about this in the next section.
 
   return (
     <div className={styles.mapContainer}>
@@ -162,153 +135,98 @@ function DetectClick() {
 
 export default Map;
 
-//!video 231: handle the popup and marker\
+//& Title: Video 231 - Handling the Popup and Marker
 
-//? Getting the cities
-// let's display one marker and pop up
+//? Displaying Markers and Popups for Cities
+//* Let's display one marker and popup for each of our cities.
+//* This means we now need to get access to the cities in this map component by using the cities context (useCities)
 
-// for each of our cities.
-
-// So, that means that we now need to get access
-
-// to the cities, here in this map component, right?
-
-// Well, for that, we thankfully have now our global state.
-
-// So, the state that is living inside our context
-
-// which is easily made available
-
-// to every single component that we wanted.
+//? Accessing Global State
+//* Thankfully, we now have our global state (cities)
+//*This state, which lives inside our context, can be easily made available to any component we want.
 
 //*======================
-//& loping over the cities
-// e don't want a marker here,
+//& Title: Looping Over Cities
+//? Marker Placement
+//* We don't want a marker at a fixed position.
 
-// just in this fixed position,
+//? City Object Markers
+//* Instead, we aim to place one marker for each city object.
 
-// but, instead, we want one marker for each city object.
-
-// So, we're, basically, just going to loop over
-
-// that cities array and display one of these for each.
+//? Looping Over Cities Array
+//* We will loop over the cities array and display a marker for each city.
 
 //*=======================
+//& Title: Marker Style
+//? Global Trick Usage
+//* Notice how we need to use this trick of making this global so that CSS modules
+//* don't attach any of these random strings to our classes.
 
-//& Marker Style:
-// And notice how, here, again, we need to use this trick
-
-// of making this global so that CSS modules
-
-// then doesn't attach any of these random strings
-
-// to our classes because then they would not map
-
-// to the classes that leaflet exports.
+//? Mapping to Leaflet Exports
+//* This is because they would not map to the classes that leaflet exports.
 
 //*============================
 
-//! video 232:
-// when we click, here, on one of these cities,
+//! video 232:   Interacting With the Map
 
-// then it should not only open the city component, here,
+//& Title: City Selection and Map Positioning
+//? Clicking on Cities
+//* When we click on one of these cities, it should not only open the city component, but also move to that position on the map.
 
-// but it should also move to that position on the map.
+//? Updating Map Position State
+//* We will want to update our map position state accordingly.
 
-// So, basically, we will want
+//? Setting Map Position
+//* Let's set the position of the map to the currently selected city and attach an event handler to the map.
 
-// to update our map position state,
-//=====
-// let's set the position of the map
+//& Title: Implementing Functionality with Leaflet
+//? Custom Component Creation
+//* We need to implement this functionality (moving the map when selecting the city) on our own within this Leaflet library. Everything works with components in this library.
 
-// to the currently selected city
-
-// and let's also attach an event handler to the map.
-//=====
-// we need to implement this functionality (moving the map when select the city) on our own
-
-// within this Leaflet library.
-
-// Now in this library, everything works with components.
-
-// So whenever we need to implement a functionality like this
-
-// we need to create a custom component
-
-// and then use that component in here.
+//? Using Custom Component
+//* Whenever we need to implement a functionality like this, we need to create a custom component and then use that component in here.
 
 //============
 //* implement that feature that opens the form whenever we click somewhere on the map.
 
 //=========
 
-// We need to give this form component here, also access
+//& Title: Form Component Access
+//? Position Access
+//* We need to give this form component access to the position where the click on the form occurred.
 
-// to the position where they click on the form occurred.
+//? Leveraging URL
+//* Let's leverage the power of the URL to store that state.
 
-// let's once again leverage the power of the URL here
+//? Navigation and Data Storage
+//* As we click, we can navigate to the form with the latitude and longitude set to wherever the click happened.
 
-// and basically just store that state in the URL.
+//? Data Reading
+//* Inside the form, we can easily read that data from the URL, just like we did in the map component.
 
-// So as we click here, we can navigate to the form
+//? Global State Usage
+//* We are using this kind of global state to pass data between pages. Without this, we would have to create a global state variable to temporarily store that position, which would be more work than simply storing it in the URL.
 
-// with the latitude and longitude
-
-// set to wherever the click happened.
-
-// And so then inside the form
-
-// we can easily read that data from the URL
-
-// just like we did also in the map component already.
-
-// So exactly the same thing.
-
-// So basically using, again,
-
-// this kind of global state to pass data between pages.
-
-// So without this,
-
-// we would have to create some global state variable
-
-// where we would temporarily store that position
-
-// which would be a lot more work
-
-// than simply storing it in the URL.
-
-//===
-//* wrap up: video 232
-// we just add these two interactions to our Map component.
-
-// So first, the interaction where we can move the map around
-
-// as we click here on different cities.
-
-// And then second, we can now interact with the map
+//& Title: Wrap Up: Video 232
+//? Map Component Interactions
+//* We added two interactions to our Map component. First, the interaction where we can move the map around as we click on different cities. Second, we can now interact with the map.
 
 //*===========================
 
 //! video 233:
 //* create Hooks folder and create custom hook useGeolocation
 
-// we can then use the get position function inside useGeolocation hook on any button to retrieve the current position of our user.
+//* we can then use the get position function inside useGeolocation hook
+//* on any button to retrieve the current position of our user.
 
 //*==============================================
 
-//! video  234: fetching data city in the form (form component)
+//! Title: Video 234 - Fetching City Data in the Form Component
+//? Position Data Usage
+//* We're going to use the position data to fetch all necessary information about the city
+//* where the user has clicked.
 
-// we're gonna use the position data
-
-// in order to fetch all necessary information
-
-// about the city where the user has clicked.
-
-// So for example, if the user clicks here on Rome,
-
-// then we want to automatically fetch that data here
-
-// from an API, so from a reverse geocoding API.
+//? Example: Click on Rome
+//* For example, if the user clicks on Rome, we want to automatically fetch that data from a reverse geocoding API.
 
 //*=============================================

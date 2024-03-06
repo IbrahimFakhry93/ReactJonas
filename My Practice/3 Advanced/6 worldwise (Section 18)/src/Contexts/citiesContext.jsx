@@ -1,18 +1,21 @@
 import { createContext, useContext, useEffect, useState } from "react";
+
+//* Add children prop to the provider so we can then use this provider component
+//* as the top level component in the app component.
 const Base_URL = `http://localhost:9000`;
 const citiesContext = createContext();
-
-// Add children prop to the provider so we can then use this provider component
-// as the top level component in the app component.
 
 function CitiesProvider({ children }) {
   const [cities, setCities] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   //! video 229:
   const [currentCity, setCurrentCity] = useState({}); //* if you forgot {}, currentCity will be undefined in City comp
-  //! note: current city is global state because it's needed in citiesList comp.
-  //! to mark the active current city on the list (UI Feature)
-  //* so place currentCity in the context.
+  //! note:
+  //* current city is global state because it's needed in citiesList comp.
+  //* to mark the active current city on the list (UI Feature)
+  //* so place currentCity here in the context.
+
+  //! fetching list of cities
   useEffect(function () {
     async function fetchCities() {
       try {
@@ -22,7 +25,7 @@ function CitiesProvider({ children }) {
         console.log(data);
         setCities(data);
       } catch {
-        alert("there is error");
+        alert("there is error fetching list of cities");
       } finally {
         setIsLoading(false);
       }
@@ -31,7 +34,7 @@ function CitiesProvider({ children }) {
     fetchCities();
   }, []);
 
-  //* GET CURRENT CITY
+  //! GET CURRENT CITY
   async function getCity(id) {
     try {
       setIsLoading(true);
@@ -40,11 +43,13 @@ function CitiesProvider({ children }) {
       console.log(data);
       setCurrentCity(data);
     } catch {
-      alert("there is error");
+      alert("there is error getting current city");
     } finally {
       setIsLoading(false);
     }
   }
+
+  //! Create new city: (used in form component)
   async function createCity(newCity) {
     try {
       setIsLoading(true);
@@ -64,14 +69,16 @@ function CitiesProvider({ children }) {
       setIsLoading(false);
     }
   }
-
+  //! Delete city:
   async function deleteCity(id) {
     try {
       setIsLoading(true);
       await fetch(`${Base_URL}/cities/${id}`, {
         method: "DELETE",
       });
-      setCities((cities) => cities.filter((city) => city.id !== id)); //* in delete sth we use filter, because we want our data array to be shorter so here we want all the cities where the city.id is different from the one that was passed in.
+      //* in delete sth we use filter, because we want our data array to be shorter
+      //* so here we want all the cities where the city.id is different from the one that was passed in.
+      setCities((cities) => cities.filter((city) => city.id !== id));
     } catch {
       alert("there is error deleting the city");
     } finally {
@@ -97,7 +104,7 @@ function CitiesProvider({ children }) {
 function useCities() {
   const context = useContext(citiesContext);
   if (context === undefined)
-    throw new Error("Post context was used outside of the PostProvider");
+    throw new Error("citiesContext was used outside of the PostProvider");
   return context;
 }
 

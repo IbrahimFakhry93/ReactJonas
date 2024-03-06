@@ -8,7 +8,7 @@ function createRandomPost() {
     body: faker.hacker.phrase(),
   };
 }
-//& Video 225  (App v-3 )
+//& Video 225 Advanced Pattern: A Custom Provider and Hook (App v-3 )
 // So the idea is basically to remove all the state
 
 // and state updating logic, all from this component
@@ -37,15 +37,21 @@ function createRandomPost() {
 
 //^ Create PostContext.js (Create PostProvider Comp)
 
-//* Lecture first part:  (Create PostProvider Comp)
-//* Lecture second part: (Create our own custom hook) inside
 //~ means encapsulate this repeated part in every comp in a custom hook const { onClearPosts } = useContext(PostContext);
 
 function App() {
   // const x = usePosts();
-  // console.log(x); //* undefined, because we use context outside the context provider (PostProvider)
+  // console.log(x); //! undefined, because we use context outside the context provider (PostProvider)
 
   const [isFakeDark, setIsFakeDark] = useState(false);
+  //! App Effects
+  useEffect(
+    function () {
+      document.documentElement.classList.toggle("fake-dark-mode");
+    },
+    [isFakeDark]
+  );
+
   return (
     <section>
       <button
@@ -65,8 +71,6 @@ function App() {
 }
 
 //*===========================================
-//! note this header here, doesn't need all these props
-//! it just pass them into Results comp
 
 //~ 1) consume Context
 function Header() {

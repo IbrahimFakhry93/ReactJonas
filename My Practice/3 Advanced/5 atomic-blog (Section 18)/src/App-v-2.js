@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { faker } from "@faker-js/faker";
 
-//& Video 224
+//& Video 224: Consuming the context
 
 //! App Context:
 //~ 1) Create Context
@@ -86,7 +86,7 @@ function App() {
 //! note this header here, doesn't need all these props
 //! it just pass them into Results comp
 
-//~ 1) consume Context
+//~ 3) consume Context
 function Header() {
   const { onClearPosts } = useContext(PostContext);
   console.log(onClearPosts);

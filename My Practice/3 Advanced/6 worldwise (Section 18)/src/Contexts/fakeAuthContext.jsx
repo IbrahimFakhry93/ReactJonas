@@ -64,74 +64,35 @@ function useAuth() {
 export { AuthProvider, useAuth };
 
 //*=======================
-//! video 238:
-//* login and logout function:
+//! Title: Video 238 - Adding Fake Authentication: Setting Up Context
+//? Login and Logout Functions
+//* When the user clicks on a button, our application should call a login function.
+//* This function will check if the user's credentials are correct.
 
-// when the user clicks on this button here
+//? Login Function
+//* We need a login function here, which will perform the authentication check.
 
-// is for our application to call a login function.
+//? Logout Button
+//* In our final application, we have a logout button. We also need a function for that.
 
-// And so that login function is where we will then check
-
-// if the user's credentials are correct.
-
-// So we need a login function, probably here,
-
-// which will do that.
-
-// And also we can see here in our final application
-
-// that we have a logout button.
-
-// And so we also need that.
-
-// So clicking those two buttons will then
-
-// create the actions that I mentioned earlier.
-
-// So setting the user to authenticate it
-
-// and storing the user in state.
+//? Actions on Button Click
+//* Clicking these two buttons will create the actions I mentioned earlier - setting the user to authenticated and storing the user in state.
 
 //==========
 
-//* use reducer for the two required states:
-// And then we need those two state variables
+//! Title: Video 238 Using Reducer for Required States
+//? Two State Variables
+//* We need two state variables - one that contains the user object and another that stores whether the user is currently authenticated or not.
 
-// where one contains the user object
+//? Using Reducer
+//* We will use a reducer for these two state variables as they will always be updated at the same time. Even if it's a small reducer, using a reducer in this situation is beneficial.
 
-// and the other one stores whether the user
-
-// is currently authenticated or not.
-
-// So let's actually do that again using a reducer
-
-// because these two state variables
-
-// will always be updated at the same time.
-
-// So I really like to use a reducer in this situation,
-
-// even though if it's a really small reducer.
-
-//======================
-// { ...state, user: action.payload, isAuthenticated: true}  === { user: action.payload, isAuthenticated: true}
-
-// However, we should always, always keep this ( ...state) here
-
-// because this makes our code more future proof.
-
-// So imagine that in the future
-
-// we add some other state variable here
-
-// and so then we would have everywhere to remember
-
-// to then add this ( ...state) back.
+//? State Spread Operator
+//* We should always keep the state spread operator ( ...state) in our code. This makes our code more future proof. If we add some other state variable in the future, we would have to remember to add this ( ...state) back.
 
 //*===============
 
-//* copy to code snippet:
+//* copy to code snippet file:
 
 // import { createContext, useContext } from "react";
 
@@ -150,44 +111,18 @@ export { AuthProvider, useAuth };
 
 //*================================
 
-//! video 239:
-//* implement the actual login and log out functionalities in the application.
+//! Title: Video 239 - Adding Fake Authentication: Implementing "Login"
+//? Implementing Login and Logout
+//* We are implementing the actual login and logout functionalities in the application.
 
-//* don't do fake user in real world
-// when you build your own applications,
+//? Warning: Fake User in Real World Applications
+//* When you build your own applications, you should never have a fake user in your code that contains the plain word password. With this, anyone who inspects your code can get access to your application.
 
-// you should never ever do this,
+//? Code Availability
+//* All the code that you write inside your React application will be available on the front end, so the browsers will download it. Any malicious attacker will be able to find this combination of email and password in your source code.
 
-// so you should never have a fake user in your code like this
+//? Security Risk
+//* This means they will get access to your application. Again, never, never do this.
 
-// which contains the plain word password,
-
-// because with this, everyone who inspects your code
-
-// can get access to your application.
-
-// All the code that you write inside your React application
-
-// will be available on the front end,
-
-// so the browsers will download it.
-
-// And so, any malicious attacker will be able
-
-// to find this combination of email and password
-
-// in your source code.
-
-// And so then, they will get access to your application.
-
-// Again, never, never do this.
-
-// We are just doing it here
-
-// because I just want you to learn the mechanics
-
-// of authentication in isolation,
-
-// so basically without having all that stuff,
-
-// like an actual API call and implementing your own database
+//? Learning Purpose
+//* We are just doing it here because I want you to learn the mechanics of authentication in isolation, without having all that stuff, like an actual API call and implementing your own authentication system based on a database

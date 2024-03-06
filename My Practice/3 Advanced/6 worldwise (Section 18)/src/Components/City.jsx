@@ -26,7 +26,8 @@ function City() {
   const { getCity, currentCity, isLoading } = useCities();
 
   // if(isLoading) return <Spinner/> //! this causes error
-  //* because React Hook "useEffect" is called conditionally. React Hooks must be called in the exact same order in every component render
+  //* because React Hook "useEffect" is called conditionally.
+  //* React Hooks must be called in the exact same order in every component render
 
   //* this effect could be placed in city comp when it's mounted but it's cleaner to be here in the context
   useEffect(
@@ -36,7 +37,8 @@ function City() {
     [id]
   );
 
-  if (isLoading) return <Spinner />; //* to solve the issue that previous city will appear for a half of second because the new current one
+  //* to solve the issue that previous city will appear for a half of second because the new current one
+  if (isLoading) return <Spinner />;
 
   const { cityName, emoji, date, notes } = currentCity;
 
@@ -80,3 +82,27 @@ function City() {
 }
 
 export default City;
+//! video 229:  Finishing the City View =>  flow of getting and rendering current city
+
+//& Title: Component Interaction and State Management
+
+//? URL Change and ID Retrieval
+//* When we click on a link, the URL changes, giving us a new ID. This ID is read into the city component.
+
+//? Calling the getCity Function
+//* Upon component mounting, we call the `getCity` function, which comes from our context.
+
+//? Fetching City Data
+//* The `getCity` function immediately starts fetching the city data for that ID.
+
+//? Storing Fetched Data
+//* When the data arrives, it gets stored into the `setCurrentCity` state.
+//* This state variable is also passed into the context value.
+
+//? Updating the City Component
+//* The city component immediately receives the updated value.
+//* We destructure it and display everything in the UI.
+
+//? Child to Parent Communication
+//* We call a function that updates the current city.
+//* The updated city then comes back down into this component where we can use it.

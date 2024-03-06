@@ -7,6 +7,5 @@ export function useUrlPosition() {
 
   return [lat, lng];
 }
-// And so then whenever we need to position from the url,
-
-// we very simply just call this one function, and that's it.
+//* And so then whenever we need to position from the url,
+//* we very simply just call this one function, and that's it.

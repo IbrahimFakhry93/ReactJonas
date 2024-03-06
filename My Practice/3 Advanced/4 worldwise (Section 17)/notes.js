@@ -3,19 +3,17 @@
 //& Usage of nested routes:
 
 //* we need nested routes when we want a part of the user interface to be controlled by a part of the URL.
-
-//* show a part of the UI  based on some part of the URL.
-
-// in the URL, we have slash app and then slash cities.
-
-// And so basically this cities part here is displayed because in the URL we have cities.
+//* show a part of the UI based on some part of the URL.
+//* in the URL, we have slash app and then slash cities.  (app/cities)
+//* And so basically these cities part here is displayed because in the URL we have cities.
+//* (app/cities) , (app/countries) , (app/form)
 
 // eslint-disable-next-line no-lone-blocks
 {
   /* 
 
 <Route path="app" element={<AppLayout />}>    //& Parent Route
-    <Route index element={<p>List of cities</p>} />    //& index Route
+    <Route index  element={<HomePage /> />    //& index Route
     <Route path="cities" element={<p>List of cities</p>} />    //& Child Route
     <Route path="countries" element={<p>List of countries</p>} />   //& element can be any JSX or component
     <Route path="form" element={<p>form</p>} />
@@ -38,12 +36,35 @@
 //& Usage of index route:
 //* index route is the default child route that is going to be matched
 //* if none of these other routes here matches.
+//eslint-disable-next-line no-lone-blocks
+{
+  /* <Route index element={<HomePage />} />   //& index route */
+  /* //! OR: <Route path="/" element={<HomePage />} />  as down  */
+}
+
+//eslint-disable-next-line no-lone-blocks
+//! <Route path="app" element={<AppLayout />}>
+//*  Consider Navigate component as redirect, use replace so you can go back by back button in the browser
+// <Route index element={<Navigate replace to="cities" />} />  //& index + Navigate
+// <Route
+//   path="cities"
+//   element={<CityList cities={cities} isLoading={isLoading} />}
+// />
+// <Route path="cities/:id" element={<City />} />
+// <Route
+//   path="countries"
+//   element={<CountryList cities={cities} isLoading={isLoading} />}
+// />
+// <Route path="form" element={<Form />} />
+//! </Route>
+// <Route path="*" element={<PageNotFound />} />
 
 //*=====================================================================
 
 //& Title: React Router vs Use state hook
 
-//* Now if we think about this, what we just implemented here is actually very similar to something like a tabs component, but implemented in a very different way.
+//* Now if we think about this, what we just implemented here is actually very similar to something like a tabs component,
+//* but implemented in a very different way.
 
 //? Implementing a Tab Component
 //* So before, if we wanted to implement a tab component where we have these tabs here and then the content changes according to which is the active tab
@@ -99,14 +120,16 @@
 //~ const { cityName, emoji, date, id, position } = city;
 // eslint-disable-next-line no-lone-blocks
 {
-  /* <li>
-<Link
-  className={styles.cityItem}
-  to={`${id}?lat=${position.lat}&lng=${position.lng}`}
->
-  <h3 className={styles.name}>{cityName}</h3>
-</Link>
-</li> */
+  /*
+ <li>
+          <Link
+            className={styles.cityItem}
+            to={`${id}?lat=${position.lat}&lng=${position.lng}`}
+          >
+            <h3 className={styles.name}>{cityName}</h3>
+          </Link>
+  </li> 
+*/
 }
 
 //* Step 3: Read the State from the URL  ( get that data from the URL)
