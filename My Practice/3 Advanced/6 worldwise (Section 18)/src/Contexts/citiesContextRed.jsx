@@ -64,7 +64,8 @@ function CitiesProvider({ children }) {
 
   //* GET CURRENT CITY
   async function getCity(id) {
-    //* if the ID that is being passed in is the same as the current city. And so basically we can check if the city that we
+    //* if the ID that is being passed in is the same as the current city.
+    //* And so basically we can check if the city that we
     //* want to load is already the current city. And so then there's no need to call the API again.
 
     console.log(id, currentCity.id); //* id is string because is coming from url, but currentCity.id is number
@@ -102,7 +103,7 @@ function CitiesProvider({ children }) {
       await fetch(`${Base_URL}/cities/${id}`, {
         method: "DELETE",
       });
-      dispatch({ type: "city/created", payload: id });
+      dispatch({ type: "city/deleted", payload: id });
     } catch {
       alert("there is error deleting the city");
     }
@@ -142,7 +143,8 @@ export { CitiesProvider, useCities };
 //* The set state functions are no longer defined. We are going to replace those with the dispatch function.
 
 //? Logic in Reducer Function
-//* Inside our reducer function, we should put as much logic as possible. This gives us a central place that handles all the business logic and state transitions.
+//* Inside our reducer function, we should put as much logic as possible.
+//* This gives us a central place that handles all the business logic and state transitions.
 
 //? Pure Functions and API Requests
 //* Reducers need to be pure functions, which means we cannot do API requests inside the reducer function.
@@ -158,13 +160,17 @@ export { CitiesProvider, useCities };
 
 //& Title: Using Reducer in Larger Applications
 //? Importance of Naming Conventions
-//* When we use a reducer in a larger application like this one, it's very important to follow meaningful naming conventions for action types.
+//* When we use a reducer in a larger application like this one,
+//* it's very important to follow meaningful naming conventions for action types.
 
 //? Modeling Actions as Events
-//* It's usually a good idea to model these actions as events, not setters. This makes it easier to see all related state transitions.
+//* It's usually a good idea to model these actions as events, not setters.
+//* This makes it easier to see all related state transitions.
 
 //? Example: Action Naming
-//* For example, instead of 'set cities', we can call this 'cities/loaded'. It's a bit of a naming convention to use a slash like this, at least in the Redux community, which is similar to what we are implementing here.
+//* For example, instead of 'set cities', we can call this 'cities/loaded'.
+//* It's a bit of a naming convention to use a slash like this, at least in the Redux community,
+//* which is similar to what we are implementing here.
 
 //*====================
 //& Title: Working with Asynchronous Data and Code
@@ -172,27 +178,33 @@ export { CitiesProvider, useCities };
 //* When working with asynchronous data, we have two options for the dispatch function.
 
 //^ Option 1: Passing State and Dispatch Function
-//* The first option is to pass in all the state plus the dispatch function into the value. We can then use the dispatch function inside the components to update state.
+//* The first option is to pass in all the state plus the dispatch function into the value.
+//* We can then use the dispatch function inside the components to update state.
 
 //? Limitation with Reducer
 //* However, since we're dealing with asynchronous data, we cannot have all the logic inside the reducer.
 
 //? Dispatch Function in Context
-//* If we were passing the dispatch function into the context, we would have to have this function inside the component that dispatches the action.
+//* If we were passing the dispatch function into the context,
+//* we would have to have this function inside the component that dispatches the action.
 
 //^ Option 2: Using Dispatch Inside Event Handlers
-//* The second option, which we are using, is to not pass the dispatch function into the context but instead to use it inside these event handler functions.
+//* The second option, which we are using, is to not pass the dispatch function into the context
+//* but instead to use it inside these event handler functions.
 
 //& Title: Implementing Related State Updates
 //? Advantage of Centralized State Updating Logic
-//* With this structure in place, it is quite easy to implement more related state updates. This is one of the huge advantages of having all the state updating logic in one central place.
+//* With this structure in place, it is quite easy to implement more related state updates.
+//* This is one of the huge advantages of having all the state updating logic in one central place.
 
 //? Example: Active City Update
-//* For example, as soon as a city is created, it should also become the currently active city. We can easily do this by setting the current city equal to action.payload.
+//* For example, as soon as a city is created, it should also become the currently active city.
+//* We can easily do this by setting the current city equal to action.payload.
 
 //? Example: Deleting a City
 //* Similarly, when we delete a city, we can set it back to the original state.
 
 //& Title: Conversion to Reducer
 //? Successful Conversion
-//* With this, we have successfully converted the use states to a reducer, and even created a new state (the error), which we're not really using but let's just pass it into the context as well.
+//* With this, we have successfully converted the use states to a reducer,
+//* and even created a new state (the error), which we're not really using but let's just pass it into the context as well.

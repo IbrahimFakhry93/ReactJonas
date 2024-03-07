@@ -142,11 +142,10 @@ export default Map;
 //* This means we now need to get access to the cities in this map component by using the cities context (useCities)
 
 //? Accessing Global State
-//* Thankfully, we now have our global state (cities)
-//*This state, which lives inside our context, can be easily made available to any component we want.
+//* we now have our global state (cities)
+//* This state, which lives inside our context, can be easily made available to any component we want.
 
-//*======================
-//& Title: Looping Over Cities
+//^ Looping Over Cities
 //? Marker Placement
 //* We don't want a marker at a fixed position.
 
@@ -181,7 +180,8 @@ export default Map;
 
 //& Title: Implementing Functionality with Leaflet
 //? Custom Component Creation
-//* We need to implement this functionality (moving the map when selecting the city) on our own within this Leaflet library. Everything works with components in this library.
+//* We need to implement this functionality (moving the map when selecting the city) on our own within this Leaflet library.
+//* Everything works with components in this library.
 
 //? Using Custom Component
 //* Whenever we need to implement a functionality like this, we need to create a custom component and then use that component in here.
@@ -205,15 +205,19 @@ export default Map;
 //* Inside the form, we can easily read that data from the URL, just like we did in the map component.
 
 //? Global State Usage
-//* We are using this kind of global state to pass data between pages. Without this, we would have to create a global state variable to temporarily store that position, which would be more work than simply storing it in the URL.
+//* We are using this kind of global state to pass data between pages.
+//* Without this, we would have to create a global state variable to temporarily store that position,
+//* which would be more work than simply storing it in the URL.
 
 //& Title: Wrap Up: Video 232
 //? Map Component Interactions
-//* We added two interactions to our Map component. First, the interaction where we can move the map around as we click on different cities. Second, we can now interact with the map.
+//* We added two interactions to our Map component.
+//* First, the interaction where we can move the map around as we click on different cities.
+//* Second, we can now interact with the map.
 
 //*===========================
 
-//! video 233:
+//! video 233: Setting Map Position With Geolocation
 //* create Hooks folder and create custom hook useGeolocation
 
 //* we can then use the get position function inside useGeolocation hook

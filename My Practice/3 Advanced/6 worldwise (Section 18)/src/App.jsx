@@ -19,7 +19,7 @@ import ProtectedRoute from "./Components/ProtectedRoute.jsx";
 //? Simplified Application Component
 //* Our application component has become quite clean.
 //* All it does for now is define these routes
-//*  and match them to the components, without any props. (because we created citiesContext)
+//* and match them to the components, without any props. (because we created citiesContext)
 
 function App() {
   return (
@@ -29,7 +29,8 @@ function App() {
     //* In the Context API, provider order typically doesn't matter.
 
     //? Special Cases
-    //* Sometimes, `CitiesProvider` might need state from `AuthProvider`. In these cases, we can use a custom hook from `AuthProvider` inside `CitiesProvider`.
+    //* Sometimes, `CitiesProvider` might need state from `AuthProvider`.
+    //* In these cases, we can use a custom hook from `AuthProvider` inside `CitiesProvider`.
 
     //? Provider Structure
     //* If such a dependency exists, `AuthProvider` should be the parent of `CitiesProvider`.
@@ -69,24 +70,32 @@ function App() {
 export default App;
 
 //! Title: Video 238 - Fake Authentication
+//~ open components: App - fakeAuthContext - User - ProtectedRoute
+
 //? Typical Frontend Authentication
-//* In a typical frontend application like a React application, user authentication usually works in three steps.
+//* In a typical frontend application like a React application,
+//* user authentication usually works in three steps.
 
-//? Step 1: User Credential Verification
-//* First, we get the user's email and password from a login form and check with an API endpoint if the password for the given user is correct.
+//^ Step 1: User Credential Verification
+//* First, we get the user's email and password from a login form and check with an API endpoint
+//* if the password for the given user is correct.
 
-//? Step 2: Redirect and State Update
-//* Then, if the credentials are correct, we redirect the user to our main application and save the user object in our state.
+//^ Step 2: Redirect and State Update
+//* Then, if the credentials are correct, we redirect the user to our main application
+//*  and save the user object in our state.
 
-//? Step 3: Protecting from Unauthorized Access
-//* Finally, we need to protect the application from unauthorized access, i.e., from users who are not currently logged in.
+//^ Step 3: Protecting from Unauthorized Access
+//* Finally, we need to protect the application from unauthorized access,
+//* i.e., from users who are not currently logged in.
 
 //& Title: Storing User and Authentication State
 //? Storing User in State
 //* We're going to store the user that is logged in into state.
 
 //? Storing Authentication Status in State
-//* We will also store into state whether the user is currently logged in or not. This is to protect our application from unauthorized access.
+//* We will also store into state whether the user is currently logged in or not.
+//* This is to protect our application from unauthorized access.
 
-//? Creating Context for State
-//* Let's create another context where we can store that state and give the entire application tree access to that state.
+//? Creating Context for State  (fakeAuthContext)
+//* Create (fakeAuthContext) another context where we can store that state
+//* and give the entire application tree access to that state.

@@ -28,18 +28,16 @@ function AuthProvider({ children }) {
     reducer,
     initialState
   );
+  //& Title: User Authentication
+  //? Checking User Credentials
+  //* Now, we can check whether the incoming email and password are correct.
 
-  // And now here we can check whether the
+  //? Typical API Call
+  //* Typically, this is where we would have an API call to verify the credentials.
 
-  // coming in email and password are correct.
+  //? Comparing with Fake User
+  //* But for now, we will just compare them to a fake user. Let's get that fake user object.
 
-  // And so again, this is where we would
-
-  // typically have an API call
-
-  // but now we will just compare them to a fake user.
-
-  // So let's get that fake user object,
   function login(email, password) {
     if (email === FAKE_USER.email && password === FAKE_USER.password)
       dispatch({ type: "login", payload: FAKE_USER });
@@ -76,19 +74,24 @@ export { AuthProvider, useAuth };
 //* In our final application, we have a logout button. We also need a function for that.
 
 //? Actions on Button Click
-//* Clicking these two buttons will create the actions I mentioned earlier - setting the user to authenticated and storing the user in state.
+//* Clicking these two buttons will create the actions
+//* I mentioned earlier - setting the user to authenticated and storing the user in state.
 
 //==========
 
-//! Title: Video 238 Using Reducer for Required States
+//^  Using Reducer for Required States
 //? Two State Variables
-//* We need two state variables - one that contains the user object and another that stores whether the user is currently authenticated or not.
+//* We need two state variables - (user, isAuthenticated)
+//* one that contains the user object and another that stores whether the user is currently authenticated or not.
 
 //? Using Reducer
-//* We will use a reducer for these two state variables as they will always be updated at the same time. Even if it's a small reducer, using a reducer in this situation is beneficial.
+//* We will use a reducer for these two state variables (user, isAuthenticated)
+//* as they will always be updated at the same time.
+//* Even if it's a small reducer, using a reducer in this situation is beneficial.
 
 //? State Spread Operator
-//* We should always keep the state spread operator ( ...state) in our code. This makes our code more future proof. If we add some other state variable in the future, we would have to remember to add this ( ...state) back.
+//* We should always keep the state spread operator ( ...state) in our code. This makes our code more future proof.
+//* If we add some other state variable in the future, we would have to remember to add this ( ...state) back.
 
 //*===============
 
@@ -116,13 +119,19 @@ export { AuthProvider, useAuth };
 //* We are implementing the actual login and logout functionalities in the application.
 
 //? Warning: Fake User in Real World Applications
-//* When you build your own applications, you should never have a fake user in your code that contains the plain word password. With this, anyone who inspects your code can get access to your application.
+//* When you build your own applications,
+//*  you should never have a fake user in your code that contains the plain word password.
+//* With this, anyone who inspects your code can get access to your application.
 
 //? Code Availability
-//* All the code that you write inside your React application will be available on the front end, so the browsers will download it. Any malicious attacker will be able to find this combination of email and password in your source code.
+//* All the code that you write inside your React application will be available on the front end,
+//*  so the browsers will download it.
+//* Any malicious attacker will be able to find this combination of email and password in your source code.
 
 //? Security Risk
 //* This means they will get access to your application. Again, never, never do this.
 
 //? Learning Purpose
-//* We are just doing it here because I want you to learn the mechanics of authentication in isolation, without having all that stuff, like an actual API call and implementing your own authentication system based on a database
+//* We are just doing it here because I want you to learn the mechanics of authentication in isolation,
+//* without having all that stuff, like an actual API call
+//* and implementing your own authentication system based on a database

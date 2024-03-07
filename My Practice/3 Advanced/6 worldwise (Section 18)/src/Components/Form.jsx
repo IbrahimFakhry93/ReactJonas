@@ -32,43 +32,30 @@ function Form() {
   const [emoji, setEmoji] = useState();
   const [error, setError] = useState();
   const navigate = useNavigate();
-  //   let's now use this data
+  //! Title: Reverse Geocoding and Data Fetching
+  //? Using Data for Reverse Geocoding
+  //* Let's now use this data to do the reverse geocoding.
+  //* This involves getting the city information, or really any information,
+  //* about the GPS position that we are currently located at.
 
-  // to actually do the reverse geocoding.
+  //? Latitude and Longitude
+  //* Let's just call this latitude (lat) and longitude (lng).
 
-  // So getting the city information, or really any information,
+  //? Fetching Data on Component Mount
+  //* We want to fetch this data right when the component mounts. We can use a useEffect for that.
 
-  // about the GPS position that we are currently located at.
+  //? Data Storage
+  //* The data that we're going to fetch here is not going to go into our global state,
+  //* so into the global city's context.
+  //*  This is because this data is only relevant for creating a city object that will be added to the array.
 
-  // Let's just call this lat, and lng.
-
-  // And then we want to fetch this data
-
-  // right when the component mounts.
-
-  // So that's a useEffect for that.
-
-  //   Now, the data that we're gonna fetch here is not going
-
-  // to go into our global state,
-
-  // so into the global city's context,
-
-  // because this data is only relevant
-
-  // for then creating a city's object that will be added
-
-  // to the array.
-
-  // So you only really need this data right here
-
-  // in this component.
+  //? Data Usage
+  //* We only really need this data right here in this component.
 
   const Base_URL = `https://api.bigdatacloud.net/data/reverse-geocode-client`;
 
   useEffect(
     function () {
-      //& to fix the form in case there is no latitude in longitude in the URL.
       if (!lat && !lng) return; //* to prevent HTTP to be fired off, if the user gets to the form by writing Form path on the browser url instead clicking on the map
       async function fetchCityData() {
         try {
@@ -111,12 +98,9 @@ function Form() {
 
     console.log(newCity);
 
-    //* then create that function
-    //   which uploads this new object to our fake API.
-
-    // And just like all the other functions
-
-    // that are about that API, we do that in the context.
+    //* then create that function (createCity)
+    //* which uploads this new object to our fake API. And just like all the other functions
+    //* that are about that API, we do that in the context (cities Context)
 
     await createCity(newCity);
     navigate("/app/cities");
@@ -177,191 +161,82 @@ function Form() {
 
 export default Form;
 
-//! video  234: fetching data city in the form (form component)
+//! video 234: fetching data city in the form (form component)
 
-// we're gonna use the position data
+//! Title: Fetching City Information Based on User Click
+//? Using Position Data
+//* We're going to use the position data to fetch all necessary information about the city where the user has clicked.
 
-// in order to fetch all necessary information
+//? Example: Click on Rome
+//* For example, if the user clicks on Rome, we want to automatically fetch that data from a reverse geocoding API.
 
-// about the city where the user has clicked.
+//? Opening Form and Getting Location Data
+//* Let's open up our form. The first thing we need to do is to get the location data from the URL into this component.
 
-// So for example, if the user clicks here on Rome,
+//? Reading Global State from URL (lat, lng)
+//* We are reading the global state that is stored in the URL.
 
-// then we want to automatically fetch that data here
+//? Custom Hook: useUrlPosition
+//* This was done before (Reading Global State from URL (lat, lng)) in the map component.
+//* let's create a custom hook called useUrlPosition to handle this.
 
-// from an API, so from a reverse geocoding API.
+//*================================================================================================================================
 
-// so let's open up our form,
+//! Title: Video 235 - Creating a New City
+//? Adding a New City
+//* It's time to finally add a new city and upload it to our fake API.
 
-// and now the first thing that we need to do is
+//? Date Picker Component
+//* We're using 'react-datepicker' to give us a date picker component for React.
+//*  npm i react-datepicker:
 
-// to actually get the location data
+//& Title: State Update and UI Sync
+//? Observing State Change
+//* When we go back, we might expect to see the city name there, but it isn't.
+//* This is because we haven't updated the state that is displaying these cities.
 
-// from the URL into this component.
+//? Initial Fetch and State Update
+//* These cities are fetched once in the beginning but they're never updated.
+//* If we reloaded the page, then the new city would appear because we re-fetched the data.
 
-// So reading here,
+//? Adding New City to State
+//* We also need to add the new city to our state.
+//* We're going to keep the application state in sync with the state from the UI,
+//* or in other words, keep the UI state in sync with remote state.
 
-// this global state that is stored in the url.
-// and that was done before in map comp. so create custom hook called useUrlPosition
-//=======
+//? Using React Query in Future
+//* In the next big application, we will use a specialized tool called React Query.
+//* This will automatically re-fetch the data into our application whenever we add something new to the remote state.
 
-//! video 235:
+//? Manual State Update
+//* But in this case, we will manually update the state.
+//* We'll use setCities and return a new array with the current cities plus the new city.
 
-// it's time to finally add a new city and upload it to our fake API.
+//^ Recap of Video 235 - Creating a New City
+//? Position from URL
+//* We got the position from the URL as soon as the form is opened.
+//* For that, we created a custom hook (useUrlPosition) which gets us the latitude and longitude.
 
-//*  npm i react-datepicker:  give us a date picker component for React.
+//? Fetching Location Data
+//* Each time those change, we fetch the data about that location so that we can display that in the form.
 
-//^===
+//? Date Picker for User
+//* We gave the users a date picker so that they can choose the date.
 
-// but now watch what happens as we go back.
+//? Submitting the Form
+//* With all the data in place, we are ready to submit the form.
+//* We create a new object and pass that into the createCity function.
 
-// So maybe we expect to now see this city name there,
+//? Updating State
+//* This function lives in our cities context
+//* along with all the other functions that are responsible for updating the state related to cities.
+//* This creates a post request, which updates the server state,
+//* and we also update the UI state so that the new object immediately gets reflected in our UI.
 
-// but as we go back, it is not there.
+//? Navigating Back
+//* Finally, after all that is done, we navigate back to the page where we came from.
+//* by this: navigate("/app/cities") in handleSubmit as above
 
-// So it hasn't been added to this state right here.
-
-// So why do you think that is?
-
-// Well, if we think about this, then it actually makes sense
-
-// because nowhere in our code we are updating the state
-
-// that is displaying these cities here.
-
-// So these cities are simply fetched once in the beginning
-
-// but they're never updated.
-
-// So this cities stayed right here.
-
-// Again, it is fetched in the beginning,
-
-// but we did not update that, right?
-
-// Now if we reloaded the page
-
-// then that new city would appear down here.
-
-// But that's only because, well, we re-fetched the data.
-
-// And so then of course, it needs to be there.
-
-// And so what we also need to do here
-
-// is to add that new city to our state.
-
-// So basically, we're gonna keep the application state
-
-// in sync with the state from the UI.
-
-// Or in other words, using the terminology
-
-// that we have learned earlier in the section
-
-// we're gonna keep the UI state in sync with remote state.
-
-// Now, this is usually not the way to go
-
-// but in a small application like this one
-
-// it is perfectly fine of doing this.
-
-// And then the next big application
-
-// we will then learn how to better do this.
-
-// So there we will use a specialized tool called React Query
-
-// which will make it so
-
-// that whenever we add something new to the remote state
-
-// that data will then automatically get re-fetched
-
-// into our application.
-
-// So that would fix this problem.
-
-// But in this case we will just do the same thing manually.
-
-// So we'll now just also setCities
-
-// and then we take the current cities and return a new array
-
-// with the current cities plus the data,
-
-// which is basically the new city.
-
-//====================================
-//! recap of video 235:
-// So let's just very quickly recap everything that we did.
-
-// So first of all, we got the position basically from the URL
-
-// as soon as the form is opened.
-
-// So for that, we created this custom hook
-
-// which will get us the latitude and longitude.
-
-// Then each time those change
-
-// we fetch the data about that location.
-
-// So the city name, the country name and so on
-
-// so that we can then display that here nicely in the form.
-
-// So otherwise the user would have to write that out manually
-
-// which is not nice.
-
-// It would also not have been nice
-
-// if they had to write out the date here manually.
-
-// Therefore, we gave the users this date picker
-
-// so that they can choose from there.
-
-// And then with all the data in place
-
-// we are ready to submit the form.
-
-// So then we create this new object here
-
-// and pass that into the createCity function.
-
-// So this createCity function lives in our cities context
-
-// along with all the other functions that are responsible
-
-// for updating the state that is related to cities.
-
-// And so that's why this lives here.
-
-// And so this then creates a post request, which will mutate,
-
-// so it'll update the server state, so the remote state.
-
-// And we then also update the UI state right here
-
-// so that the new object immediately gets reflected
-
-// in our UI here as well.
-
-// So otherwise, we would have to manually re-fetch the data
-
-// so that it then shows up.
-
-// And then finally, after all that is done,
-
-// so we await that operation here,
-
-// and then in the end we navigate back to the page
-
-// where we came from.
 //====================================
 
 //! video 236: delete city (city item comp)

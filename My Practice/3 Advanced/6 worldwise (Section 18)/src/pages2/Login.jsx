@@ -55,42 +55,21 @@ export default function Login() {
   );
 }
 
-//* if you try to refresh the app after login, when the url: /App/cities, you will get error
-//* why?
-// what happens when we try to basically open this page
+//& Title: Refreshing App After Login
+//? Unauthorized Access Error
+//* If you try to refresh the app after login, when the URL is /App/cities, you will get an error.
+//* This happens when we try to open this page without being logged in.
+//* If we try to just enter this URL without first going through the login flow, then we get this error.
 
-// without being logged in.
+//? Preventing Unauthorized Access
+//* We need to prevent this by protecting our application against unauthorized access.
 
-// That's what's gonna happen when we just reload the page.
+//! Title: Video 240 - Adding Fake Authentication: Protecting a Route
+//? Protecting Application Against Unauthorized Access
+//* The third part of the authentication flow is to protect the application against unauthorized access.
+//*  We want to redirect the user back to the homepage
+//* whenever they reach one of the routes that they should not reach when they are not logged in.
 
-// If we try to just enter this URL
-
-// without first going to the login flow,
-
-// then we get this error.
-
-// And so, we need to prevent that
-
-// by basically protecting our application
-
-// against unauthorized access.
-
-//*===========================================
-
-//! video  240:
-
-// the third part of the authentication flow
-
-// is to protect the application against unauthorized access.
-
-// So basically what we want to do is to redirect the user
-
-// back to the homepage whenever they reach one of the routes
-
-// that they should not reach when they are not logged in.
-
-// create a specialized component
-
-// which will handle this redirecting and then wrap
-
-// the entire application in that component.
+//? Creating ProtectedRoute Component
+//* We will create a specialized component (ProtectedRoute) which will handle this redirecting
+//* and then wrap the entire application in that component.
