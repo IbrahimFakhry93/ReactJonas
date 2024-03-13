@@ -2729,3 +2729,80 @@ element={<Navigate replace to="cities" />}
 //* replace prop is : replace the current element in the history stack.
 
 
+//*=======================================================================================================================
+
+
+//^ =================================== Section 18: Advanced State Management: The Context API ===============================
+
+//! video 229:  Finishing the City View 
+//& Add active element as UI feature:
+
+// .cityItem--active {
+//   border: 2px solid var(--color-brand--2);
+//   border-left: 5px solid var(--color-brand--2);
+// }
+
+<li>
+<Link
+  //* to add multiple class names with css modules
+  className={`${styles.cityItem} ${
+    id === currentCity.id ? styles["cityItem--active"] : ""
+  } `}
+  to={`${id}?lat=${position.lat}&lng=${position.lng}`}
+>
+  <span className={styles.emoji}>{emoji}</span>
+  <h3 className={styles.name}>{cityName}</h3>
+</Link>
+</li>
+
+//*=======================================================================================================================
+
+//! video 229:  Finishing the City View 
+
+//& Applying BackButton feature
+// .btn {
+//   color: inherit;
+//   text-transform: uppercase;
+//   padding: 0.8rem 1.6rem;
+//   font-family: inherit;
+//   font-size: 1.5rem;
+//   border: none;
+//   border-radius: 5px;
+//   cursor: pointer;
+// }
+
+// .primary {
+//   font-weight: 700;
+//   background-color: var(--color-brand--2);
+//   color: var(--color-dark--1);
+// }
+
+// .back {
+//   font-weight: 600;
+//   background: none;
+//   border: 1px solid currentColor;
+// }
+
+
+ function Button({ children, onClick, type }) {
+   return (
+!     <button onClick={onClick} className={`${styles.btn} ${styles[type]}`}>
+       {children}
+     </button>
+   );
+ }
+function BackButton() {
+  const navigate = useNavigate();
+  return (
+    <Button
+      type="back"
+      onClick={(e) => {
+        e.preventDefault(); //* to prevent form reload
+        navigate(-1);
+      }}
+    >
+      &larr; Back
+    </Button>
+  );
+}
+

@@ -62,11 +62,11 @@ function CitiesProvider({ children }) {
     fetchCities();
   }, []);
 
-  //* GET CURRENT CITY
+  //! fetch (get) current city
   async function getCity(id) {
     //* if the ID that is being passed in is the same as the current city.
-    //* And so basically we can check if the city that we
-    //* want to load is already the current city. And so then there's no need to call the API again.
+    //* And so basically we can check if the city that we want to load
+    //* is already the current city. And so then there's no need to call the API (fetching) again.
 
     console.log(id, currentCity.id); //* id is string because is coming from url, but currentCity.id is number
     if (Number(id) !== currentCity.id) return;
@@ -77,9 +77,13 @@ function CitiesProvider({ children }) {
       console.log(data);
       dispatch({ type: "city/loaded", payload: data });
     } catch {
-      alert("there is error getting the city");
+      dispatch({
+        type: "rejected",
+        payload: "there is error getting the city",
+      });
     }
   }
+  //! Create new city: (used in form component)
   async function createCity(newCity) {
     try {
       dispatch({ type: "loading" });
@@ -93,10 +97,13 @@ function CitiesProvider({ children }) {
       console.log(data);
       dispatch({ type: "city/created", payload: data }); //* the data which is the newly created city object.
     } catch {
-      alert("there is error creating the city");
+      dispatch({
+        type: "rejected",
+        payload: "there is error creating the city",
+      });
     }
   }
-
+  //! Delete city:
   async function deleteCity(id) {
     try {
       dispatch({ type: "loading" });
@@ -105,7 +112,10 @@ function CitiesProvider({ children }) {
       });
       dispatch({ type: "city/deleted", payload: id });
     } catch {
-      alert("there is error deleting the city");
+      dispatch({
+        type: "rejected",
+        payload: "there is error deleting the city",
+      });
     }
   } //* refresh the cities list page after clicking delete to make sure that this city is deleted from API after refetching
   return (
@@ -140,7 +150,8 @@ export { CitiesProvider, useCities };
 
 //& Title: State Management and Reducer Function
 //? Replacing Set State Functions
-//* The set state functions are no longer defined. We are going to replace those with the dispatch function.
+//* The set state functions are no longer defined.
+//* We are going to replace those with the dispatch function.
 
 //? Logic in Reducer Function
 //* Inside our reducer function, we should put as much logic as possible.
@@ -204,7 +215,10 @@ export { CitiesProvider, useCities };
 //? Example: Deleting a City
 //* Similarly, when we delete a city, we can set it back to the original state.
 
+//* so we updated two states together (cities, currentCity) in one action
+
 //& Title: Conversion to Reducer
 //? Successful Conversion
 //* With this, we have successfully converted the use states to a reducer,
-//* and even created a new state (the error), which we're not really using but let's just pass it into the context as well.
+//* and even created a new state (the error), which we're not really using
+//* but let's just pass it into the context as well.

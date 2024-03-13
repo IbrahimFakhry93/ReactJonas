@@ -45,14 +45,15 @@ function App() {
 
             <Route path="login" element={<Login />} />
 
-            <Route
+            {/* <Route
               path="app"
               element={
                 <ProtectedRoute>
                   <AppLayout />
                 </ProtectedRoute>
               }
-            >
+            > */}
+            <Route path="app" element={<AppLayout />}>
               <Route index element={<Navigate replace to="cities" />} />
               <Route path="cities" element={<CityList />} />
               <Route path="cities/:id" element={<City />} />
@@ -88,7 +89,7 @@ export default App;
 //* Finally, we need to protect the application from unauthorized access,
 //* i.e., from users who are not currently logged in.
 
-//& Title: Storing User and Authentication State
+//~ Storing User and Authentication State
 //? Storing User in State
 //* We're going to store the user that is logged in into state.
 
@@ -99,3 +100,18 @@ export default App;
 //? Creating Context for State  (fakeAuthContext)
 //* Create (fakeAuthContext) another context where we can store that state
 //* and give the entire application tree access to that state.
+
+//~ Adding Fake Authentication: Setting Up Context
+//? Login and Logout Functions
+//* When the user clicks on a button, our application should call a login function.
+//* This function will check if the user's credentials are correct.
+
+//? Login Function
+//* We need a login function here, which will perform the authentication check.
+
+//? Logout Button
+//* In our final application, we have a logout button. We also need a function for that.
+
+//? Actions on Button Click
+//* Clicking these two buttons will create the actions
+//* I mentioned earlier - setting the user to authenticated and storing the user in state.

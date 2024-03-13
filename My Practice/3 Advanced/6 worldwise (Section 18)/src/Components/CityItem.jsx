@@ -13,7 +13,7 @@ function CityItem({ city }) {
     }).format(new Date(date));
 
   function handleDelete(e) {
-    e.preventDefault(); //* so the link is no longer clicked, only the button.
+    e.preventDefault(); //* so the link is no longer clicked and not direct us to city page, only the button.
     deleteCity(id);
   }
 
@@ -48,15 +48,3 @@ export default CityItem;
 // and here from the state, and then just call that function
 
 // when we click on this button.
-
-//! video 237:
-
-// to do next is to convert
-
-// this state management that we have going on here
-
-// to a reducer.
-
-// So, that's a common pattern that you will see together
-
-// with the context API.

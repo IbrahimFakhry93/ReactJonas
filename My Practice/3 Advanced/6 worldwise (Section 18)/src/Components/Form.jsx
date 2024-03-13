@@ -32,7 +32,10 @@ function Form() {
   const [emoji, setEmoji] = useState();
   const [error, setError] = useState();
   const navigate = useNavigate();
-  //! Title: Reverse Geocoding and Data Fetching
+
+  //! video 234: fetching data city in the form (form component)
+
+  //& Title: Reverse Geocoding and Data Fetching
   //? Using Data for Reverse Geocoding
   //* Let's now use this data to do the reverse geocoding.
   //* This involves getting the city information, or really any information,
@@ -82,6 +85,7 @@ function Form() {
     [lat, lng]
   );
 
+  //* So the handler function (handleSubmit) can be an async function. That's no problem at all.
   async function handleSubmit(e) {
     e.preventDefault();
 
@@ -105,6 +109,8 @@ function Form() {
     await createCity(newCity);
     navigate("/app/cities");
   }
+
+  //! video 234: fetching data city in the form (form component)
 
   //& to fix the form in case there is no latitude in longitude in the URL.
 
@@ -161,6 +167,7 @@ function Form() {
 
 export default Form;
 
+//? comp: Form - useUrlPosition
 //! video 234: fetching data city in the form (form component)
 
 //! Title: Fetching City Information Based on User Click
@@ -218,7 +225,7 @@ export default Form;
 //* For that, we created a custom hook (useUrlPosition) which gets us the latitude and longitude.
 
 //? Fetching Location Data
-//* Each time those change, we fetch the data about that location so that we can display that in the form.
+//* Each time those (latitude and longitude) change, we fetch the data about that location so that we can display that in the form.
 
 //? Date Picker for User
 //* We gave the users a date picker so that they can choose the date.
@@ -238,13 +245,3 @@ export default Form;
 //* by this: navigate("/app/cities") in handleSubmit as above
 
 //====================================
-
-//! video 236: delete city (city item comp)
-
-// So, all that we need to do is to create a function
-
-// that will delete a city from the API
-
-// and here from the state, and then just call that function
-
-// when we click on this button.
