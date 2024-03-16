@@ -37,7 +37,7 @@ const initialState = {
 };
 
 function reducer(state, action) {
-  if (!state.isActive && state.type !== "openAccount") return state; //* this condition to prevent depositing or any operation while the account is not active, fon't depend only on the UI
+  if (!state.isActive && action.type !== "openAccount") return state; //* this condition to prevent depositing or any operation while the account is not active, don't depend only on the UI
   switch (action.type) {
     case "openAccount":
       return { ...state, isActive: true, balance: 500 };

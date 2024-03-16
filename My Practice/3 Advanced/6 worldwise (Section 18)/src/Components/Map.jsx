@@ -14,13 +14,13 @@ import { useGeolocation } from "../Hooks/useGeoLocation";
 import Button from "./Button";
 import { useUrlPosition } from "../Hooks/useUrlPosition";
 
-//! Video 230:
+//! Video 230: Including a Map With the Leaflet Library
 //* create MapPosition state
 //* turn from scrollWheelZoom={false} to true, to enable zoom scrolling
 //* add className={styles.map} to display the map
 //* Edit the display of the tile layer by url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
 
-//!video 231: handle the popup
+//!video 231: handle the popup (Displaying City Markers on Map)
 function Map() {
   const { cities } = useCities();
   const [MapPosition, setMapPosition] = useState([40, 0]); //* when position changed , the map should be rendered

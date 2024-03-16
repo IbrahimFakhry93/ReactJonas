@@ -4,12 +4,31 @@ function Options({ question, answer, dispatch }) {
     <div className="options">
       {question.options.map((option, index) => (
         <button
-          className={`btn btn-option ${index === answer ? "answer" : ""} ${
-            isAnswered
-              ? index === question.correctOption
-                ? "correct"
-                : "wrong"
-              : ""
+          //* first css class "answer" will shift the selected answer to the left (whether it's correct or wrong)
+          //* look at the UI
+          // className={`btn btn-option ${index === answer ? "answer" : ""} ${
+          //   isAnswered
+          //     ? index === question.correctOption
+          //       ? "correct"
+          //       : "wrong"
+          //     : ""
+          // }`}
+
+          // className={`btn btn-option ${index === answer ? "answer" : ""} ${
+          //*   isAnswered
+          //     ? index === question.correctOption
+          //       ? "correct"
+          //       : index === answer
+          //       ? "wrong-selected"
+          //       : "wrong"
+          //*     : ""
+          // }`}
+
+          className={`btn btn-option ${index === answer && "answer"} ${
+            isAnswered &&
+            ((index === question.correctOption && "correct") ||
+              (index === answer && "wrong-selected") ||
+              "wrong")
           }`}
           disabled={isAnswered}
           key={option}

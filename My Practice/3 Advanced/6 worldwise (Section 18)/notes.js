@@ -10,17 +10,18 @@
 //* 3) create CitiesContext and Cities provider function comp
 //* 4) Grab all state code and state updating code from App.jsx
 //* and place inside Cities provider function comp
-//*========================================
-//! video 228:
+//*==========================================================================================
+//! video 228: Consuming the CitiesContext
 //? comp: App- CitiesContext  - citiesList - countriesList
-//*========================================
+//*==========================================================================================
 //! video 229:  Finishing the City View =>  flow of getting and rendering current city
 //! means clicking on of the cities on the list and fetch the data for the city.
 //? comp: CitiesContext - City - CityItem
 //& Title: Component Interaction and State Management
-
+//! open city Comp here
 //? URL Change and ID Retrieval
-//* When we click on a link, the URL changes, giving us a new ID. This ID is read into the city component.
+//* When we click on a link, the URL changes, giving us a new ID.
+//* This ID is read into the city component.
 
 //? Calling the getCity Function
 //* Upon component mounting, we call the `getCity` function, which comes from our context.
@@ -43,9 +44,9 @@
 //*========================================
 
 //! video 230:  Including a Map With the Leaflet Library
-//! video 231:
-//! video 232:
-//! video 233:
+//! video 231:  Displaying City Markers on Map
+//! video 232:  Interacting With the Map
+//! video 233:  Setting Map Position With Geolocation
 //? comp:  Map - index.css - Map.module.css
 //* npm i react-leaflet leaflet
 
@@ -68,6 +69,7 @@
 //* If such a dependency exists, `AuthProvider` should be the parent of `CitiesProvider`.
 import React, { createContext, useContext, useState, useEffect } from "react";
 
+//~ Chatgpt case example:
 // Create two contexts
 const AuthContext = createContext();
 const CitiesContext = createContext();
@@ -111,7 +113,7 @@ export default App;
 //* Not important info down, skip if you want
 
 //! video 229: Finishing the City View
-
+//* Not important info down, skip if you want
 //& Title: Fetching Data in Real World Applications
 
 //? Fetching Individual Objects
@@ -133,7 +135,6 @@ export default App;
 //! video 234: fetching data city in the form (form component)
 //? comp: Form - useUrlPosition
 
-//* Prevent Form component to be loaded if there are no lat,lng
 //**======================================================================================================
 //! video 235: Creating new city:
 //? comp: Form - useUrlPosition

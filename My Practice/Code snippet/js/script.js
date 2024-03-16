@@ -2430,40 +2430,31 @@ function Day({ day, max, min, code, isToday }) {
 //* npm i react-router-dom@6
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
-//& Link instead of anchor (<a></a>) why??
-{
-  /* //* <a></a> anchor element will cause page reload  */
-}
-{
-  /* <a href="/pricing">Pricing</a> */
-}
-//! instead:
-{
-  /* <Link to="/pricing">Pricing</Link> */
-}
+//! using anchor (<a></a>) will cause page reload
+
+//* <a href="/pricing">Pricing</a> 
+
+//! instead use Link:
+
+//* <Link to="/pricing">Pricing</Link> 
+
+//! Default routing:
+<Route index element={<HomePage />} />   //& index route 
+//* or: <Route path="/" element={<HomePage />} />  
+
+//! Use NavLink instead of Link:
+//* <NavLink></NavLink> to highlight the selected link with class='active'
+//*====================================================================================================================================
 
 
-  {/* <Route index element={<HomePage />} />   //& index route */}
-  {/* //! OR: <Route path="/" element={<HomePage />} />  as down  */}
-//*================================
-
-
-//& NavLink instead of Link when??
-//* <NavLink></NavLink> to highlighted the selected link with class='active'
-
-
-
-//! Video 212
+//! Video 212: Nested Routes
 
 //& Usage of nested routes:
 
 //* we need nested routes when we want a part of the user interface to be controlled by a part of the URL.
-
 //* show a part of the UI  based on some part of the URL.
-
-// in the URL, we have slash app and then slash cities.
-
-// And so basically this cities part here is displayed because in the URL we have cities.
+//* in the URL, we have slash app and then slash cities.
+//* And so basically this cities part here is displayed because in the URL we have cities.
 
 // eslint-disable-next-line no-lone-blocks
 {
@@ -2476,11 +2467,89 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
     <Route path="form" element={<p>form</p>} />
 </Route> 
 
-
 */
 }
+//*=====================================================================
+//& Usage of index route:
+//* index route is the default child route that is going to be matched
+//* if none of these other routes here matches.
+//eslint-disable-next-line no-lone-blocks
+{
+  /* <Route index element={<HomePage />} />   //& index route */
+  /* //! OR: <Route path="/" element={<HomePage />} />  as down  */
+}
 
-//=====================================================================
+//eslint-disable-next-line no-lone-blocks
+//! <Route path="app" element={<AppLayout />}>
+//*  Consider Navigate component as redirect, use replace so you can go back by back button in the browser
+// <Route index element={<Navigate replace to="cities" />} />  //& index + Navigate
+// <Route
+//   path="cities"
+//   element={<CityList cities={cities} isLoading={isLoading} />}
+// />
+// <Route path="cities/:id" element={<City />} />
+// <Route
+//   path="countries"
+//   element={<CountryList cities={cities} isLoading={isLoading} />}
+// />
+// <Route path="form" element={<Form />} />
+//! </Route>
+// <Route path="*" element={<PageNotFound />} />
+
+//& Usage of index route:
+//* index route is the default child route that is going to be matched
+//* if none of these other routes here matches.
+//*=====================================================================
+
+
+//& Usage of Outlet Component routes:  <Outlet />
+//* how to display one component or one element inside another component
+//* that's where the outlet component provided by React Router comes into play.
+//* as in sidebar (outlet)
+
+//*=====================================================================
+//& Title: React Router vs Use state hook
+
+//& Understanding React Router and Tab Components
+
+//* Realized that the implementation of protected routes is similar to a tabs component, but with a different approach.
+
+//? Traditional Tab Component Implementation
+//* Previously, to implement a tab component where the content changes based on the active tab,
+//*  we would use the useState hook to manage the active tab.
+
+//? Using React Router for Tab Management
+//* With React Router, we manage tabs differently.
+//* Instead of using useState to manage the active tab, we allow the URL to store the state of the active tab.
+//* When the URL changes, the active tab changes accordingly.
+
+//? A New Perspective with React Router
+//* React Router introduces a new way of thinking about application building.
+
+//? The Relevance of Previous Knowledge
+//* Despite the new approach, we still frequently build components like accordions or tabbed components using the useState hook.
+
+//? Navigation in Real-World Applications
+//* Going forward, the overall navigation of real-world applications is typically managed by a tool like React Router.
+//* This includes managing sub-navigation like tabs.
+
+//* (cities and countries tabs)
+
+//*=====================================================================
+//& Title: Implementing Nested Routes
+
+//? Implementing Nested Routes
+//* Nested routes were implemented inside another route element.
+//*  The content to be rendered by the nested route is placed inside the 'Outlet' component.
+
+//? Switching Between Nested Routes
+//* To switch between the nested routes, another navigation was implemented using 'NavLink' components.
+//* These link to the different URLs, which in this case are sub-URLs, as in AppNav comp
+
+//? Sub Routes Example
+//* An example of this implementation can be seen with the sub-routes of 'cities' and 'countries'.
+
+//*=====================================================================
 
 //& Usage of Outlet Component routes:  <Outlet />
 //* how to display one component or one element inside another component
@@ -2488,58 +2557,13 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 //* as in sidebar (outlet)
 
-//=====================================================================
-
-//& Usage of index route:
-//* index route is the default child route that is going to be matched
-//* if none of these other routes here matches.
-
-//*=====================================================================
-
-//& Title: React Router vs Use state hook
-
-//* Now if we think about this, what we just implemented here is actually very similar to something like a tabs component, but implemented in a very different way.
-
-//? Implementing a Tab Component
-//* So before, if we wanted to implement a tab component where we have these tabs here and then the content changes according to which is the active tab
-//* we would've implemented that using the Use state hook to manage the currently active tab.
-
-//? Using React Router
-//* But here with React Router, we do the same thing, but in a very different way. So instead of using the Use state hook to manage state,
-//* we basically allow React Router enter URL to store that state of the active tab.
-//* And so then whenever this URL here changes, then we change which tab is currently active.
-
-//? React Router: A New Way of Thinking
-//* So React Router is a whole new way of thinking about how we built an application.
-
-//? The Value of Previous Learning
-//* So we still build components like accordions or tabbed components like the one I just mentioned using the U state hook all the time.
-
-//? Navigation in Real World Applications
-//* But from now on, the overall navigation of the application is in the real world always managed by something like React Router.
-//* And so that includes a small sub navigation like this one.  (cities and countries tabs)
-
-//*=====================================================================
-//& Title: Implementing Nested Routes
-
-//? Implementing Nested Routes
-//* So how we implemented our nested routes here inside another route element.
-//*  Then we rendered whatever the nested route wants to render inside the outlet component here.
-
-//? Switching Between Nested Routes
-//* And then to actually switch between the nested routes we implemented
-//* yet another navigation with these Nav link components to basically link between the different URLs, which in this case are these sub URLs.
-
-//? Sub Routes Example
-//* So with the sub routes of cities and countries.
-
 //*=====================================================================
 //& another usefulness of react router
 //* storing state in the URL so that we can use it in different places of the application (use it globally)
 
 //*=====================================================================
 
-//! Video 216
+//! Video 216:  Dynamic Routes With URL Parameters
 //& Title: React Route with Params
 
 //? Using Params with React Router
@@ -2574,7 +2598,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 //~ <Route path="cities/:id" element={<City />} />
 
 //*=====================================================================
-//! Video 217
+//! Video 217. Reading and Setting a Query String
 //& Query String
 
 //^ Create query string by passing it to (to prop) in the link
@@ -2705,7 +2729,7 @@ onClick={(e) => {
 //*   return (
 //!     <button onClick={onClick} className={`${styles.btn} ${styles[type]}`}>
 //*       {children}
-//*     </button>
+//!     </button>
 //*   );
 //* }
 
@@ -2729,10 +2753,10 @@ element={<Navigate replace to="cities" />}
 //* replace prop is : replace the current element in the history stack.
 
 
-//*=======================================================================================================================
+//&=======================================================================================================================
 
 
-//^ =================================== Section 18: Advanced State Management: The Context API ===============================
+//&  Section 18: Advanced State Management: The Context API
 
 //! video 229:  Finishing the City View 
 //& Add active element as UI feature:
@@ -2805,4 +2829,711 @@ function BackButton() {
     </Button>
   );
 }
+//*=======================================================================================================================
+
+
+//& Create a context:
+
+//^ 1) Create Context:
+const citiesContext = createContext();
+
+//^ 2) Create Provider:
+function CitiesProvider({ children }) {
+  const [cities, setCities] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [currentCity, setCurrentCity] = useState({}); //* if you forgot {}, currentCity will be undefined in City comp
+
+  //! Effect: fetching list of cities
+  useEffect(function () {
+    async function fetchCities() {
+      try {
+        setIsLoading(true);
+        const res = await fetch(`${Base_URL}/cities`);
+        const data = await res.json();
+        console.log(data);
+        setCities(data);
+      } catch {
+        alert("there is error fetching list of cities");
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchCities();
+  }, []);
+
+  //! Handling function: fetch (get) current city
+    async function getCity(id) {
+      try {
+        setIsLoading(true);
+        const res = await fetch(`${Base_URL}/cities/${id}`);
+        const data = await res.json();
+        console.log(data);
+        setCurrentCity(data);
+      } catch {
+        alert("there is error getting current city");
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    //^ 3) Pass states, handling function in the value of Provider
+  return (
+    <citiesContext.Provider
+      value={{
+        cities,
+        isLoading,
+        currentCity,
+        getCity,
+      }}
+    >
+      {children}
+    </citiesContext.Provider>
+  );
+}
+
+//^ 4) Use Context:
+function useCities() {
+  const context = useContext(citiesContext);
+  if (context === undefined)
+    throw new Error("citiesContext was used outside of the PostProvider");
+  return context;
+}
+
+//^ 5) Export the context and provider
+export { CitiesProvider, useCities };
+
+//^ 6) Wrap the whole App inside citiesProvider
+
+<CitiesProvider>
+<BrowserRouter>
+  <Routes>
+    <Route path="/" element={<HomePage />} />
+    <Route path="product" element={<Product />} />
+    <Route path="pricing" element={<Pricing />} />
+
+    <Route path="login" element={<Login />} />
+
+    <Route
+      path="app"
+      element={
+        <ProtectedRoute>
+          <AppLayout />
+        </ProtectedRoute>
+      }
+    >
+   
+      <Route index element={<Navigate replace to="cities" />} />
+      <Route path="cities" element={<CityList />} />
+    </Route>
+    <Route path="*" element={<PageNotFound />} />
+  </Routes>
+</BrowserRouter>
+</CitiesProvider>
+
+
+//^ 7) Consume the context wherever, it's needed like in cityList for ex.
+
+//*=======================================================================================================================
+//& Context + Reducer
+
+const Base_URL = `http://localhost:9000`;
+const citiesContextRed = createContext();
+
+const initialState = {
+  cities: [],
+  isLoading: false,
+  currentCity: {},
+  error: "",
+};
+
+function reducer(state, action) {
+  switch (action.type) {
+    case "loading":
+      return { ...state, isLoading: true };
+    case "cities/loaded":
+      return { ...state, isLoading: false, cities: action.payload };
+    case "city/loaded":
+      return { ...state, isLoading: false, currentCity: action.payload };
+    case "city/created":
+      return {
+        ...state,
+        isLoading: false,
+        cities: [...state.cities, action.payload],
+        currentCity: action.payload, //* to activate the current city on UI (green border around it)
+      };
+    case "city/deleted":
+      return {
+        ...state,
+        isLoading: false,
+        cities: state.cities.filter((city) => city.id !== action.payload),
+        currentCity: {}, //* to deactivate the current city
+      };
+    case "rejected":
+      return { ...state, error: action.payload };
+    default:
+      throw new Error("unknown error");
+  }
+}
+
+function CitiesProvider({ children }) {
+  const [{ cities, isLoading, currentCity, error }, dispatch] = useReducer(
+    reducer,
+    initialState
+  ); //* we don't really will use this error
+
+  useEffect(function () {
+    async function fetchCities() {
+      dispatch({ type: "loading" });
+      try {
+        const res = await fetch(`${Base_URL}/cities`);
+        const data = await res.json();
+        dispatch({ type: "cities/loaded", payload: data });
+      } catch {
+        dispatch({
+          type: "rejected",
+          payload: "there was an error fetching the cities",
+        });
+      }
+    }
+
+    fetchCities();
+  }, []);
+
+  //! fetch (get) current city
+  async function getCity(id) {
+    //* if the ID that is being passed in is the same as the current city.
+    //* And so basically we can check if the city that we want to load
+    //* is already the current city. And so then there's no need to call the API (fetching) again.
+
+    console.log(id, currentCity.id); //* id is string because is coming from url, but currentCity.id is number
+    if (Number(id) !== currentCity.id) return;   
+    try {
+      dispatch({ type: "loading" });
+      const res = await fetch(`${Base_URL}/cities/${id}`);
+      const data = await res.json();
+      console.log(data);
+      dispatch({ type: "city/loaded", payload: data });
+    } catch {
+      dispatch({
+        type: "rejected",
+        payload: "there is error getting the city",
+      });
+    }
+  }
+  //! Create new city: (used in form component)
+  async function createCity(newCity) {
+    try {
+      dispatch({ type: "loading" });
+      const res = await fetch(`${Base_URL}/cities`, {
+        method: "POST",
+        body: JSON.stringify(newCity),
+        headers: { "Content-type": "application/json" },
+      });
+
+      const data = await res.json();
+      console.log(data);
+      dispatch({ type: "city/created", payload: data }); //* the data which is the newly created city object.
+    } catch {
+      dispatch({
+        type: "rejected",
+        payload: "there is error creating the city",
+      });
+    }
+  }
+  //! Delete city:
+  async function deleteCity(id) {
+    try {
+      dispatch({ type: "loading" });
+      await fetch(`${Base_URL}/cities/${id}`, {
+        method: "DELETE",
+      });
+      dispatch({ type: "city/deleted", payload: id });
+    } catch {
+      dispatch({
+        type: "rejected",
+        payload: "there is error deleting the city",
+      });
+    }
+  } //* refresh the cities list page after clicking delete to make sure that this city is deleted from API after refetching
+  return (
+    <citiesContextRed.Provider
+      value={{
+        cities,
+        isLoading,
+        currentCity,
+        getCity,
+        createCity, //* pass it into the context here so to be used in the form comp
+        deleteCity,
+        error, //* we don't really will use this error
+      }}
+    >
+      {children}
+    </citiesContextRed.Provider>
+  );
+}
+
+function useCities() {
+  const context = useContext(citiesContextRed);
+  if (context === undefined)
+    throw new Error("Post context was used outside of the PostProvider");
+  return context;
+}
+
+export { CitiesProvider, useCities };
+
+//**===========================================================================================
+//& Title: Context API Provider Order
+
+//? Rule of Thumb
+//* In the Context API, provider order typically doesn't matter.
+
+//? Special Cases
+//* Sometimes, `CitiesProvider` might need state from `AuthProvider`.
+//* In these cases, we can use a custom hook from `AuthProvider` inside `CitiesProvider`.
+
+//? Provider Structure
+//* If such a dependency exists, `AuthProvider` should be the parent of `CitiesProvider`.
+import React, { createContext, useContext, useState, useEffect } from "react";
+
+//~ Chatgpt case example:
+// Create two contexts
+const AuthContext = createContext();
+const CitiesContext = createContext();
+
+function AuthProvider({ children }) {
+  const [auth, setAuth] = useState({ user: "John Doe", isLoggedIn: true });
+
+  return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
+}
+
+function CitiesProvider({ children }) {
+  const auth = useContext(AuthContext);
+  const [cities, setCities] = useState(["New York", "Los Angeles", "Chicago"]);
+
+  // Imagine we have a function that fetches cities based on the user
+  function fetchCities(user) {
+    // Fetch cities for the user...
+  }
+
+  // If auth changes, we fetch the cities for the user
+  useEffect(() => {
+    fetchCities(auth.user);
+  }, [auth]);
+
+  return (
+    <CitiesContext.Provider value={cities}>{children}</CitiesContext.Provider>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <CitiesProvider>{/* Rest of the app */}</CitiesProvider>
+    </AuthProvider>
+  );
+}
+
+//*=======================================================================================================================
+
+
+//& Conditional rendering inside component function
+function CityList() {
+  const { cities, isLoading } = useCities();
+  if (isLoading) return <Spinner />;
+  if (!cities.length) return <Message message="click on the map" />;
+  return (
+    <div className={styles.cityList}>
+      {cities.map((city) => (
+        <CityItem city={city} key={city.id} />
+      ))}
+    </div>
+  );
+}
+
+//*=======================================================================================================================
+
+//&  Creating a Unique List of Countries using Reduce method
+
+//* This code creates a unique list of countries from an array of city objects.
+
+const countries2 = cities.reduce((arr, city) => {
+  if (!arr.map((city) => city.country).includes(city.country))
+    return [...arr, { country: city.country, emoji: city.emoji }];
+  else return arr;
+}, []);
+
+
+//? Using the Reduce Method
+//* The 'reduce' method is used to transform the 'cities' array into a new array called 'countries2'.
+
+//* The 'reduce' method takes a callback function and an initial value for the accumulator (in this case, an empty array).
+
+//* The callback function is invoked for each 'city' object in the 'cities' array.
+
+//? Checking for Unique Countries
+//* Inside the callback function, we first map over the accumulated array 'arr' to create an array of country names.
+
+//* We then check if this array of country names includes the country of the current 'city' object.
+
+//! If arr does not include the country, 
+//* we return a new array that includes all previous elements of 'arr' 
+//* and a new object containing the 'country' and 'emoji' properties of the current 'city'.
+
+//* If the country is already included, we simply return the accumulated array 'arr' without adding anything new.
+
+//? Result
+//* The result is an array of unique country objects, each with 'country' and 'emoji' properties.
+//*=======================================================================================================================
+
+//& Error by call "useEffect" conditionally:
+
+  // if(isLoading) return <Spinner/> //! this causes error
+  //* because React Hook "useEffect" is called conditionally.
+  //* React Hooks must be called in the exact same order in every component render
+
+  //* this effect could be placed in city comp when it's mounted but it's cleaner to be here in the context
+  useEffect(
+    function () {
+      getCity(id);
+    },
+    [id]
+  );
+
+  //* to solve the issue that previous city will appear for a half of second because the new current one
+  if (isLoading) return <Spinner />;
+
+//*=======================================================================================================================
+
+//& Format Date:
+  const formatDate = (date) =>
+  new Intl.DateTimeFormat("en", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    weekday: "long",
+  }).format(new Date(date));
+
+  <>
+  <p>{formatDate(date || null)}</p>
+
+  <time className={styles.date}>({formatDate(date)})</time>
+  </>
+//*=======================================================================================================================
+//& Install leaflet library:
+  //* npm i react-leaflet leaflet
+
+// @import "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+// @import "https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap";
+
+
+
+//**======================================================================================================
+
+//& Handle form submit and navigate to new page
+
+//* So the handler function (handleSubmit) can be an async function. That's no problem at all.
+async function handleSubmit(e) {
+  e.preventDefault();
+
+  if (!cityName || !date) return;
+
+  const newCity = {
+    cityName,
+    country,
+    emoji,
+    notes,
+    date,
+    position: { lat, lng },
+  };
+
+  await createCity(newCity);
+
+  //? Navigating Back
+//* Finally, after all that is done, we navigate back to the page where we came from.
+//* by this: navigate("/app/cities") in handleSubmit as above
+
+  navigate("/app/cities");
+}
+
+//^ to fix the form in case there is no latitude in longitude in the URL.
+
+//* to prevent Form comp to be fired off, if the user gets to the form by writing Form path on the browser url instead clicking on the map
+//* Prevent Form component to be loaded if there are no lat,lng
+if (!lat && !lng) return <Message message=" start click on the map " />;
+
+if (isLoadingGeoCoding) return <Spinner />;
+
+if (error) return <Message message={error} />;
+
+//**======================================================================================================
+//& Date Picker Component
+//* We're using 'react-datepicker' to give us a date picker component for React.
+//*  npm i react-datepicker:
+
+<DatePicker
+id="date"
+onChange={(date) => setDate(date)}
+selected={date}
+dateFormat="dd/MM/yyyy"
+/>
+
+//**======================================================================================================
+//& Convert Country code to Emoji
+export function convertToEmoji(countryCode) {
+  const codePoints = countryCode
+    .toUpperCase()
+    .split("")
+    .map((char) => 127397 + char.charCodeAt());
+  return String.fromCodePoint(...codePoints);
+}
+
+//**======================================================================================================
+
+//& Click on map, fetch the data from the clicked position
+useEffect(
+  function () {
+    if (!lat && !lng) return; //* to prevent HTTP to be fired off, if the user gets to the form by writing Form path on the browser url instead clicking on the map
+    async function fetchCityData() {
+      try {
+        setError("");
+        setIsLoadingGeoCoding(true);
+        const res = await fetch(
+          `${Base_URL}?latitude=${lat}&longitude=${lng}`
+        );
+        const data = await res.json();
+        if (!data.countryCode) throw new Error("Not a city");
+
+        console.log(data);
+        setCityName(data.city || data.locality || "");
+        setEmoji(convertToEmoji(data.countryCode));
+        setCountry(data.countryName);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setIsLoadingGeoCoding(false);
+      }
+    }
+    fetchCityData();
+  },
+  [lat, lng]
+);
+//**======================================================================================================
+
+//& Get data from url by a custom hook
+
+import { useSearchParams } from "react-router-dom";
+
+export function useUrlPosition() {
+  const [searchParams] = useSearchParams();
+  const lat = searchParams.get("lat");
+  const lng = searchParams.get("lng");
+
+  return [lat, lng];
+}
+//* And so then whenever we need to position from the url,
+//* we very simply just call this one function, and that's it.
+
+
+//*=========================================================================================================================
+
+
+//& Handle Delete city, prevent default navigate click of link
+
+function CityItem({ city }) {
+  const { deleteCity } = useCities();
+  const { id, position } = city;
+  
+  function handleDelete(e) {
+    e.preventDefault(); //* so the link is no longer clicked and not direct us to city page, only the button.
+    deleteCity(id);
+  }
+
+  return (
+    <li>
+      <Link
+        to={`${id}?lat=${position.lat}&lng=${position.lng}`}
+      >
+        <button onClick={handleDelete}>
+          &times;
+        </button>
+      </Link>
+    </li>
+  );
+}
+
+
+//*===========================================================================================================
+
+
+//& Fake Authentication
+//~ Components: App, fakeAuthContext, User, AppLayout, ProtectedRoute, Login, HomePage
+
+//? Frontend Authentication
+//* Three-step process: user credential verification, redirect and state update, and protection from unauthorized access.
+
+//~ Storing User and Authentication State
+//* User and authentication status are stored in state for protection against unauthorized access.
+
+//? Context for State (fakeAuthContext)
+//* A context is created to store the state and provide access to the entire application tree.
+
+//~ Setting Up Context for Fake Authentication
+//* Login and logout functions are set up. 
+//* Clicking the associated buttons sets the user to authenticated and stores the user in state.
+
+
+const FAKE_USER = {
+  name: "Jack",
+  email: "jack@example.com",
+  password: "qwerty",
+  avatar: "https://i.pravatar.cc/100?u=zz",
+};
+
+const AuthContext2 = createContext();
+const initialState2 = {
+  user: null,
+  isAuthenticated: false,
+};
+
+function reducer(state, action) {
+  switch (action.type) {
+    case "login":
+      return { ...state, user: action.payload, isAuthenticated: true };
+    case "logout":
+      return { ...state, user: null, isAuthenticated: false };
+
+    default:
+      throw new Error("action is unknown");
+  }
+}
+function AuthProvider({ children }) {
+  const [{ user, isAuthenticated }, dispatch] = useReducer(
+    reducer,
+    initialState2
+  );
+
+  function login(email, password) {
+    if (email === FAKE_USER.email && password === FAKE_USER.password)
+      dispatch({ type: "login", payload: FAKE_USER });
+  }
+  function logout() {
+    dispatch({ type: "logout" });
+  }
+  return (
+    <AuthContext.Provider value={{ user, isAuthenticated, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
+}
+
+function useAuth() {
+  const context = useContext(AuthContext2);
+  if (context === undefined)
+    throw new Error("AuthContext was used outside AuthProvider");
+  return context;
+}
+
+export { AuthProvider, useAuth };
+
+
+//& Login Comp
+export default function Login() {
+  // PRE-FILL FOR DEV PURPOSES
+  const [email, setEmail] = useState("jack@example.com");
+  const [password, setPassword] = useState("qwerty");
+  const { login, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+  function handleLogin(e) {
+    e.preventDefault();
+    // if (!email || !password) return;
+    // login(email, password);
+    //? or:
+    if (email && password) login(email, password);
+  }
+
+  useEffect(
+    function () {
+      if (isAuthenticated) navigate("/App", { replace: true });
+    },
+    [isAuthenticated, navigate]
+  );
+
+  return (
+    <main className={styles.login}>
+      <form className={styles.form} onSubmit={handleLogin}>
+        <div className={styles.row}>
+          <label htmlFor="email">Email address</label>
+          <input
+            type="email"
+            id="email"
+            onChange={(e) => setEmail(e.target.value)}
+            value={email}
+          />
+        </div>
+
+        <div className={styles.row}>
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            onChange={(e) => setPassword(e.target.value)}
+            value={password}
+          />
+        </div>
+
+        <div>
+          <Button type="primary">Login</Button>
+        </div>
+      </form>
+    </main>
+  );
+  }
+
+//*====================================================================================================================
+
+//! Title: Video 240 - Adding Fake Authentication: Protecting a Route
+//? Protecting Against Unauthorized Access
+//* The application is protected against unauthorized access by redirecting unauthenticated users back to the homepage.
+
+//? ProtectedRoute Component
+//* A specialized component (ProtectedRoute) is created to handle redirection and wrap the entire application.
+
+function ProtectedRoute({ children }) {
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
+  //! we should not call the navigate function from the top level code.
+  //* So that's basically an effect. And so effects belong in useEffect.
+  useEffect(
+    function () {
+      if (!isAuthenticated) navigate("/");
+    },
+    [isAuthenticated, navigate]
+  );
+  return isAuthenticated ? children : null;
+}
+
+//^ Debugging Protected Routes
+
+//* Attempted to implement protected routes and tested the functionality.
+
+//* Encountered an issue: The user component was still trying to render, causing an error.
+
+//? Problem Analysis
+//* The error occurred because the user component was trying to read from the 'avatar' property of the user object, which didn't exist.
+
+//? Applying useEffect to Solve the Issue
+//* Realized that the useEffect hook executes after the component has already been rendered.
+//* This means that the user component was being rendered before the navigation could occur, causing the error.
+
+//^ Solution: Conditional Rendering to the Rescue
+//! return isAuthenticated ? children : null;
+//* Implemented conditional rendering to solve the issue.
+//* If the user is authenticated, the children components are rendered; otherwise, null is returned.
+//* This prevents the user component from rendering when the user is not authenticated.
+
+//* Retested the functionality by logging in and reloading the page.
+//* Confirmed that the user is redirected as expected when not authenticated.
+
 

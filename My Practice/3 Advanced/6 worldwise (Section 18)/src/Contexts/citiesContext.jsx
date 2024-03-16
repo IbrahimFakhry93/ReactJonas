@@ -3,8 +3,11 @@ import { createContext, useContext, useEffect, useState } from "react";
 //* Add children prop to the provider so we can then use this provider component
 //* as the top level component in the app component.
 const Base_URL = `http://localhost:9000`;
+
+//^ 1) Create Context:
 const citiesContext = createContext();
 
+//^ 2) Create Provider:
 function CitiesProvider({ children }) {
   const [cities, setCities] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -85,6 +88,7 @@ function CitiesProvider({ children }) {
       setIsLoading(false);
     }
   } //* refresh the cities list page after clicking delete to make sure that this city is deleted from API after refetching
+  //^ 3) Pass states, handling function in the value of Provider
   return (
     <citiesContext.Provider
       value={{
@@ -100,12 +104,15 @@ function CitiesProvider({ children }) {
     </citiesContext.Provider>
   );
 }
-
+//^ 4) Use Context:
 function useCities() {
   const context = useContext(citiesContext);
   if (context === undefined)
     throw new Error("citiesContext was used outside of the PostProvider");
   return context;
 }
-
+//^ 5) Export the context and provider
 export { CitiesProvider, useCities };
+
+//^ 6) Wrap the whole App inside citiesProvider (in App.jsx)
+//^ 7) Consume the context wherever, it's needed like in cityList.jsx for ex.

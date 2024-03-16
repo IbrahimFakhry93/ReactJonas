@@ -161,6 +161,11 @@ progress {
   border: 2px solid var(--color-theme);
   color: var(--color-light);
 }
+.btn-option.wrong-selected {
+  background-color: red;
+  border: 2px solid red;
+  color: var(--color-darkest);
+}
 .btn-option.wrong {
   background-color: var(--color-accent);
   border: 2px solid var(--color-accent);

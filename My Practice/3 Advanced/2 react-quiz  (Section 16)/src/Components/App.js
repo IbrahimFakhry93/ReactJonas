@@ -12,7 +12,7 @@ import FinishScreen from "./FinishScreen";
 import Footer from "./Footer.js";
 import Timer from "./StartApp/Timer.js";
 
-//& note at the end at video 21 min:
+//& note at the end at video 21 min: Setting Up a Timer With useEffect
 //* all the state lives in the App, so when a state update, the App will re-render and the children components will re-render as well
 //* that will cause a performance issue
 
@@ -43,13 +43,14 @@ const initialState = {
 
   //& To display the timer
   remainingSeconds: null, //* calculate the seconds for each question based on number of questions, it's null at start, because we haven't fetch (get) the questions yet
-  //* we will calculate (remainingSeconds) at the case: start as downwards
+  //* we will calculate (remainingSeconds) at the case: 'start' as downwards
 };
 
 function reducer(state, action) {
   switch (action.type) {
     case "dataReceived":
-      return { ...state, questions: action.payload, status: "ready" }; //* we updated these two state variables (questions , status), so these two pieces of state, all in one dispatch.
+      return { ...state, questions: action.payload, status: "ready" }; //* we updated these two state variables (questions , status),
+    //* so these two pieces of state, all in one dispatch.
     case "dataFailed":
       return { ...state, status: "error" };
     case "start":

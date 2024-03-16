@@ -13,15 +13,8 @@ const initialState = { count: 0, step: 1 };
 //! VIP:
 //* useReducer is used to centralize all state updating logic in one central place, which is the reducer function.
 
-// it's ultimately this reducer function
-
-// that will be updating the state object.
-
-// So in a way.
-
-// it's a bit like the setState function in useState
-
-// but with superpowers.
+//* it's ultimately this reducer function that will be updating the state object.
+//* it's like the setState function in useState but with superpowers.
 
 function reducer(state, action) {
   //! state: current state
@@ -31,7 +24,7 @@ function reducer(state, action) {
   //* so the current state plus the action, and based on that, return the next state.
   // return state + action; //! whatever we return here, will be the new state
 
-  //* reducer function takes the current state nd all the information that is contained in the action
+  //* reducer function takes the current state and all the information that is contained in the action
   //* in order to compute the next state.
   //* So usually based on the action type, the reducer then takes some kind of decision.
 
