@@ -16,11 +16,12 @@ function createRandomPost() {
     body: faker.hacker.phrase(),
   };
 }
-
+//~ 1) Create context
 //! App Context:
 const PostContext = createContext(); //* PostContext in capital letter because it is component
 console.log(PostContext);
 
+//~ 2) Create Provider
 //& Place all the states and all states update logic in separate context
 function PostProvider({ children }) {
   //! App States
@@ -62,10 +63,13 @@ function PostProvider({ children }) {
   );
 }
 
+//~ 3) Create Post context custom hook
 function usePosts() {
   const context = useContext(PostContext);
   if (context === undefined)
-    throw new Error("Post context was used outside of the PostProvider");
+    throw new Error(
+      "Post context custom hook was used outside of the PostProvider"
+    );
   return context;
 }
 

@@ -384,6 +384,82 @@ function Counter() {
     </div>
   );
 }
+//*==============================================================================================================================
+const initState = { count: 0, step: 1 };
+
+function reducer(state, action) {
+  switch (action.type) {
+    case "dec":
+      return { ...state, count: state.count - state.step };
+    case "inc":
+      return { ...state, count: state.count + state.step };
+    case "setCount":
+      return { ...state, count: action.payload };
+    case "setStep":
+      return { ...state, step: action.payload };
+    case "reset":
+      return initState;
+    default:
+      throw new Error("Unknown action");
+  }
+}
+
+function App() {
+  const [state, dispatch] = useReducer(reducer, initState);
+  const { count, step } = state;
+
+  // This mutates the date object.
+  const date = new Date("june 21 2027");
+  date.setDate(date.getDate() + count);
+
+  const dec = function () {
+    dispatch({ type: "dec" });
+  };
+
+  const inc = function () {
+    dispatch({ type: "inc" });
+  };
+
+  const defineCount = function (e) {
+    dispatch({ type: "setCount", payload: Number(e.target.value) });
+  };
+
+  const defineStep = function (e) {
+    dispatch({ type: "setStep", payload: Number(e.target.value) });
+  };
+
+  const reset = function () {
+    dispatch({ type: "reset" });
+  };
+
+  return (
+    <div className="counter">
+      <div>
+        <input
+          type="range"
+          min="0"
+          max="10"
+          value={step}
+          onChange={defineStep}
+        />
+        <span>{step}</span>
+      </div>
+
+      <div>
+        <button onClick={dec}>-</button>
+        <input value={count} onChange={defineCount} />
+        <button onClick={inc}>+</button>
+      </div>
+
+      <p>{date.toDateString()}</p>
+
+      <div>
+        <button onClick={reset}>Reset</button>
+      </div>
+    </div>
+  );
+}
+
 
 //*==============================================================================================================================
 //& Title: Using children prop in React for reusability
@@ -2385,6 +2461,469 @@ function Day({ day, max, min, code, isToday }) {
 
 //^====================================================  Advanced Level =========================================================
 
+//? Section 16: The Advanced useReducer Hook
+
+//^ Quiz App
+
+//& time for each question:
+const SECS_PER_QUES = 30; //* convention for variable to write as this
+
+const initState2 = {
+  questions: [],
+
+  //& To display the status of Application
+  //* loading /error/ready/active/finished
+  status: "loading",
+
+  //& To display the question and answers
+  index: 0, 
+
+  //& To display the correct and wrong answers
+  //* once we click on selected option or answer, re-render required so create state answer
+  answer: null, //* null because initially there is no answer
+
+  //& To display and update the scores
+  points: 0,
+
+  //& To display the highScores across multiple quiz trials
+  highScores: 0, //* it is a state because we want it to preserved across renders
+
+  //& To display the timer
+  remainingSeconds: null, //* calculate the seconds for each question based on number of questions, it's null at start, because we haven't fetch (get) the questions yet
+  //* we will calculate (remainingSeconds) at the case: 'start' as downwards
+};
+
+function reducer(state, action) {
+  switch (action.type) {
+    case "dataReceived":
+      return { ...state, questions: action.payload, status: "ready" }; //* we updated these two state variables (questions , status) in one dispatch.
+
+    case "dataFailed":
+      return { ...state, status: "error" };
+    case "start":
+      return {
+        ...state,
+        status: "active",
+        remainingSeconds: state.questions.length * SECS_PER_QUES,
+      };
+    case "newAnswer":
+      const question = state.questions.at(state.index); //* get the current question
+      //* and here we are leveraging the current state that we get into the reducer to compute the next state. So really relying on that current state.
+      return {
+        ...state,
+        answer: action.payload,
+        points:
+          action.payload === question.correctOption
+            ? state.points + question.points
+            : state.points, //* check if the current question is equal to the received answer.
+        //* we place points because it is logic when the answer is received we update the score
+      }; //* we updated these two state variables (questions , status), so these two pieces of state, all in one dispatch.
+
+    case "nextQuestion":
+      return { ...state, index: state.index + 1, answer: null }; //* answer null to reset the answers or options after navigate to next question
+
+    case "finish":
+      return {
+        ...state,
+        status: "finish",
+        highScores:
+          state.points > state.highScores ? state.points : state.highScores,
+      };
+    case "reset":
+      return { ...initState2, questions: state.questions, status: "ready" };
+    case "tick":
+      return {
+        ...state,
+        remainingSeconds: state.remainingSeconds - 1,
+        //& this line down entire heart of timer feature
+        status: state.remainingSeconds === 0 ? "finish" : state.status,
+      };
+    default:
+      return new Error("Action unknown");
+  }
+}
+
+export default function App() {
+  //& We need to display data on UI so we need state:
+  // const [state, dispatch] = useReducer(reducer, initState2);
+  //* use destruction
+  const [
+    { questions, status, index, answer, points, highScores, remainingSeconds },
+    dispatch,
+  ] = useReducer(reducer, initState2);
+  //& numQuestions derived state from questions state
+  const numQuestions = questions.length;
+  const maxPossiblePoints = questions.reduce(
+    (prev, cur) => prev + cur.points,
+    0
+  );
+  //& fetch data on mount
+  useEffect(function () {
+    fetch("http://localhost:9000/questions")
+      .then((res) => res.json())
+      .then((data) => {
+        dispatch({ type: "dataReceived", payload: data });
+        console.log(data);
+      })
+      .catch((err) => dispatch({ type: "dataFailed" }));
+  }, []);
+
+  //&  display different UIs inside <Main/> for different status situations (loading,ready,error)
+  return (
+    <div className="app">
+      <Header />
+      <Main>
+        {status === "loading" && <Loader />}
+        {status === "error" && <Error />}
+        {status === "ready" && (
+          <StartScreen numQuestions={numQuestions} dispatch={dispatch} />
+        )}
+        {status === "active" && (
+          <>
+            <Progress
+              index={index}
+              numQuestions={numQuestions}
+              points={points}
+              maxPossiblePoints={maxPossiblePoints}
+              answer={answer}
+            />
+            <Question
+              question={questions[index]}
+              answer={answer}
+              dispatch={dispatch}
+            />
+
+            <Footer>
+              <NextQuestion
+                dispatch={dispatch}
+                answer={answer}
+                index={index}
+                numQuestions={numQuestions}
+              />
+              <Timer dispatch={dispatch} remainingSeconds={remainingSeconds} />
+            </Footer>
+          </>
+        )}
+
+        {status === "finish" && (
+          <FinishScreen
+            points={points}
+            maxPossiblePoints={maxPossiblePoints}
+            highScores={highScores}
+            dispatch={dispatch}
+          />
+        )}
+      </Main>
+    </div>
+  );
+}
+
+
+
+//^======================
+  
+//& Timer Feature
+
+//^ case "tick":
+  return {
+    ...state,
+    remainingSeconds: state.remainingSeconds - 1,
+    //& this line down entire heart of timer feature
+    status: state.remainingSeconds === 0 ? "finish" : state.status,
+  };
+
+
+function Timer({ dispatch, remainingSeconds }) {
+  const mins = Math.floor(remainingSeconds / 60);
+  const secs = remainingSeconds % 60;
+  //* useEffect here because we want the timer to start once the timer mount and it will mount in the status: 'start'
+  //* if we put useEffect in the App, it will start when the App is mounted , when the whole application starts not the quiz itself
+  useEffect(
+    function () {
+      //* every setInterval return a unique ID
+      const id = setInterval(() => {
+        dispatch({ type: "tick" });
+      }, 1000);
+
+      //* use this id to clear the function
+      //* this cleanup function will run between re-renders and at unmount
+      return () => clearInterval(id);
+    },
+    [dispatch]
+  );
+  return (
+    <div>
+
+      //& Display the digits of timer 
+      <p class="timer">
+        {mins < 10 && "0"}
+        {mins}: {secs < 10 && "0"}
+        {secs}
+      </p>
+    </div>
+  );
+}
+//? Cleanup Function Importance
+//* The cleanup function in `useEffect` stops the interval set by `setInterval` when the `Timer` component unmounts or re-renders.
+//* This prevents the interval from running indefinitely and trying to update the state of an unmounted component, avoiding memory leaks and potential errors.
+
+//^======================
+//& Progress feature:
+
+function Progress({ index, numQuestions, points, maxPossiblePoints, answer }) {
+  return (
+    <header className="progress">
+      <progress max={numQuestions} value={index + Number(answer !== null)} />
+      <p>
+        Question <strong>{index + 1}</strong> / {numQuestions}
+      </p>
+
+      <p>
+        <strong>{points}</strong> / {maxPossiblePoints} points
+      </p>
+    </header>
+  );
+}
+
+// export default Progress;
+
+//^ Progress Bar Update Logic
+//? 'value' Attribute
+//* 'value={index + Number(answer !== null)}' updates the progress bar based on the current question and if an answer is selected.
+//* 'index' is the current question. 'Number(answer !== null)' returns 1 if an answer is selected, 0 otherwise.
+//* So, the progress bar value is the current question number if an answer is selected, and the previous question number if not.
+
+
+//^=================================================================================
+
+//& Style answers options UI feature 
+
+function Options({ question, answer, dispatch }) {
+const isAnswered = answer !== null; //* that means if there is an answer
+return (
+  <div className="options">
+    {question.options.map((option, index) => (
+      <button
+        //* first css class "answer" will shift the selected answer to the left (whether it's correct or wrong)
+        //* look at the UI
+  
+        // className={`btn btn-option ${index === answer ? "answer" : ""} ${
+        //*   isAnswered
+        //     ? index === question.correctOption
+        //       ? "correct"
+        //       : index === answer
+        //       ? "wrong-selected"
+        //       : "wrong"
+        //*     : ""
+        // }`}
+
+        className={`btn btn-option ${index === answer && "answer"} ${
+          isAnswered &&
+          ((index === question.correctOption && "correct") ||
+            (index === answer && "wrong-selected") ||
+            "wrong")
+        }`}
+        disabled={isAnswered}
+        key={option}
+        onClick={() => dispatch({ type: "newAnswer", payload: index })}
+      >
+        {option}
+      </button>
+    ))}
+  </div>
+);
+}
+
+// export default Options;
+
+//* class={`btn btn-option ${index === answer ? 'answer':''}`}
+//* index === answer this will be achieved, when the button is clicked
+
+
+// .btn-option.correct {
+//   background-color: var(--color-theme);
+//   border: 2px solid var(--color-theme);
+//   color: var(--color-light);
+// }
+// .btn-option.wrong-selected {
+//   background-color: red;
+//   border: 2px solid red;
+//   color: var(--color-darkest);
+// }
+// .btn-option.wrong {
+//   background-color: var(--color-accent);
+//   border: 2px solid var(--color-accent);
+//   color: var(--color-darkest);
+// }
+
+// .answer {
+//   transform: translateX(2rem);
+// }
+//^====================================
+
+//& Finish screen:
+
+function FinishScreen({ points, maxPossiblePoints, highScores, dispatch }) {
+  const percentage = (points / maxPossiblePoints) * 100;
+  return (
+    <>
+      <p className="result">
+        <strong>{points}</strong> out of {maxPossiblePoints} (
+        {Math.ceil(percentage)}%)
+      </p>
+
+      <p className="highscore">HighScores: {highScores}</p>
+      <button
+        className="btn btn-ui"
+        onClick={() => dispatch({ type: "reset" })}
+      >
+        reset
+      </button>
+    </>
+  );
+}
+
+// export default FinishScreen;
+
+
+//^====================================
+
+//& Conditionally display navigation button
+function NextQuestion({ dispatch, answer, index, numQuestions }) {
+  //* early return
+
+  if (answer === null) return;
+
+  if (index < numQuestions - 1)
+    return (
+      <button
+        className="btn btn-ui"
+        onClick={() => dispatch({ type: "nextQuestion" })}
+      >
+        Next
+      </button>
+    );
+
+  if (index === numQuestions - 1)
+    return (
+      <button
+        className="btn btn-ui"
+        onClick={() => dispatch({ type: "finish" })}
+      >
+        Finish
+      </button>
+    );
+}
+
+//*==================================================================================================================
+
+
+//& Bank account features using reducer:
+
+const initalstate3 = {
+  balance: 0,
+  loan: 0,
+  isActive: false,
+};
+
+function reducer(state, action) {
+  if (!state.isActive && action.type !== "openAccount") return state; //* this condition to prevent depositing or any operation while the account is not active, don't depend only on the UI
+  switch (action.type) {
+    case "openAccount":
+      return { ...state, isActive: true, balance: 500 };
+    case "deposit":
+      return { ...state, balance: state.balance + action.payload };
+    case "withdraw":
+      return state.balance > 0
+        ? { ...state, balance: state.balance - action.payload }
+        : state;
+    case "requestLoan":
+      return state.loan === 0
+        ? {
+            ...state,
+            loan: action.payload,
+            balance: state.balance + action.payload,
+          }
+        : state;
+
+    case "payLoan":
+      return state.loan !== 0
+        ? { ...state, loan: 0, balance: state.balance - state.loan }
+        : state;
+    case "closeAccount":
+      return state.loan === 0 && state.balance === 0 ? initalstate3 : state;
+    default:
+      return new Error("Action unknown");
+  }
+}
+
+export default function App() {
+  const [{ balance, loan, isActive }, dispatch] = useReducer(
+    reducer,
+    initalstate3
+  );
+
+  return (
+    <div className="App">
+      <h1>useReducer Bank Account</h1>
+      <p>Balance: {balance}</p>
+      <p>Loan: {loan}</p>
+
+      <p>
+        <button
+          onClick={() => dispatch({ type: "openAccount" })}
+          disabled={isActive}
+        >
+          Open account
+        </button>
+      </p>
+      <p>
+        <button
+          onClick={() => dispatch({ type: "deposit", payload: 150 })}
+          disabled={!isActive}
+        >
+          Deposit 150
+        </button>
+      </p>
+      <p>
+        <button
+          onClick={() => dispatch({ type: "withdraw", payload: 50 })}
+          disabled={!isActive}
+        >
+          Withdraw 50
+        </button>
+      </p>
+      <p>
+        <button
+          onClick={() => dispatch({ type: "requestLoan", payload: 5000 })}
+          disabled={!isActive}
+        >
+          Request a loan of 5000
+        </button>
+      </p>
+      <p>
+        <button
+          onClick={() => dispatch({ type: "payLoan" })}
+          disabled={!isActive}
+        >
+          Pay loan
+        </button>
+      </p>
+      <p>
+        <button
+          onClick={() => dispatch({ type: "closeAccount" })}
+          disabled={!isActive}
+        >
+          Close account
+        </button>
+      </p>
+    </div>
+  );
+}
+//*==================================================================================================================
+
+//? Section 17:
+
 //& setup Vite Project:
 
 // npm create vite@latest
@@ -2756,8 +3295,240 @@ element={<Navigate replace to="cities" />}
 //&=======================================================================================================================
 
 
-//&  Section 18: Advanced State Management: The Context API
+//? Section 18: Advanced State Management: The Context API
 
+//? Atomic blog:
+
+//& Create Random posts and create array at initial state
+
+import { faker } from "@faker-js/faker";
+function createRandomPost() {
+  return {
+    title: `${faker.hacker.adjective()} ${faker.hacker.noun()}`,
+    body: faker.hacker.phrase(),
+  };
+}
+
+const [posts, setPosts] = useState(() =>
+Array.from({ length: 30 }, () => createRandomPost())
+);
+
+//* note: same as:
+useState(() =>
+Array.from({ length: 30 }, createRandomPost)  //* without callback function
+)   
+
+
+//& Search posts by its title and content (body)
+
+const [searchQuery, setSearchQuery] = useState("");
+
+  //! Derived state. These are the posts that will actually be displayed
+const searchedPosts =
+    searchQuery.length > 0
+      ? posts.filter((post) =>
+          `${post.title} ${post.body}`
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase())
+        )
+      : posts;
+
+
+
+
+  //& Dark mode Feature 
+   
+  const [isFakeDark, setIsFakeDark] = useState(false);
+
+  //* Whenever `isFakeDark` changes, we toggle the `fake-dark-mode` class on the HTML element (see in "Elements" dev tool).
+  useEffect(
+    function () {
+      document.documentElement.classList.toggle("fake-dark-mode");
+    },
+    [isFakeDark]
+  );
+
+  //! App JSX render
+
+        // <button
+        //*   onClick={() => setIsFakeDark((isFakeDark) => !isFakeDark)}
+        //   className="btn-fake-dark-mode"
+        // >
+        //   {isFakeDark ? "☀️" : "🌙"}
+        // </button>
+
+
+//&  “Optimized data (posts) Generation and State Management in React”
+
+//* State is used to store posts for optimization. 
+//* The callback in useState, which generates posts, is called once on initial render. 
+//* This prevents post re-creation on every render. 
+//* This is an alternative to moving posts outside the components.
+
+
+
+//* Here we don't need the setter function.
+//* We're only using state to store these posts
+//* because the callback function passed into useState (which generates the posts) is only called once,
+//* on the initial render. So we use this trick as an optimization technique,
+//* because if we just used a regular variable, these posts would be re-created on every render.
+//* We could also move the posts outside the components, but I wanted to show you this trick 😉
+
+
+const [posts2] = useState(() =>
+// 💥 WARNING: This might make your computer slow! Try a smaller `length` first
+Array.from({ length: 100 }, () => createRandomPost())
+);
+
+//*====================================================================
+
+
+//& Common Pattern useContext + Custom hook:
+
+//^ Custom Hook File:
+
+function createRandomPost() {
+  return {
+    title: `${faker.hacker.adjective()} ${faker.hacker.noun()}`,
+    body: faker.hacker.phrase(),
+  };
+}
+//~ 1) Create context
+
+const PostContext = createContext(); //* PostContext in capital letter because it is component
+console.log(PostContext);
+
+//~ 2) Create Provider
+//& Place all the states and all states update logic in separate context
+function PostProvider({ children }) {
+  //! App States
+  const [posts, setPosts] = useState(() =>
+    Array.from({ length: 30 }, () => createRandomPost())
+  );
+  const [searchQuery, setSearchQuery] = useState("");
+
+  //! Derived state
+  const searchedPosts =
+    searchQuery.length > 0
+      ? posts.filter((post) =>
+          `${post.title} ${post.body}`
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase())
+        )
+      : posts;
+
+  function handleAddPost(post) {
+    setPosts((posts) => [post, ...posts]);
+  }
+
+  function handleClearPosts() {
+    setPosts([]);
+  }
+
+  return (
+    <PostContext.Provider
+      value={{
+        posts: searchedPosts,
+        onAddPost: handleAddPost,
+        onClearPosts: handleClearPosts,
+        searchQuery: searchQuery,
+        setSearchQuery: setSearchQuery,
+      }}
+    >
+      {children}
+    </PostContext.Provider>
+  );
+}
+
+//~ 3) Create Post context custom hook
+function usePosts() {
+  const context = useContext(PostContext);
+  if (context === undefined)
+    throw new Error(
+      "Post context custom hook was used outside of the PostProvider"
+    );
+  return context;
+}
+
+export { PostProvider, usePosts };
+
+//^====================================================================
+
+
+//^ App file:
+
+function App() {
+  // const x = usePosts();
+  // console.log(x); //! undefined, because we use context outside the context provider (PostProvider)
+
+  const [isFakeDark, setIsFakeDark] = useState(false);
+  //! App Effects
+  useEffect(
+    function () {
+      document.documentElement.classList.toggle("fake-dark-mode");
+    },
+    [isFakeDark]
+  );
+
+  return (
+    <section>
+      <button
+        onClick={() => setIsFakeDark((isFakeDark) => !isFakeDark)}
+        className="btn-fake-dark-mode"
+      >
+        {isFakeDark ? "☀️" : "🌙"}
+      </button>
+      <PostProvider>
+        <Header />
+        <Main />
+        <Archive />
+        <Footer />
+      </PostProvider>
+    </section>
+  );
+}
+
+//?===========================================
+
+//~ 4) consume Context   (1, 2, 3 in PostContext.js)
+function Header() {
+  // const { onClearPosts } = useContext(PostContext);
+
+  //~ consume Context
+  const { onClearPosts } = usePosts(); //* after importing usePosts custom hook
+
+  console.log(onClearPosts);
+  return (
+    <header>
+      <h1>
+        <span>⚛️</span>The Atomic Blog
+      </h1>
+      <div>
+        <Results />
+        <SearchPosts />
+        <button onClick={onClearPosts}>Clear posts</button>
+      </div>
+    </header>
+  );
+}
+//*?===========================================
+function SearchPosts() {
+  //~ consume Context
+  const { searchQuery, setSearchQuery } = usePosts();
+  return (
+    <input
+      value={searchQuery}
+      onChange={(e) => setSearchQuery(e.target.value)}
+      placeholder="Search posts..."
+    />
+  );
+}
+
+
+
+//*=======================================================
+
+//? WorldWise App
 //! video 229:  Finishing the City View 
 //& Add active element as UI feature:
 

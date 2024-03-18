@@ -9,35 +9,31 @@ function createRandomPost() {
   };
 }
 //& Video 225 Advanced Pattern: A Custom Provider and Hook (App v-3 )
-// So the idea is basically to remove all the state
 
-// and state updating logic, all from this component
+//^ Refactoring State Management
+//? Removing State and Logic from Component
+//* The idea is to remove all the state and state updating logic from this component.
 
-// and place it into our own custom Context Provider component.
+//? Custom Context Provider Component
+//* We will place it into our own custom Context Provider component.
 
-// So we will then have all the state
+//? Providing State Using Context
+//* We will then have all the state and provide that using context into our application.
 
-// and we will then provide that
+//? Refactoring Existing Code
+//* This is basically just a refactoring of what we already have.
+//* The functionality will stay exactly the same.
 
-// using context into our application.
+//? Three Parts of Context
+//* We will still have all three parts - creating the context, providing a value, and reading it.
 
-// So it's basically just a refactoring
-
-// of what we already have
-
-// but the functionality will stay exactly the same
-
-// and we still will have all three parts.
-
-// So creating the context, then providing a value,
-
-// and then reading it.
-
-// We will just have these different parts in different files.
+//? Different Parts in Different Files
+//* We will just have these different parts in different files.
 
 //^ Create PostContext.js (Create PostProvider Comp)
 
-//~ means encapsulate this repeated part in every comp in a custom hook const { onClearPosts } = useContext(PostContext);
+//~ means encapsulate this repeated part (useContext(PostContext)) in every comp in a custom hook:
+//* const { onClearPosts } = useContext(PostContext),  const { posts } = useContext(PostContext);
 
 function App() {
   // const x = usePosts();
@@ -72,9 +68,11 @@ function App() {
 
 //*===========================================
 
-//~ 1) consume Context
+//~ 4) consume Context   (1, 2, 3 in PostContext.js)
 function Header() {
   // const { onClearPosts } = useContext(PostContext);
+
+  //~ consume Context
   const { onClearPosts } = usePosts(); //* after importing usePosts custom hook
 
   console.log(onClearPosts);
@@ -93,6 +91,7 @@ function Header() {
 }
 //*===========================================
 function SearchPosts() {
+  //~ consume Context
   const { searchQuery, setSearchQuery } = usePosts();
   return (
     <input
@@ -171,7 +170,6 @@ function List() {
 //*===========================================
 function Archive() {
   const { onAddPost } = usePosts();
-  // Here we don't need the setter function. We're only using state to store these posts because the callback function passed into useState (which generates the posts) is only called once, on the initial render. So we use this trick as an optimization technique, because if we just used a regular variable, these posts would be re-created on every render. We could also move the posts outside the components, but I wanted to show you this trick 😉
   const [posts] = useState(() =>
     // 💥 WARNING: This might make your computer slow! Try a smaller `length` first
     Array.from({ length: 10000 }, () => createRandomPost())
