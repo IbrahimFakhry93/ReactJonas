@@ -2463,6 +2463,14 @@ function Day({ day, max, min, code, isToday }) {
 
 //? Section 16: The Advanced useReducer Hook
 
+
+//& Create fake Api:
+
+//* install in other running terminal: npm i json-server
+//* in package.json in scripts add this: "server": "json-server --watch data/questions.json --port 9000"
+//* npm run server
+
+
 //^ Quiz App
 
 //& time for each question:
@@ -3852,6 +3860,155 @@ function useCities() {
 }
 
 export { CitiesProvider, useCities };
+
+//^==============================================================
+
+//^ Quiz App (reducer + context)
+
+//& Title: Provider and Dispatch Function
+//? Provider Component
+//* Here is the Provider itself where we pass all these different state values, plus the dispatch function, into the context.
+
+//? Comparison with Previous Application
+//* This is quite different to what we did earlier in the WorldWise application. 
+//* There, we didn't pass the dispatch function but really just the event handler functions.
+
+//? Dealing with Asynchronous Code
+//* That was because we were dealing with asynchronous code, which is not the case here.
+
+//? No Need for Intermediary Event Handler Functions
+//* Here, we don't need any intermediary event handler functions. 
+//* We can simply dispatch this function so that we can then dispatch events in the components.
+
+
+
+const QuizContext = createContext();
+const SECS_PER_QUES2 = 30; 
+const initialState4 = {
+  questions: [],
+
+ 
+  status: "loading",
+
+
+  index: 0,
+
+  
+  answer: null, 
+
+
+  points: 0,
+
+
+  highScores: 0, 
+
+
+  remainingSeconds: null,
+};
+
+function reducer(state, action) {
+  switch (action.type) {
+    case "dataReceived":
+      return { ...state, questions: action.payload, status: "ready" }; 
+    case "dataFailed":
+      return { ...state, status: "error" };
+    case "start":
+      return {
+        ...state,
+        status: "active",
+        remainingSeconds: state.questions.length * SECS_PER_QUES2,
+      };
+    case "newAnswer":
+      const question = state.questions.at(state.index); 
+      return {
+        ...state,
+        answer: action.payload,
+        points:
+          action.payload === question.correctOption
+            ? state.points + question.points
+            : state.points, 
+      }; 
+
+    case "nextQuestion":
+      return { ...state, index: state.index + 1, answer: null }; 
+
+    case "finish":
+      return {
+        ...state,
+        status: "finish",
+        highScores:
+          state.points > state.highScores ? state.points : state.highScores,
+      };
+    case "reset":
+      return { ...initialState4, questions: state.questions, status: "ready" };
+    case "tick":
+      return {
+        ...state,
+        remainingSeconds: state.remainingSeconds - 1,
+        status: state.remainingSeconds === 0 ? "finish" : state.status,
+      };
+    default:
+      return new Error("Action unknown");
+  }
+}
+
+function QuizProvider({ children }) {
+  
+  const [
+    { questions, status, index, answer, points, highScores, remainingSeconds },
+    dispatch,
+  ] = useReducer(reducer, initialState);
+  
+  const question = questions[index];
+  const numQuestions = questions.length;
+  const maxPossiblePoints = questions.reduce(
+    (prev, cur) => prev + cur.points,
+    0
+  );
+  //& fetch data on mount
+  useEffect(function () {
+    fetch("http://localhost:9000/questions")
+      .then((res) => res.json())
+      .then((data) => {
+        dispatch({ type: "dataReceived", payload: data });
+        console.log(data);
+      })
+      .catch((err) => dispatch({ type: "dataFailed" }));
+  }, []);
+
+  return (
+    <QuizContext.Provider
+      value={{
+        question,
+        questions,
+        status,
+        index,
+        answer,
+        points,
+        highScores,
+        remainingSeconds,
+        numQuestions,
+        maxPossiblePoints,
+        dispatch,
+      }}
+    >
+      {children}
+    </QuizContext.Provider>
+  );
+}
+
+function useQuiz() {
+  const context = useContext(QuizContext);
+  if (context === undefined)
+    throw new Error(
+      "QuizContext context was used outside of the QuizContextProvider"
+    );
+  return context;
+}
+
+export { QuizProvider, useQuiz };
+
+
 
 //**===========================================================================================
 //& Title: Context API Provider Order

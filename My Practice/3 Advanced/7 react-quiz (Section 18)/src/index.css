@@ -167,6 +167,11 @@ progress {
   color: var(--color-darkest);
 }
 
+.btn-option.wrong-selected {
+  background-color: red;
+  border: 2px solid red;
+  color: var(--color-darkest);
+}
 .answer {
   transform: translateX(2rem);
 }

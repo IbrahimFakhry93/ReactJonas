@@ -15,15 +15,14 @@ function Options({ question, answer, dispatch }) {
           // }`}
 
           // className={`btn btn-option ${index === answer ? "answer" : ""} ${
-          //*   isAnswered
+          //   isAnswered
           //     ? index === question.correctOption
           //       ? "correct"
           //       : index === answer
           //       ? "wrong-selected"
           //       : "wrong"
-          //*     : ""
+          //     : ""
           // }`}
-
           className={`btn btn-option ${index === answer && "answer"} ${
             isAnswered &&
             ((index === question.correctOption && "correct") ||
