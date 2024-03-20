@@ -4465,3 +4465,8 @@ function ProtectedRoute({ children }) {
 //* Confirmed that the user is redirected as expected when not authenticated.
 
 
+//?====================================================================================================================
+
+//? Section 19: Performance Optimization and Advanced useEffect
+
+//& Title: 
