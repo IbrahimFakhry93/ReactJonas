@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, memo } from "react";
 import { faker } from "@faker-js/faker";
 import { PostProvider, usePosts } from "./PostContext";
 import { Test, Test2 } from "./Test";
@@ -9,32 +9,6 @@ function createRandomPost() {
     body: faker.hacker.phrase(),
   };
 }
-//& Video 225 Advanced Pattern: A Custom Provider and Hook (App v-3 )
-// So the idea is basically to remove all the state
-
-// and state updating logic, all from this component
-
-// and place it into our own custom Context Provider component.
-
-// So we will then have all the state
-
-// and we will then provide that
-
-// using context into our application.
-
-// So it's basically just a refactoring
-
-// of what we already have
-
-// but the functionality will stay exactly the same
-
-// and we still will have all three parts.
-
-// So creating the context, then providing a value,
-
-// and then reading it.
-
-// We will just have these different parts in different files.
 
 //^ Create PostContext.js (Create PostProvider Comp)
 
@@ -110,14 +84,14 @@ function Results() {
   return <p>🚀 {posts.length} atomic posts found</p>;
 }
 //*===========================================
-function Main() {
+const Main = memo(function Main() {
   return (
     <main>
       <FormAddPost />
       <Posts />
     </main>
   );
-}
+});
 //*===========================================
 function Posts() {
   return (
@@ -169,7 +143,7 @@ function List() {
           </li>
         ))}
       </ul>
-      <Test />
+      {/* <Test /> */}
     </>
   );
 }

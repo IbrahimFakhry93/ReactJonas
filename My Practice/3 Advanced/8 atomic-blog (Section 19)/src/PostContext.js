@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { faker } from "@faker-js/faker";
 
 //! video 225: Advanced Pattern: A Custom Provider and Hook (App v-3 )
@@ -47,18 +47,21 @@ function PostProvider({ children }) {
     setPosts([]);
   }
 
+  //! memoize value of the context:
+
+  const value = useMemo(() => {
+    return {
+      posts: searchedPosts,
+      onAddPost: handleAddPost,
+      onClearPosts: handleClearPosts,
+      searchQuery: searchQuery,
+      setSearchQuery: setSearchQuery,
+    };
+  }, [searchedPosts, searchQuery]); //* if onAddPost will be added, it must be memoized by using (useCallback)
+
   return (
-    <PostContext.Provider
-      value={{
-        posts: searchedPosts,
-        onAddPost: handleAddPost,
-        onClearPosts: handleClearPosts,
-        searchQuery: searchQuery,
-        setSearchQuery: setSearchQuery,
-      }}
-    >
-      {children}
-    </PostContext.Provider>
+    //* 2) Provide value to child components
+    <PostContext.Provider value={value}>{children}</PostContext.Provider>
   );
 }
 
