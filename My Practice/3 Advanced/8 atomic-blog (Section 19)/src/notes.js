@@ -151,7 +151,7 @@ function App3() {
 
 //*===================================================================
 
-//& Title: Optimizing Context Re-Renders
+//! video 251. Optimizing Context Re-Renders
 
 //? App.js - PostContext.js
 //* We can use a few strategies to prevent wasted renders related to the context API.
@@ -180,3 +180,9 @@ function App3() {
 //* Some people even take it one step further. So inside the search Query context,
 //* you could even create one context only for the search Query and one only for the state, update or function.
 //* Or if you're using a reducer, you could then create one context for the state and one context for the dispatch function.
+
+//^  look at PostProvider function in PostContext.js to see the memoization
+
+//*===================================================================================================
+
+//! video 252.  Back to The "WorldWise" App:

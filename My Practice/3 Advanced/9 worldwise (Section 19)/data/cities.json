@@ -1,0 +1,40 @@
+{
+  "cities": [
+    {
+      "id": "b015",
+      "cityName": "Belgrade",
+      "country": "Serbia",
+      "emoji": "🇷🇸",
+      "notes": "",
+      "date": "2024-03-02T19:26:08.923Z",
+      "position": {
+        "lat": "44.80522439622257",
+        "lng": "20.498784159781586"
+      }
+    },
+    {
+      "id": "c2a7",
+      "cityName": "Benavente",
+      "country": "Portugal",
+      "emoji": "🇵🇹",
+      "notes": "",
+      "date": "2024-03-03T12:46:38.366Z",
+      "position": {
+        "lat": "38.805470223177466",
+        "lng": "-8.812021314519125"
+      }
+    },
+    {
+      "id": "f468",
+      "cityName": "Arganda",
+      "country": "Spain",
+      "emoji": "🇪🇸",
+      "notes": "",
+      "date": "2024-03-24T11:41:59.812Z",
+      "position": {
+        "lat": "40.29628651711716",
+        "lng": "-3.496251004053764"
+      }
+    }
+  ]
+}

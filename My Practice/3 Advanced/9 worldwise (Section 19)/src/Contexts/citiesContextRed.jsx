@@ -1,4 +1,10 @@
-import { createContext, useContext, useEffect, useReducer } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useReducer,
+} from "react";
 const Base_URL = `http://localhost:9000`;
 const citiesContext = createContext();
 
@@ -62,27 +68,48 @@ function CitiesProvider({ children }) {
     fetchCities();
   }, []);
 
-  //! fetch (get) current city
-  async function getCity(id) {
-    //* if the ID that is being passed in is the same as the current city.
-    //* And so basically we can check if the city that we want to load
-    //* is already the current city. And so then there's no need to call the API (fetching) again.
+  // //! fetch (get) current city
+  // async function getCity(id) {
+  //   //* if the ID that is being passed in is the same as the current city.
+  //   //* And so basically we can check if the city that we want to load
+  //   //* is already the current city. And so then there's no need to call the API (fetching) again.
 
-    console.log(id, currentCity.id); //* id is string because is coming from url, but currentCity.id is number
-    if (Number(id) === currentCity.id) return;
-    try {
-      dispatch({ type: "loading" });
-      const res = await fetch(`${Base_URL}/cities/${id}`);
-      const data = await res.json();
-      console.log(data);
-      dispatch({ type: "city/loaded", payload: data });
-    } catch {
-      dispatch({
-        type: "rejected",
-        payload: "there is error getting the city",
-      });
-    }
-  }
+  //   console.log(id, currentCity.id); //* id is string because is coming from url, but currentCity.id is number
+  //   if (Number(id) === currentCity.id) return;
+  //   try {
+  //     dispatch({ type: "loading" });
+  //     const res = await fetch(`${Base_URL}/cities/${id}`);
+  //     const data = await res.json();
+  //     console.log(data);
+  //     dispatch({ type: "city/loaded", payload: data });
+  //   } catch {
+  //     dispatch({
+  //       type: "rejected",
+  //       payload: "there is error getting the city",
+  //     });
+  //   }
+  // }
+  //! fetch (get) current city
+  const getCity = useCallback(
+    async function getCity(id) {
+      console.log(id, currentCity.id); //* id is string because is coming from url, but currentCity.id is number
+      if (Number(id) === currentCity.id) return;
+      try {
+        dispatch({ type: "loading" });
+        const res = await fetch(`${Base_URL}/cities/${id}`);
+        const data = await res.json();
+        console.log(data);
+        dispatch({ type: "city/loaded", payload: data });
+      } catch {
+        dispatch({
+          type: "rejected",
+          payload: "there is error getting the city",
+        });
+      }
+    },
+    [currentCity.id]
+  );
+
   //! Create new city: (used in form component)
   async function createCity(newCity) {
     try {
