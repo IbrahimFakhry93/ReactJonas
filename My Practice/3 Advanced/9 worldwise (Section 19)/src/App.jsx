@@ -1,20 +1,33 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Suspense, lazy } from "react";
 
-import HomePage from "./pages2/Homepage.jsx";
-import Product from "./pages2/Product.jsx";
-import Pricing from "./pages2/Pricing.jsx";
-import Login from "./pages2/Login.jsx";
-import AppLayout from "./pages2/AppLayout.jsx";
-import PageNotFound from "./pages2/PageNotFound.jsx";
+// import { CitiesProvider } from "./Contexts/citiesContext.jsx";
+import { CitiesProvider } from "./Contexts/citiesContextRed.jsx";
+import { AuthProvider } from "./Contexts/fakeAuthContext.jsx";
+
+import ProtectedRoute from "./Components/ProtectedRoute.jsx";
 import CityList from "./Components/CityList.jsx";
 import CountryList from "./Components/CountryList.jsx";
 import City from "./Components/City.jsx";
 import Form from "./Components/Form.jsx";
+import SpinnerFullPage from "./Components/SpinnerFullPage.jsx";
+
 import "./index.css";
-// import { CitiesProvider } from "./Contexts/citiesContext.jsx";
-import { CitiesProvider } from "./Contexts/citiesContextRed.jsx";
-import { AuthProvider } from "./Contexts/fakeAuthContext.jsx";
-import ProtectedRoute from "./Components/ProtectedRoute.jsx";
+
+// import HomePage from "./pages2/Homepage.jsx";
+// import Product from "./pages2/Product.jsx";
+// import Pricing from "./pages2/Pricing.jsx";
+// import Login from "./pages2/Login.jsx";
+// import AppLayout from "./pages2/AppLayout.jsx";
+// import PageNotFound from "./pages2/PageNotFound.jsx";
+
+const HomePage = lazy(() => import("./pages2/Homepage.jsx"));
+const Product = lazy(() => import("./pages2/Product.jsx"));
+const Pricing = lazy(() => import("./pages2/Pricing.jsx"));
+const Login = lazy(() => import("./pages2/Login.jsx"));
+const AppLayout = lazy(() => import("./pages2/AppLayout.jsx"));
+const PageNotFound = lazy(() => import("./pages2/PageNotFound.jsx"));
+
 //& Title: Clean Application Component
 
 //? Simplified Application Component
@@ -39,30 +52,32 @@ function App() {
     <AuthProvider>
       <CitiesProvider>
         <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="product" element={<Product />} />
-            <Route path="pricing" element={<Pricing />} />
+          <Suspense fallback={<SpinnerFullPage />}>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="product" element={<Product />} />
+              <Route path="pricing" element={<Pricing />} />
 
-            <Route path="login" element={<Login />} />
+              <Route path="login" element={<Login />} />
 
-            <Route
-              path="app"
-              element={
-                <ProtectedRoute>
-                  <AppLayout />
-                </ProtectedRoute>
-              }
-            >
-              {/* <Route path="app" element={<AppLayout />}> */}
-              <Route index element={<Navigate replace to="cities" />} />
-              <Route path="cities" element={<CityList />} />
-              <Route path="cities/:id" element={<City />} />
-              <Route path="countries" element={<CountryList />} />
-              <Route path="form" element={<Form />} />
-            </Route>
-            <Route path="*" element={<PageNotFound />} />
-          </Routes>
+              <Route
+                path="app"
+                element={
+                  <ProtectedRoute>
+                    <AppLayout />
+                  </ProtectedRoute>
+                }
+              >
+                {/* <Route path="app" element={<AppLayout />}> */}
+                <Route index element={<Navigate replace to="cities" />} />
+                <Route path="cities" element={<CityList />} />
+                <Route path="cities/:id" element={<City />} />
+                <Route path="countries" element={<CountryList />} />
+                <Route path="form" element={<Form />} />
+              </Route>
+              <Route path="*" element={<PageNotFound />} />
+            </Routes>
+          </Suspense>
         </BrowserRouter>
       </CitiesProvider>
     </AuthProvider>
