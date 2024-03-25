@@ -33,6 +33,19 @@ import { faker } from "@faker-js/faker";
 
 //* when search on search bar, Main comp and Posts comp won't be re-rendered
 //* because they have been passed as children to PostContext,
+// eslint-disable-next-line no-lone-blocks
+{
+  /*
+//^ in App comp in App.js
+<PostProvider>
+      <Header />
+      <Main />
+      <Archive />
+      <Footer />
+</PostProvider> 
+ 
+*/
+}
 //* but Lists and Header will be re-rendered because they consume contexts and context is updated
 
 //*================================================================================================
@@ -41,13 +54,15 @@ import { faker } from "@faker-js/faker";
 //? App-memo.js - work in Archive comp
 
 //* When search on search bar while archive is shown,
-//* that typing in search bar, re-render the App (bec. update its state searchQuery) and also will render the archive comp
+//* that typing in search bar, re-render the App (bec. update its state searchQuery)
+//* and also will render the archive comp
 //* because it's a child of Parent comp (App)
 //* so archive component is perfect candidate for memoization
 
 //! why good candidate for memoization?
 //* It re-renders very often and it does so with the same props.
-//* So the only prop that it has is the show prop, which is always false
+//* So the only prop that it has is the show prop, which (show) is always false
+//* (before we change it later by adding ({ archiveOptions, onAddPost })as props
 
 //*? always showing archive even with memo will take some time, why?
 //* because memorizing a component has nothing to do
@@ -95,7 +110,8 @@ function App2() {
   //? UseMemo with dependency when Object contains stateful value
   //* By specifying an empty dependency array, this value (archiveOptions) will only be computed once
   //* in the beginning and will then never change, so it will never be recomputed.
-  //* so we need to add the stateful value (posts.length) to the dependency array
+  //* so we need to add the stateful value (posts.length) to the dependency array.
+
   const archiveOptions2 = useMemo(() => {
     return {
       title: `Archive posts ${posts.length}`,
