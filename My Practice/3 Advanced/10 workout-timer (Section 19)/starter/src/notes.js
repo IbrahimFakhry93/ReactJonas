@@ -13,222 +13,161 @@ import { useEffect } from "react";
 
 //! 257. Setting State Based on Other State Updates
 
-//* duration need to be turned into state, to update it by clicking on button
+//& Title: Setting State Based on Other State Updates
 
-// to use the useEffect Hook
+//? Duration (Derived State)
+//* The 'duration' needs to be turned into a new piece of state, to update it by clicking on a button.
+//* We want to calculate this duration each time we click on one of these buttons,
+//* but also each time that one of these state variables here changes.
 
-// to keep this duration state here in sync
+//? Using useEffect Hook
+//* We use the useEffect Hook to keep this 'duration' state in sync with all these other state variables updates.
+//* This is a perfectly fine use case for the useEffect Hook, because there are so many state variables involved,
+//* that it just becomes very impractical, and even unreadable and confusing to do it in another way.
 
-// with all these other state variables.
+```Impractical solution
+onChange={(e) => {
+  setSets(e.target.value);
+  setDuration((number * sets * speed) / 60 + (e.target.value - 1) * durationBreak)
+}}
 
-// and this is a perfectly fine use case for the useEffect Hook,
-
-// because there are so many state variables here involved,
-
-// that it just becomes very impractical,
-
-// and even unreadable and confusing to do it in a way
-
-// that I just demonstrated you as this:
-// onChange={(e) => {
-
-//     setSets(e.target.value);
-//     setDuration((number * sets * speed) / 60 + (e.target.value - 1) * durationBreak)
-
-// }}
-
-// useEffect(() => {
-//   setDuration((number * sets * speed) / 60 + (sets - 1) * durationBreak);
-// }, [number,sets,speed,durationBreak]);
+practical solution
+useEffect(() => {
+  setDuration((number * sets * speed) / 60 + (sets - 1) * durationBreak);
+}, [number,sets,speed,durationBreak]);
+```;
 
 //^==================
-// So these buttons now work.
+//& Title: Using useEffect to Update State Based on Other State Updates
 
-// And again, in order to do that,
+//? Transforming 'duration' into a State Variable
+//* In order to make the buttons work, we needed to transform 'duration' into a state variable.
+//* We created an effect that listens for the state change in any one of these four state variables.
+//* [number,sets,speed,durationBreak]
+//* If that happens, it will then calculate our new duration.
 
-// we needed to transform this duration here
-
-// into a state variable.
-
-// And so then, to update that state variable in an easy way,
-
-// we created this effect which lists for the state change
-
-// in any one of these four state variables.
-
-// And if that happens,
-
-// it will then calculate our new duration.
-
-// And so, here, we have the classic example
-
-// of using an effect to update state
-
-// based on another state update,
-
-// which again, is not always desirable
-
-// and it's not always the best solution.
-
-// But here, I think it is perfectly fine
-
-// because otherwise, we would have to spread this logic here
-
-// into four different event handler functions
-
-// which wouldn't be really nice.
+```javascript
+useEffect(() => {
+  setDuration((number * sets * speed) / 60 + (sets - 1) * durationBreak);
+}, [number,sets,speed,durationBreak]);
+```;
 
 //^===========
 
 //* downside of using effect
-// So, only updating once, which we would think
+//& Title: Understanding useEffect Hook in State Updates
 
-// only gives us one render.
+//? Initial Render
+//* Initially, we might think that updating once only gives us one render.
+//* But in reality, we do have two renders. The calculator comp is rendered, and then again.
 
-// But actually, we do have two renders.
+//? Problem with useEffect Hook
+//* The problem with the useEffect Hook to update states is that it only runs after the render has already happened.
+//* So, when we set the state here (duration) again, we get a second render.
 
-// So the calculator is rendered.
-
-// And then again, and so this is exactly the problem
-
-// of the useEffect Hook to update states.
-
-// So, right here.
-
-// So basically, this first state update
-
-// is this number of sets updating,
-
-// which will then trigger this effect here.
-
-// But the effect only runs
-
-// after the render has already happened.
-
-// And so then when we set the state here again,
-
-// we get a second render.
-
-// So React is not able to batch these two renders in one,
-
-// simply because, again, the effect actually runs
-
-// way after the render has already happened.
-
-// And so just be aware of that issue
-
-// whenever you do something like this.
-
-// So, whenever you can, again, avoid this.
-
-// But when you have so many state variables here
-
-// that influence the value of another state,
-
-// then you can do this.
+```javascript
+useEffect(() => {
+  setDuration((number * sets * speed) / 60 + (sets - 1) * durationBreak);
+}, [number,sets,speed,durationBreak]);
+```;
 
 //*======================================================================================================
 
 //! 258. Using Helper Functions In Effects
 
-//* when add PlaySound to useEffect, it causes a flicker
+//& Title: Understanding useEffect and its Dependencies
+//^ open Calculator.js
 
-//* Problem:
+//? Defining playSound Function
+```const playSound = function () {
+    if (!allowSound) return;
+    const sound = new Audio(clickSound);
+    sound.play();
+  }; ``` //? Using playSound in useEffect //* so playSound should be added to useEffect dependency array //* playSound is a reactive value because it has state variable (allowSound)
+``` useEffect(() => {
+    setDuration((number * sets * speed) / 60 + (sets - 1) * durationBreak); 
+    playSound();
+  }, [number, sets, speed, durationBreak, playSound]);```;
+//!  Adding playSound to useEffect causes a flicker problem
 
-// So each time that we click here on this button,
+//? Understanding the Flicker Problem
+//* Each time we click the increment button (+) or dec btn (-), it sets the duration state and plays the sound.
+//* Updating the state (duration) re-renders the calculator component, which recreates playSound function.
+//* React sees a new function (playSound), and since it's part of the dependency array of the effect, it runs the effect.
+//* The duration is then set again using the current values, which haven't changed.
+//* When we click the button, none of these four values changes.
+//* So, the duration is set here for the second time,
+//* it uses these values again, causing the duration to immediately revert.
+//* This is why we see the flashing.
+//* For a fraction of a second, it goes to 53, but then immediately goes back.
+//* This is also why we hear the sound twice. We hear it once when we click the button, and then again from this effect.
 
-// it will set the duration and it will play the sound.
+//? Solution: wrap the playSound in useCallback function to memoize playSound
+//? or: to move playSound out of the calculator component, but here it can't because
+//? it has a stateful value (allowSound)
+//? or: move playSound func inside effect, but it doesn't work also because we need this function
+//? in other event handlers like handleInc and handleDec, so we have to memoize playSound function
+//? so then the function will not be recreated between these renders.
 
-// Now updating the state will
+```const playSound = useCallback(
+    function () {
+      //* it's a reactive value because it has allowSound
+      if (!allowSound) return;
+      const sound = new Audio(clickSound); //* Audio is a browser feature.
+      sound.play();
+    },
+    [allowSound]
+  );```;
 
-// of course re-render the component,
+//! but here another problem, that when we click on sound icon, it will reset the allowSound
+//! that will recreate PlaySound func again , that will cause the useEffect to reset the duration again
 
-// which will recreate this function here.
+//! solution:
+//? Synchronizing Sound Play with Duration State
 
-// So React will see a brand new function.
+//* We want the sound to play whenever the duration changes. That's why we placed this function in three places.
+//* However, there is a better, more clear and intentional way of doing that.
+//* We can simply synchronize this side effect of playing the sound with the duration state.
 
-// And since this function is part of the dependency array
+//^===================
+//^ open Calculator2.js
 
-// of this effect, it will then run this effect as well.
+//* synchronize this side effect of playing the sound with the duration state update
+```useEffect(() => {
+    const playSound = function () {
+      if (!allowSound) return;
+      const sound = new Audio(clickSound); 
+      sound.play();
+    };
+    playSound();
+  }, [duration, allowSound]);```;
 
-// And so that's where the duration is
+//?: Managing Side Effects in useEffect
 
-// then set again but using the current values,
-
-// which actually haven't changed.
-
-// So when we click here, none of these four values changes.
-
-// And so when the duration is then set here
-
-// for the second time, it will use these values again,
-
-// which will make it so that the duration
-
-// immediately goes back.
-
-// And so that's why we see that flashing.
-
-// So for a fraction of a second it'll go to 53,
-
-// but then immediately it'll go back.
-
-// So saw that here.
-
-// So that is the reason why this is happening
-
-// and also why we kind of hear the sound twice.
-
-// So we hear it here
-
-// and we then hear it again from this effect.
+//* This time, we were able to finally move the helper function into the effect.
+//* This is a great demonstration that we should have one effect for each side effect that we want to have.
+//* In other words, this effect here should only be responsible for setting the duration, not for setting the duration and playing a sound.
+//* Instead, we create one effect that is responsible for playing the sound, and we do that whenever the duration changes.
 
 //*===========================================================================
 
 //! closures in effect:
+//^ open Calculator2.js
+//* useEffect to explain stale closure
+//   useEffect(() => {
+//     console.log(sets, duration);
+//     document.title(`Your ${number}-exercises workout`);
+//   }, [number, sets, duration]);
 
-// when we first learned about use effect
+//& Title: Understanding useEffect and Closures in JavaScript
 
-// maybe you have wondered why use effect actually
+//? Subtitle: Why useEffect needs a dependency array
+//*  When we first learned about useEffect,
+//*  we might have wondered why useEffect actually needs the dependency array in order to know when it should execute the effect.
+//*  Why can't the effect not simply rerun automatically?
 
-// needs the dependency array
-
-// in order to know when it should execute the effect.
-
-// So why can't the effect not simply rerun automatically
-
-//^ closure definition:
-
-// So in JavaScript, a closure is basically the fact
-
-// that a function captures all the variables
-
-// from its Lexile scope.
-
-// So from the place that it was defined
-
-// at the time that the function was created.
-
-// So again, whenever a function is created, it closes
-
-// over the effect of that Lexile environment at the time.
-
-// And so it'll always have access to the variables
-
-// from the place where it was defined.So in JavaScript, a closure is basically the fact
-
-// that a function captures all the variables
-
-// from its Lexile scope.
-
-// So from the place that it was defined
-
-// at the time that the function was created.
-
-// So again, whenever a function is created, it closes
-
-// over the effect of that Lexile environment at the time.
-
-// And so it'll always have access to the variables
-
-// from the place where it was defined.
+//& Title: Closure Definition
+//* In JavaScript, a closure is basically the fact that a function captures all the variables from its Lexile scope.
+//* So from the place that it was defined at the time that the function was created.
+//* Whenever a function is created, it closes over the effect of that Lexile environment at the time.
+//* And so it'll always have access to the variables from the place where it was defined.

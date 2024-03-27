@@ -11,9 +11,10 @@ function Calculator({ workouts, allowSound }) {
   const [duration, setDuration] = useState();
   const mins = Math.floor(duration);
   const seconds = (duration - mins) * 60;
+  //! (derived state) const duration = (number * sets * speed) / 60 + (sets - 1) * durationBreak;
 
   // const playSound = function () {
-  //   //* it's a reactive value because it has allowSound
+  //* it's a reactive value because it has allowSound
   //   if (!allowSound) return;
   //   const sound = new Audio(clickSound); //* Audio is a browser feature.
   //   sound.play();
@@ -28,6 +29,11 @@ function Calculator({ workouts, allowSound }) {
     [allowSound]
   );
 
+  useEffect(() => {
+    setDuration((number * sets * speed) / 60 + (sets - 1) * durationBreak); //* add Math.ceil, so when secs is half mins (50:30), so next increment turn into 50
+    playSound();
+  }, [number, sets, speed, durationBreak, playSound]);
+
   function durationInc() {
     setDuration((duration) => Math.floor(duration) + 1); //* add Math.floor, so when secs is half mins (50:30), so next increment turn into 51
     playSound();
@@ -37,11 +43,6 @@ function Calculator({ workouts, allowSound }) {
     playSound();
   }
 
-  // const duration = (number * sets * speed) / 60 + (sets - 1) * durationBreak;
-  useEffect(() => {
-    setDuration((number * sets * speed) / 60 + (sets - 1) * durationBreak); //* add Math.ceil, so when secs is half mins (50:30), so next increment turn into 50
-    playSound();
-  }, [number, sets, speed, durationBreak, playSound]);
   return (
     <>
       <form>

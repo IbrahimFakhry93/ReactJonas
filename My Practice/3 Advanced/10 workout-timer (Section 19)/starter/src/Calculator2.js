@@ -22,13 +22,23 @@ function Calculator({ workouts, allowSound }) {
   //^===============
   // const playSound = useCallback(
   //   function () {
-  //     //* it's a reactive value because it has allowSound
   //     if (!allowSound) return;
-  //     const sound = new Audio(clickSound); //* Audio is a browser feature.
+  //     const sound = new Audio(clickSound);
   //     sound.play();
   //   },
   //   [allowSound]
   // );
+
+  //* synchronize this side effect of playing the sound with the duration state update
+  useEffect(() => {
+    const playSound = function () {
+      //* it's a reactive value because it has allowSound
+      if (!allowSound) return;
+      const sound = new Audio(clickSound); //* Audio is a browser feature.
+      sound.play();
+    };
+    playSound();
+  }, [duration, allowSound]);
 
   function durationInc() {
     setDuration((duration) => Math.floor(duration) + 1); //* add Math.floor, so when secs is half mins (50:30), so next increment turn into 51
@@ -41,17 +51,6 @@ function Calculator({ workouts, allowSound }) {
   useEffect(() => {
     setDuration((number * sets * speed) / 60 + (sets - 1) * durationBreak); //* add Math.ceil, so when secs is half mins (50:30), so next increment turn into 50
   }, [number, sets, speed, durationBreak]);
-
-  //* synchronize this side effect of playing the sound with the duration state update
-  useEffect(() => {
-    const playSound = function () {
-      //* it's a reactive value because it has allowSound
-      if (!allowSound) return;
-      const sound = new Audio(clickSound); //* Audio is a browser feature.
-      sound.play();
-    };
-    playSound();
-  }, [duration, allowSound]);
 
   //* useEffect to explain stale closure
   useEffect(() => {
