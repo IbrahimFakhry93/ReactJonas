@@ -1,10 +1,14 @@
+//& initial state:
+
 const initialStateAccount = {
   balance: 0,
   loan: 0,
   loanPurpose: "",
 };
 
-export default function reducerAccount(state = initialStateAccount, action) {
+//& reducer function:
+
+export default function accountReducer(state = initialStateAccount, action) {
   switch (action.type) {
     //* 'domainName/eventName'
     case "account/deposit":
@@ -39,7 +43,7 @@ export function deposit(amount) {
 
 //^====================================
 export function withdraw(amount) {
-  return { type: "account/deposit", payload: amount };
+  return { type: "account/withdraw", payload: amount };
 }
 
 //^====================================

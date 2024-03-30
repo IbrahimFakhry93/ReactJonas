@@ -13,7 +13,8 @@ const initialStateCustomer = {
 
 //*  return { ...state, balance: state.balance + action.payload };
 // So spreading all the current state into this new state
-// that will be returned from here.
+// that will be returned from here as this:
+//* return { ...state, balance: state.balance + action.payload };
 // payload is basically the data that gets passed into the reducer
 // when the action is dispatched.
 
@@ -50,7 +51,7 @@ function accountReducer(state = initialStateAccount, action) {
 // that it doesn't know about
 // it will simply return the original state back.
 
-//! const store = createStore(reducerAccount);
+//! const store = createStore(accountReducer);
 
 // store.dispatch({ type: "account/deposit", payload: 500 });
 // console.log(store.getState());
@@ -70,15 +71,15 @@ function deposit(amount) {
   return { type: "account/deposit", payload: amount };
 }
 //* in Redux we don't dispatch actions directly to the reducer but really to the store.
-store.dispatch(deposit(500));
-console.log(store.getState());
+// store.dispatch(deposit(500));
+// console.log(store.getState());
 
 //^====================================
 function withdraw(amount) {
-  return { type: "account/deposit", payload: amount };
+  return { type: "account/withdraw", payload: amount };
 }
-store.dispatch(withdraw(500));
-console.log(store.getState());
+// store.dispatch(withdraw(500));
+// console.log(store.getState());
 //^====================================
 function requestLoan(amount, purpose) {
   return {
@@ -86,14 +87,14 @@ function requestLoan(amount, purpose) {
     payload: { amount, purpose },
   };
 }
-store.dispatch(requestLoan(500, "buy a car"));
-console.log(store.getState());
+// store.dispatch(requestLoan(500, "buy a car"));
+// console.log(store.getState());
 //^====================================
 function payLoan() {
   return { type: "account/payLoan" };
 }
-store.dispatch(payLoan);
-console.log(store.getState());
+// store.dispatch(payLoan);
+// console.log(store.getState());
 
 //*=====================================================================================================================================
 
@@ -130,15 +131,15 @@ function customerReducer(state, action) {
 }
 
 //& create Root reducer
-const rootReducer = combineReducers({
-  account: accountReducer,
-  customer: customerReducer,
-});
+// const rootReducer = combineReducers({
+//   account: accountReducer,
+//   customer: customerReducer,
+// });
 
 //& create Store:
-const store = createStore(rootReducer);
+// const store = createStore(rootReducer);
 
 //& Dispatch create actions to reducer by store
-store.dispatch(createCustomer("Jonas Schmidtmann", "234334343"));
-store.dispatch(deposit(400));
-console.log(store.getState());
+// store.dispatch(createCustomer("Jonas Schmidtmann", "234334343"));
+// store.dispatch(deposit(400));
+// console.log(store.getState());

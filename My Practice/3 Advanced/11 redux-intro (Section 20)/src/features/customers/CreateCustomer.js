@@ -1,10 +1,18 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { createCustomer } from "./customerSlice";
 
+// this file is all about two input fields which are already controlled elements
+// with these two useState hooks
 function Customer() {
   const [fullName, setFullName] = useState("");
   const [nationalId, setNationalId] = useState("");
-
-  function handleClick() {}
+  const dispatch = useDispatch();
+  function handleClick() {
+    console.log(fullName);
+    if (!fullName || !nationalId) return;
+    dispatch(createCustomer(fullName, nationalId));
+  }
 
   return (
     <div>
