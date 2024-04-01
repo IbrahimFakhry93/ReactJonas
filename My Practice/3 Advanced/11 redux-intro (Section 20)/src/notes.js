@@ -216,192 +216,124 @@ function handleDeposit() {
 //*=============================================================================================================
 
 //!  271. Making an API Call With Redux Thunks
-//? open: store - accountSlice - accountOperations
-// use Redux Thunks
+//? open: store-v-2 - accountSlice - accountOperations
 
-// to implement a feature where the user can deposit money
+//& Title: Redux Thunks for Currency Conversion
 
-// into the account in a foreign currency,
+//? Feature Implementation
+//* Redux Thunks are used to implement a feature where the user can deposit money in a foreign currency,
+//* which is then converted via an external API.
 
-// which will then be converted by calling an external API.
+//? User Deposits and Currency Selection
+//* Users can deposit money and select the currency of the deposit.
+//* If the selected currency is not US dollars, a conversion is needed before the deposit is made.
 
-// So basically, whenever the user deposits some money here,
+//? Action Dispatch
+//* Before the deposit action is dispatched to the store, Redux Thunk is used.
+//* This middleware sits between the action dispatch (triggered by a button click) and the action reaching the store.
 
-// they can select which currency that money is.
+//^===========================================================================
 
-// So for example, euro.
+//& Title: Using Redux Thunk Middleware
 
-// And so if that currency is different from US dollar,
+//? Installation
+//* The first step is to install the middleware package. This can be done using npm with the command `npm i redux-thunk`.
 
-// then we need to convert these 500 euros back to US dollars
+//? Applying Middleware
+//* The next step is to apply the middleware to our store. This is typically done when creating the Redux store.
 
-// before they actually get deposited into the account.
+//? Using Middleware in Action Creators
+//* Finally, we use the middleware in our action creator functions.
+//* This allows us to write action creators that return a function instead of an action,
+//* enabling us to perform asynchronous operations.
 
-// So before that deposit action is actually dispatched
+//^===========================================================================
+//& Title: Dispatching Functions in Redux
 
-// to the store.
+//? Dispatching a Function  => accountOperations.js
+//* In Redux, we can dispatch a function. When Redux sees that we're dispatching a function,
+//* it knows that the function is a thunk.
 
-// And so that's where now the Redux thunk comes into play.
+//? Executing the Thunk     => store-v-2.js
+//* Redux will execute the thunk function and not immediately dispatch the action to the store.
+//* This allows us to perform asynchronous operations before dispatching an action.
 
-// So we will have that middleware sitting
+//? Returning a Function    =>  accountSlice.js
+//* If we return a function from our action creator, Redux knows that this is the asynchronous action
+//* that we want to execute before dispatching anything to the store.
 
-// between dispatching the action,
+//^===========================================================================
 
-// as we click here on the button,
+//& Title: Redux Thunks and Data Encapsulation
 
-// and that action actually reaching the store.
+//? Data Conversion and Encapsulation
+//* The component is unaware of the behind-the-scenes amount conversion.
+//* This conversion is encapsulated in the account slice, keeping the component (AccountOperations) clean.
 
-//^==========================
+//? Using Thunks
+//* With Thunks, we return a new function from the action creator function instead of an action object.
+//* Redux calls this function, passing in the dispatch function and getState.
+//* We can delay the dispatching until the asynchronous operation has finished.
+//* This function sits between the initial dispatching and the reducer in the store receiving the action.
 
-// In order to use this middleware,
-
-// we need to follow three steps.
-
-// First, we install the middleware package.  npm i redux-thunk
-
-// Then we apply that middleware to our store.
-
-// And finally, we use the middleware
-
-// in our action creator functions.
-//^============
-
-// So basically, we will dispatch a function.
-
-// And so when Redux sees that,
-
-// it will know that that function is the thunk.
-
-// And so it will then execute that function
-
-// and not immediately dispatch the action to the store.
-
-// All right?
-
-// So again, if we return a function here,
-
-// then Redux knows that this is the asynchronous action
-
-// that we want to execute before dispatching anything
-
-// to the store.
-
-//^===========================
-
-// the beauty of what we just implemented here is
-
-// that this component here actually has no idea
-
-// that the amount is converted behind the scenes.
-
-// So that conversion is completely hidden from our component.
-
-// And instead, it is encapsulated right here
-
-// in the account slice.
-
-// So it's happening here in the centralized place.
-
-// And if we had other API calls
-
-// or other asynchronous operations
-
-// in these other action creators,
-
-// then, of course, they would also be in this file.
-
-// So again, they would then all be
-
-// in this one centralized place,
-
-// not spread all over the application.
-
-// And so with this,
-
-// we can keep this component here really tidy and clean.
-
-// I mean, it's not really that clean
-
-// because we chose to have all this JSX in one file,
-
-// which usually we would probably split up.
-
-// But you get the point.
-
-// So we don't have the data fetching anymore here
-
-// in the component.
-
-// So I hope this wasn't all too confusing.
-
-// And what I mostly want you to retain
-
-// is that when we are using Thunks,
-
-// instead of returning an action object
-
-// from the action creator function,
-
-// we return a new function.
-
-// And so then the result of this becomes a function
-
-// and no longer an object.
-
-// And so then Redux,
-
-// when it sees that we are dispatching a function,
-
-// it will call that function,
-
-// and into that function,
-
-// it'll pass in the dispatch function and getState,
-
-// which we didn't even use, in this case.
-
-// And so then we can use that dispatch function
-
-// inside here to delay that dispatching
-
-// until the asynchronous operation
-
-// that we want to implement has finished.
-
-// And so therefore, we can think of this function here sitting
-
-// between the initial dispatching and the reducer
-
-// in the store receiving the action.
-
-//*===========================================================================
+//*=============================================================================================================
 
 //!  272. The Redux DevTools
 
 //* install redux chrome extension
 //* npm i @redux-devtools/extension
-//*===========================================================================
+//*=============================================================================================================
 
 //! 274. Creating the Store With RTK
 //? store.js
 //* npm i @reduxjs/toolkit
 
-// configure store does a lot of things
+//& Title: Configuring Store and Connecting React with Redux
 
-// automatically for us
+//? Configuring Store
+//* The 'configureStore' function does a lot of things automatically for us.
+//* It combines our reducers, adds the Thunk middleware, and even sets up the developer tools.
 
-// so it automatically will combine our reducers,
+//? Connecting React with Redux
+//* The part where we connect the React application with Redux works in the exact same way as before.
+//* Nothing changes with the React Redux package that we use on the React side.
 
-// it will automatically add the Thunk middleware,
+//*=============================================================================================================
 
-// and it will even automatically set up the developer tools,
+//! 275. Creating the Account Slice
+//? open: accountSlice Copy.js
 
-//^=============
+//& Title: Redux Toolkit and createSlice Function
 
-// Now then the part where we connect the React application
+//? Introduction to createSlice
+//* With Redux Toolkit, the idea of slices is baked into Redux itself.
+//* We now have a function called 'createSlice' which we can import from Redux Toolkit.
 
-// with Redux works in the exact same way as before
+//? Benefits of createSlice
+//^ The 'createSlice' function provides three big benefits:
+//* 1. It automatically creates action creators from our reducers.
+//* 2. It simplifies the writing of reducers as we no longer need a switch statement and the default case is automatically handled.
+//* 3. It allows us to mutate our state inside reducers.
 
-// so nothing changes with the React Redux package
+//? Immer Library and Immutable Logic
+//* Behind the scenes, 'createSlice' uses a library called Immer which converts our logic back to immutable logic.
+//* So, Redux still requires the kind of logic where we do not mutate the state,
+//* but we can now convert this kind of logic to a mutating logic.
+//* From Jonas's experience, this last point is the biggest advantage of using Redux Toolkit.
 
-// that we use on the React site.
+//*=============================================================================================================
+//! 276. Back to Thunks
+//? accountSlice copy
+//& Title: Creating Thunks in Redux Toolkit
+
+//? Using createAsyncThunk
+//* To create Thunks in Redux Toolkit, we can use the 'createAsyncThunk' function provided by Redux Toolkit.
+
+//? Alternative to createAsyncThunk
+//* However, using 'createAsyncThunk' can be a lot of extra work.
+//* An easier solution is to simply use the action creator function that we already used before.
+//* We can basically just reuse that function.
+
+//*=============================================================================================================
+//! 277. Creating the Customer Slice
+//? open CustomerSlice copy

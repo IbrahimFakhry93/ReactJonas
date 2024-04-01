@@ -21,7 +21,6 @@ function AccountOperations() {
 
   function handleDeposit() {
     if (!depositAmount) return;
-    // console.log(currency);
     dispatch(deposit(depositAmount, currency));
     setDepositAmount(""); //* make the input field empty again
     setCurrency("USD");
