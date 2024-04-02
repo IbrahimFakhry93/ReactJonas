@@ -4514,14 +4514,37 @@ const rootReducer = combineReducers({
 //! dispatch(actionCreator)
 //*====================================================================================================
 
-//!  272. The Redux DevTools
 
-//* install redux chrome extension
-//* npm i @redux-devtools/extension
+//& Title: The Legacy Way of Connecting Components to Redux
+
+//? open: BalanceDisplay.js
+
+//? The Old Way - Before React Hooks
+//* Before React hooks existed, we connected React components to the Redux store using the Connect API.
+// import { connect } from "react-redux";
+
+//? Using mapStateToProps
+//* The function 'mapStateToProps' receives the state object from the store.
+//* We return an object from this function where we can define the name of a prop (ex. balance).
+//* that our component (BalanceDisplay) should receive.
+
+// function BalanceDisplay({ balance }) {
+//   return <div className="balance">{balance}</div>;
+// }
+
+// function mapStateToProps(state) {
+//   return {
+//     balance: state.account.balance,
+//   };
+// }
+
+// export default connect(mapStateToProps)(BalanceDisplay);
+
+
 //*=============================================================================================================
 
 
-//& Title: Subscribe to store using useSelector
+//& Title: Subscribe Component to store redux using useSelector
 
 import { useSelector } from "react-redux";
 function Customer() {
@@ -4544,6 +4567,11 @@ function Customer() {
 
 //*=========================================================================================
 
+//& Title  The Redux DevTools
+
+//* install redux chrome extension
+//* npm i @redux-devtools/extension
+//*=========================================================================================
 //& Title  Creating the Store With Redux Toolkit 
 //? store.js
 //* npm i @reduxjs/toolkit
