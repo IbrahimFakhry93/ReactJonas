@@ -24,10 +24,10 @@ function accountReducer(state = initialStateAccount, action) {
     case "account/deposit":
       return { ...state, balance: state.balance + action.payload };
     case "account/withdraw":
-      if (state.balance < action.payload) return;
+      if (state.balance < action.payload) return state;
       return { ...state, balance: state.balance - action.payload };
     case "account/requestLoan":
-      if (state.loan > 0) return;
+      if (state.loan > 0) return state;
       return {
         ...state,
         balance: state.balance + action.payload.amount,
@@ -114,7 +114,7 @@ function updateName(fullName) {
 }
 
 //& Create reducer function for customer
-function customerReducer(state, action) {
+function customerReducer(state = initialStateCustomer, action) {
   switch (action.type) {
     case "createCustomer":
       return {

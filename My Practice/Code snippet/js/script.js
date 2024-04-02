@@ -4470,3 +4470,322 @@ function ProtectedRoute({ children }) {
 //? Section 19: Performance Optimization and Advanced useEffect
 
 //& Title: 
+
+
+
+
+//?====================================================================================================================
+//?  Section 20: Redux and Modern Redux Toolkit (With Thunks)
+
+
+//& Title: Using Redux Thunk Middleware
+
+//* `npm i redux-thunk`.
+//* import { thunk } from "redux-thunk";  inside  store.js
+//*===============================================================================================
+//& Title:  Redux store without redux tool kit
+
+import { applyMiddleware, combineReducers, createStore } from "redux";
+import { thunk } from "redux-thunk";
+import { composeWithDevTools } from "@redux-devtools/extension";
+import accountReducer from "./features/accounts/accountSlice";
+import customerReducer from "./features/customers/customerSlice";
+//^ create Root reducer
+const rootReducer = combineReducers({
+  account: accountReducer,
+  customer: customerReducer,
+});
+
+//^ create Store:
+
+// const store = createStore(
+//   rootReducer,
+//   composeWithDevTools(applyMiddleware(thunk))
+// );
+
+// export default store;
+//* next we will inject this store in our React application
+//*=====================================================================================================
+
+//& Title: using the useDispatch hook, to get access to the dispatch function
+
+//! const dispatch = useDispatch();
+//! then pass action creator to dispatch function
+//! dispatch(actionCreator)
+//*====================================================================================================
+
+//!  272. The Redux DevTools
+
+//* install redux chrome extension
+//* npm i @redux-devtools/extension
+//*=============================================================================================================
+
+
+//& Title: Subscribe to store using useSelector
+
+import { useSelector } from "react-redux";
+function Customer() {
+  //* useSelector to read the data from store
+  const customer = useSelector((store) => store.customer.fullName);
+  console.log(customer);
+ 
+  return <h2>👋 Welcome, {customer}</h2>;
+}
+
+// export default Customer;
+
+ //* note:
+  //! the name customer in (store) => store.customer is the name provided in the store file as down:
+  // const rootReducer = combineReducers({
+  //   account: accountReducer,
+  //   customer: customerReducer,
+  // });
+
+
+//*=========================================================================================
+
+//& Title  Creating the Store With Redux Toolkit 
+//? store.js
+//* npm i @reduxjs/toolkit
+
+//! Store:
+import { configureStore } from "@reduxjs/toolkit";
+import accountReducer from "./features/accounts/accountSlice";
+import customerReducer from "./features/customers/customerSlice";
+
+const store = configureStore({
+  reducer: {
+    account: accountReducer,
+    customer: customerReducer,
+  },
+});
+// export default store;
+
+//*=====================================================================================================
+//& Title:feature Slice by Redux Toolkit 
+
+//! AccountSliceRTK
+import { createSlice } from "@reduxjs/toolkit";
+
+//^ initial state:
+
+const initialState5 = {
+  balance: 0,
+  loan: 0,
+  loanPurpose: "",
+  isLoading: false,
+};
+
+//^ reducer function:
+
+const accountSlice = createSlice({
+  name: "account",
+  initialState5,
+  reducers: {
+    deposit(state, action) {
+      // state.balance=state.balance+action.payload;
+      //? or
+      state.balance += action.payload;
+    },
+    withdraw(state, action) {
+      if (state.balance < action.payload) return state;
+      state.balance -= action.payload;
+    },
+    requestLoan: {
+      prepare(amount, purpose) {
+        return {
+          payload: { amount, purpose },
+        };
+      },
+      reducer(state, action) {
+        if (state.loan > 0) return state;
+        state.balance = state.balance + action.payload.amount;
+        state.loan = action.payload.amount;
+        state.loanPurpose = action.payload.purpose;
+      },
+    },
+    payLoan(state) {
+      //* if state.loan = 0; is first,
+      //* so balance will stay the same,
+      //* that is one of pitfalls of mutating the state in reduxtoolkit
+      //* so order is important
+      state.loan = 0;
+      state.loanPurpose = "";
+      state.balance -= state.loan;
+
+      //^==========================
+      state.balance -= state.loan;
+      state.loan = 0;
+      state.loanPurpose = "";
+    },
+    convertingCurrency(state) {
+      state.isLoading = true;
+    },
+  },
+});
+
+console.log(accountSlice);
+
+export const { withdraw, requestLoan, payLoan } = accountSlice.actions;
+
+export function deposit(amount, currency) {
+  console.log(currency);
+  if (currency === "USD") return { type: "account/deposit", payload: amount };
+
+  return async function (dispatch, getState) {
+    dispatch({ type: "account/convertingCurrency" });
+    //* API Call:
+    const res = await fetch(
+      `https://api.frankfurter.app/latest?amount=${amount}&from=${currency}&to=USD`
+    );
+    const data = await res.json();
+    console.log(data);
+    const converted = data.rates.USD;
+    //* dispatch Action:
+    dispatch({ type: "account/deposit", payload: converted });
+  };
+}
+
+// export default accountSlice.reducer;
+
+//!==================================================================================================
+
+
+
+
+
+
+
+function AccountOperations() {
+  const [depositAmount, setDepositAmount] = useState("");
+  const [withdrawalAmount, setWithdrawalAmount] = useState("");
+  const [loanAmount, setLoanAmount] = useState("");
+  const [loanPurpose, setLoanPurpose] = useState("");
+  const [currency, setCurrency] = useState("USD");
+  const dispatch = useDispatch();
+  
+  //* Rename the state names
+  const {
+    loan: currentLoan,
+    loanPurpose: currentLoanPurpose,
+    isLoading,
+  } = useSelector((store) => store.account);
+
+  function handleDeposit() {
+    if (!depositAmount) return;
+    dispatch(deposit(depositAmount, currency));
+    setDepositAmount(""); //* make the input field empty again
+    setCurrency("USD");
+  }
+
+  function handleRequestLoan() {
+    if (!loanPurpose || !loanAmount) return;
+    dispatch(requestLoan(loanAmount, loanPurpose));
+    setLoanAmount("");
+    setLoanPurpose("");
+  }
+
+  function handlePayLoan() {
+    dispatch(payLoan());
+  }
+
+  return (
+    <div>
+      <h2>Your account operations</h2>
+      <div className="inputs">
+        <div>
+          <label>Deposit</label>
+          <input
+            type="number"
+            value={depositAmount}
+            onChange={(e) => setDepositAmount(+e.target.value)}
+          />
+          <select
+            value={currency}
+            onChange={(e) => setCurrency(e.target.value)}
+          >
+            <option value="USD">US Dollar</option>
+            <option value="EUR">Euro</option>
+            <option value="GBP">British Pound</option>
+          </select>
+
+          <button onClick={handleDeposit} disabled={isLoading}>
+            {isLoading ? "Converting...." : `Deposit ${depositAmount}`}
+          </button>
+        </div>
+
+        <div>
+          <label>Request loan</label>
+          <input
+            type="number"
+            value={loanAmount}
+            onChange={(e) => setLoanAmount(+e.target.value)}
+            placeholder="Loan amount"
+          />
+          <input
+            value={loanPurpose}
+            onChange={(e) => setLoanPurpose(e.target.value)}
+            placeholder="Loan purpose"
+          />
+          <button onClick={handleRequestLoan}>Request loan</button>
+        </div>
+
+        {currentLoan > 0 && (
+          <div>
+            <span>
+              Pay back ${currentLoan} {currentLoanPurpose}
+            </span>
+            <button onClick={handlePayLoan}>Pay loan</button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// export default AccountOperations;
+
+
+
+
+//!==================================================================================================
+//! customerSliceRTK
+import { createSlice } from "@reduxjs/toolkit";
+
+const initialState6 = {
+  fullName: "",
+  nationalId: "",
+  createdAt: "",
+};
+
+const customerSlice = createSlice({
+  name: "customer",
+  initialState6,
+  reducers: {
+    createCustomer: {
+      prepare(fullName, nationalId) {
+        return {
+          payload: {
+            fullName,
+            nationalId,
+            createdAt: new Date().toISOString(), //* this side effect should be here as you did, not in reducer
+          },
+        };
+      },
+      reducer(state, action) {
+        state.fullName = action.payload.fullName;
+        state.nationalId = action.payload.nationalId;
+        state.createdAt = action.payload.createdAt;
+      },
+    },
+    updateName(state, action) {
+      state.fullName = action.payload;
+    },
+  },
+});
+export const { createCustomer, updateName } = customerSlice.actions;
+// export default customerSlice.reducer;
+
+
+
+

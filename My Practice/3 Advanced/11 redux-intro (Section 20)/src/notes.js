@@ -70,6 +70,7 @@ function deposit(amount) {
 //     customer: customerReducer,
 //   });
 
+// const store = createStore(rootReducer);
 //*===================================================================
 
 //! 266. Professional Redux File Structure: State Slices
@@ -87,6 +88,8 @@ function deposit(amount) {
 //* This includes the reducer, action creators, and initial state.
 //* We then export these and put them back together in the store, reducing the need to jump around between files.
 
+//! store-v-1 => store-v-2
+
 //*=============================================================================================================
 
 //! 267. Back to React! Connecting our Redux App With React
@@ -95,31 +98,20 @@ function deposit(amount) {
 
 //* npm i react-redux
 //* import {Provider} from "react-redux"
+//* import store from "./store";
 
 //* wrap our entire application in Provider just like context-API
 //* pass store as prop to provider
 
-//? Redux Store
-//* The application is aware of the Redux store, allowing every component to read data from the store and dispatch actions.
+```
+root.render(
+  <React.StrictMode>
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </React.StrictMode>
+);```// import { createCustomer } from "./customerSlice"; // import { useDispatch } from "react-redux"; //? open: CreateCustomers component.
 
-//? Context API Similarity
-//* This behavior is similar to the Context API, which broadcasts global state into every component that wants to read it.
-
-//^==========================================================================================================
-
-//? open customer.js
-
-//? Using useSelector Hook
-//* The useSelector hook in Redux creates a subscription to the store.
-//* When the store changes, the subscribed component (ex. customer) re-renders.
-//* Redux implements performance optimizations behind the scenes, similar to those in the Context API.
-
-//*======================================================================================================================
-
-//! 268. Dispatching Actions from Our React App
-//* learn how to dispatch actions to the Redux store from within React components.
-
-//? open: CreateCustomers component.
 //* need to complete handleClick logic
 //* in this function where we will want to dispatch now an action
 //* that will create the new customer.
@@ -129,7 +121,24 @@ function deposit(amount) {
 //   dispatch(createCustomer(fullName, nationalId));
 // }
 
-//^==========================================================================================================
+//* learn how to dispatch actions to the Redux store from within React components.
+
+//*=============================================================================================================
+
+//! 268. Dispatching Actions from Our React App
+
+//* Redux implements performance optimizations behind the scenes, similar to those in the Context API.
+//* When the store changes, the subscribed component (ex. customer) re-renders.
+//* The useSelector hook in Redux creates a subscription to the store.
+//? Using useSelector Hook
+//? open customer.js
+
+//* This behavior is similar to the Context API, which broadcasts global state into every component that wants to read it.
+
+//? Context API Similarity
+//* The application is aware of the Redux store, allowing every component to read data from the store and dispatch actions.
+
+//^=====================================================================
 
 //* using the useDispatch hook, to get access to the dispatch function
 
@@ -137,7 +146,7 @@ function deposit(amount) {
 //! then pass action creator to dispatch function
 //! dispatch(actionCreator)
 
-//^=============================
+//^====================================================================
 
 // let's actually hide the form
 
@@ -195,11 +204,24 @@ function handleDeposit() {
 
 //? The Old Way - Before React Hooks
 //* Before React hooks existed, we connected React components to the Redux store using the Connect API.
+// import { connect } from "react-redux";
 
 //? Using mapStateToProps
 //* The function 'mapStateToProps' receives the state object from the store.
-//* We return an object from this function where we can define the name of a prop.
-//* that our component should receive.
+//* We return an object from this function where we can define the name of a prop (ex. balance).
+//* that our component (BalanceDisplay) should receive.
+
+// function BalanceDisplay({ balance }) {
+//   return <div className="balance">{balance}</div>;
+// }
+
+// function mapStateToProps(state) {
+//   return {
+//     balance: state.account.balance,
+//   };
+// }
+
+// export default connect(mapStateToProps)(BalanceDisplay);
 
 //*=============================================================================================================
 //! 270. Redux Middleware and Thunks
@@ -230,19 +252,23 @@ function handleDeposit() {
 
 //? Action Dispatch
 //* Before the deposit action is dispatched to the store, Redux Thunk is used.
-//* This middleware sits between the action dispatch (triggered by a button click) and the action reaching the store.
+//* This middleware sits between the action dispatch (triggered by a button click)
+//* and the action reaching the store.
 
 //^===========================================================================
 
 //& Title: Using Redux Thunk Middleware
 
 //? Installation
-//* The first step is to install the middleware package. This can be done using npm with the command `npm i redux-thunk`.
+//* The first step is to install the middleware package.
+//* This can be done using npm with the command `npm i redux-thunk`.
 
 //? Applying Middleware
-//* The next step is to apply the middleware to our store. This is typically done when creating the Redux store.
+// import { thunk } from "redux-thunk";  open: store-v-2.js
+//* The next step is to apply the middleware to our store.
+//* This is typically done when creating the Redux store.
 
-//? Using Middleware in Action Creators
+//? Using Middleware in Action Creators:  => accountSlice.js
 //* Finally, we use the middleware in our action creator functions.
 //* This allows us to write action creators that return a function instead of an action,
 //* enabling us to perform asynchronous operations.
@@ -274,7 +300,8 @@ function handleDeposit() {
 //* With Thunks, we return a new function from the action creator function instead of an action object.
 //* Redux calls this function, passing in the dispatch function and getState.
 //* We can delay the dispatching until the asynchronous operation has finished.
-//* This function sits between the initial dispatching and the reducer in the store receiving the action.
+//* This function sits between the initial dispatching (in the component ex. accountOperations)
+//* and the reducer in the store receiving the action.
 
 //*=============================================================================================================
 
@@ -291,9 +318,16 @@ function handleDeposit() {
 //& Title: Configuring Store and Connecting React with Redux
 
 //? Configuring Store
+// import { configureStore } from "@reduxjs/toolkit";
 //* The 'configureStore' function does a lot of things automatically for us.
 //* It combines our reducers, adds the Thunk middleware, and even sets up the developer tools.
 
+// const store = configureStore({
+//   reducer: {
+//     account: accountReducer,
+//     customer: customerReducer,
+//   },
+// });
 //? Connecting React with Redux
 //* The part where we connect the React application with Redux works in the exact same way as before.
 //* Nothing changes with the React Redux package that we use on the React side.
@@ -301,7 +335,7 @@ function handleDeposit() {
 //*=============================================================================================================
 
 //! 275. Creating the Account Slice
-//? open: accountSlice Copy.js
+//? open: accountSliceRTK.js
 
 //& Title: Redux Toolkit and createSlice Function
 
@@ -312,7 +346,8 @@ function handleDeposit() {
 //? Benefits of createSlice
 //^ The 'createSlice' function provides three big benefits:
 //* 1. It automatically creates action creators from our reducers.
-//* 2. It simplifies the writing of reducers as we no longer need a switch statement and the default case is automatically handled.
+//* 2. It simplifies the writing of reducers as we no longer need a switch statement
+//* and the default case is automatically handled.
 //* 3. It allows us to mutate our state inside reducers.
 
 //? Immer Library and Immutable Logic
@@ -323,7 +358,7 @@ function handleDeposit() {
 
 //*=============================================================================================================
 //! 276. Back to Thunks
-//? accountSlice copy
+//? accountSliceRTK.js
 //& Title: Creating Thunks in Redux Toolkit
 
 //? Using createAsyncThunk
@@ -336,4 +371,4 @@ function handleDeposit() {
 
 //*=============================================================================================================
 //! 277. Creating the Customer Slice
-//? open CustomerSlice copy
+//? open CustomerSliceRTK.js
