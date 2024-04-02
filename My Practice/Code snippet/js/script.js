@@ -4477,6 +4477,19 @@ function ProtectedRoute({ children }) {
 //?====================================================================================================================
 //?  Section 20: Redux and Modern Redux Toolkit (With Thunks)
 
+//& Title: format currency:
+
+function formatCurrency(value) {
+  return new Intl.NumberFormat("en", {
+    style: "currency",
+    currency: "USD",
+  }).format(value);
+}
+
+function BalanceDisplay({ balance }) {
+  return <div className="balance">{formatCurrency(balance)}</div>;
+}
+//*===============================================================================================
 
 //& Title: Using Redux Thunk Middleware
 
