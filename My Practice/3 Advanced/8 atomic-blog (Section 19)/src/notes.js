@@ -1,3 +1,5 @@
+//! video 242, 243 (overview + slides)
+
 //! video 244. The Profiler Developer Tool
 
 import { useCallback, useMemo, useState } from "react";
@@ -31,24 +33,24 @@ import { faker } from "@faker-js/faker";
 
 //? open PostContext.js
 
-//* when search on search bar, Main comp and Posts comp won't be re-rendered
+//* when search on search bar, Main comp and Posts comp (Posts is child of Main comp) won't be re-rendered
 //* because they have been passed as children to PostContext,
 // eslint-disable-next-line no-lone-blocks
 {
-  /*
-//^ in App comp in App.js
+  //^ in App comp in App.js
+  ```
 <PostProvider>
       <Header />
       <Main />
       <Archive />
       <Footer />
 </PostProvider> 
- 
-*/
+```;
 }
-//* but Lists and Header will be re-rendered because they consume contexts and context is updated
+//^ but Lists and Header will be re-rendered because they consume contexts and context is updated
 
 //*================================================================================================
+//! video 246: slide understanding Memo
 //! video 247. Memo in Practice: memoization of components
 
 //? App-memo.js - work in Archive comp
@@ -62,7 +64,7 @@ import { faker } from "@faker-js/faker";
 //! why good candidate for memoization?
 //* It re-renders very often and it does so with the same props.
 //* So the only prop that it has is the show prop, which (show) is always false
-//* (before we change it later by adding ({ archiveOptions, onAddPost })as props
+//* (before we change these props later by adding ({ archiveOptions, onAddPost })as props
 
 //*? always showing archive even with memo will take some time, why?
 //* because memorizing a component has nothing to do
@@ -177,12 +179,13 @@ function App3() {
 //* 3. The app is actually slow and laggy.
 
 //? Why components consumed context re-rendered?
-//* The reason is that the value here is an object. And this PostProvider is a child element of the App component.
+//* The reason is that the value (value prop of the context provider) is an object.
+//* And this PostProvider is a child element of the App component.
 //* Therefore, when the App component re-renders, then this post provider re-renders as well,
 //* and therefore, this object (value) will be recreated.
 //* If this object (value) is recreated, it means that the context value has changed and therefore,
 //* all the components that consume that context are going to be re-rendered.
-//* The solution for that is to memorize this object.
+//* The solution for that is to memorize this object (value)
 
 //? Multiple Variables in Context Value
 //* If you have many components that are subscribed to a context,

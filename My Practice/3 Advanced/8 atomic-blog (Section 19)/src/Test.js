@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 function SlowComponent() {
-  // If this is too slow on your maching, reduce the `length`  100_000
+  // If this is too slow on your machine, reduce the `length`  100_000
 
   //* create 1000 words and place them in an array
   const words = Array.from({ length: 1000 }, () => "WORD");

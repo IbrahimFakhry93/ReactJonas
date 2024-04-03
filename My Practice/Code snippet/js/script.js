@@ -4469,11 +4469,448 @@ function ProtectedRoute({ children }) {
 
 //? Section 19: Performance Optimization and Advanced useEffect
 
-//& Title: 
+//& Title: Optimization Trick using children Prop:
+
+function SlowComponent() {
+  // If this is too slow on your machine, reduce the `length`  100_000
+
+  //* create 1000 words and place them in an array
+  const words = Array.from({ length: 1000 }, () => "WORD");
+  return (
+    <ul>
+      {words.map((word, i) => (
+        <li key={i}>
+          {i}: {word}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+export function Test() {
+  const [count, setCount] = useState(0);
+  return (
+    <div>
+      <h1>Slow counter?!?</h1>
+      <button onClick={() => setCount((c) => c + 1)}>Increase: {count}</button>
+      <SlowComponent />
+    </div>
+  );
+}
+
+//? Issue
+//* Clicking the button updates the state (count), causing the Test component to re-render.
+//* This leads to the SlowComponent also re-rendering each time the button is clicked.
+//* although SlowComponent isn't dependent on the state (count).
+
+//^ Optimization solution:
+
+function Counter({ children }) {
+  const [count, setCount] = useState(0);
+  return (
+    <div>
+      <button onClick={() => setCount((c) => c + 1)}>Increase: {count}</button>
+      {children}
+    </div>
+  );
+}
+
+export function Test2() {
+  return (
+    <div>
+      <h1>Slow counter?!?</h1>
+      <Counter>
+        <SlowComponent />
+      </Counter>
+
+      {/* //? Alternative
+      //* Same result can be achieved with: <Counter slowComp={<SlowComponent />}/> */}
+    </div>
+  );
+}
 
 
+//* React creates SlowComponent immediately when it sees the JSX, and passes it into Counter during rendering.
+//* When the button is clicked, Counter re-renders.
+//* But SlowComponent, already created and passed as a prop, isn't affected by this state update.
+//* ==============================================================================================================
 
 
+//& Creating DarkMode Effect:
+function App() {
+  //! App States
+  const [isFakeDark, setIsFakeDark] = useState(false);
+
+  //! App Effects
+
+  //* Whenever `isFakeDark` changes, we toggle the `fake-dark-mode` class on the HTML element (see in "Elements" dev tool).
+  useEffect(
+    function () {
+      document.documentElement.classList.toggle("fake-dark-mode");
+    },
+    [isFakeDark]
+  );
+
+
+  return (
+    <section>
+      <button
+        onClick={() => setIsFakeDark((isFakeDark) => !isFakeDark)}
+        className="btn-fake-dark-mode"
+      >
+        {isFakeDark ? "☀️" : "🌙"}
+      </button>
+    </section>
+  );
+}
+
+
+//^ style css:
+```
+.fake-dark-mode {
+  filter: invert(100%);
+  transition: all 0.5s;
+}
+
+.btn-fake-dark-mode {
+  position: fixed;
+  top: 0;
+  right: 0;
+  padding: 16px;
+  line-height: 1;
+  font-size: 26px;
+  background-color: #ffe8cc;
+  border: none;
+}
+
+```
+
+
+//* ==============================================================================================================
+//& Optimization by passing a callback function to useState
+
+function App() {
+   // Here we don't need the setter function. 
+  // We're only using state to store these posts because the callback function passed into useState (which generates the posts) is only called once, on the initial render. 
+  // So we use this trick as an optimization technique, because if we just used a regular variable, these posts would be re-created on every render. 
+  // We could also move the posts outside the components, but I wanted to show you this trick 😉
+  const [posts] = useState(() =>
+    // 💥 WARNING: This might make your computer slow! Try a smaller `length` first
+    Array.from({ length: 30000 }, () => createRandomPost())
+  );
+}
+
+//* ==============================================================================================================
+//& Title: Optimization for objects using Memo
+function App() {
+  //! App States
+  const [posts, setPosts] = useState(() =>
+    Array.from({ length: 30 }, () => createRandomPost())
+  );
+
+  const [isFakeDark, setIsFakeDark] = useState(false);
+
+  const handleAddPost = useCallback(function handleAddPost(post) {
+    setPosts((posts) => [post, ...posts]);
+  }, []);
+
+  //! App Effects
+
+  //* Whenever `isFakeDark` changes, we toggle the `fake-dark-mode` class on the HTML element (see in "Elements" dev tool).
+  useEffect(
+    function () {
+      document.documentElement.classList.toggle("fake-dark-mode");
+    },
+    [isFakeDark]
+  );
+
+  const archiveOptions = useMemo(() => {
+    return {
+      title: `Archive posts ${posts.length}`,
+      show: false,
+    };
+  }, [posts.length]);
+
+  return (
+    <section>
+      <button
+        onClick={() => setIsFakeDark((isFakeDark) => !isFakeDark)}
+        className="btn-fake-dark-mode"
+      >
+        {isFakeDark ? "☀️" : "🌙"}
+      </button>
+      <Archive
+        archiveOptions={archiveOptions}
+        onAddPost={handleAddPost}
+        setIsFakeDark={setIsFakeDark}
+      />
+    </section>
+  );
+}
+
+//^===========================================================
+const Archive = memo(function Archive({ archiveOptions, onAddPost }) {
+  // Here we don't need the setter function. 
+  // We're only using state to store these posts because the callback function passed into useState (which generates the posts) is only called once, on the initial render. 
+  // So we use this trick as an optimization technique, because if we just used a regular variable, these posts would be re-created on every render. 
+  // We could also move the posts outside the components, but I wanted to show you this trick 😉
+  const [posts] = useState(() =>
+    // 💥 WARNING: This might make your computer slow! Try a smaller `length` first
+    Array.from({ length: 30000 }, () => createRandomPost())
+  );
+
+  const [showArchive, setShowArchive] = useState(archiveOptions.show);
+  // const [showArchive, setShowArchive] = useState(show);
+
+  return (
+    <aside>
+      {/* <h2>Post archive</h2> */}
+      <h2>{archiveOptions.title}</h2>
+      <button onClick={() => setShowArchive((s) => !s)}>
+        {showArchive ? "Hide archive posts" : "Show archive posts"}
+      </button>
+
+      {showArchive && (
+        <ul>
+          {posts.map((post, i) => (
+            <li key={i}>
+              <p>
+                <strong>{post.title}:</strong> {post.body}
+              </p>
+              <button onClick={() => onAddPost(post)}>Add as new post</button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </aside>
+  );
+});
+
+
+//*====================================================================================================
+
+
+//& Title: Optimization for function using useMemo
+//^ without Dependencies
+const archiveOptions = useMemo(() => {
+  return {
+    title: "Archive posts",
+    show: false,
+  };
+}, []);
+
+//^ with Dependencies
+
+function App2() {
+  const [posts, setPosts] = useState(() =>
+    Array.from({ length: 30 }, () => createRandomPost())
+  );
+
+  //? UseMemo with dependency when Object contains stateful value
+  //* By specifying an empty dependency array, this value (archiveOptions) will only be computed once
+  //* in the beginning and will then never change, so it will never be recomputed.
+  //* so we need to add the stateful value (posts.length) to the dependency array.
+
+  const archiveOptions2 = useMemo(() => {
+    return {
+      title: `Archive posts ${posts.length}`,
+      show: false,
+    };
+  }, [posts.length]);
+  return (
+    <>
+      <p>No. of Posts: {posts.length}</p>
+      <Archive
+        archiveOptions={archiveOptions2}
+      />
+    </>
+  );
+}
+//? Archive Component Re-rendering
+//* Whenever the archive is open, it will take a long time to re-render the application when we add a new post.
+//* In the last state update, the archive had to re-render because our object here was recreated.
+//* So we added a new post and therefore, posts.length was changed,
+//* and then this object here became a new object, making it so that a prop changed
+//* which, in turn, triggered the archive to be re-rendered as a result, even though it is memoized.
+//*====================================================================================================
+
+//& Title: memoize value of the context:
+
+  function createRandomPost() {
+    return {
+      title: `${faker.hacker.adjective()} ${faker.hacker.noun()}`,
+      body: faker.hacker.phrase(),
+    };
+  }
+  
+  //! App Context:
+  // const PostContext = createContext(); //* PostContext in capital letter because it is component
+  console.log(PostContext);
+  
+  //& Place all the states and all states update logic in separate context
+  function PostProvider({ children }) {
+    const [posts, setPosts] = useState(() =>
+      Array.from({ length: 30 }, () => createRandomPost())
+    );
+    const [searchQuery, setSearchQuery] = useState("");
+  
+    function handleAddPost(post) {
+      setPosts((posts) => [post, ...posts]);
+    }
+  
+    const value = useMemo(() => {
+      return {
+        posts: searchedPosts,
+        onAddPost: handleAddPost,
+        searchQuery: searchQuery,
+        setSearchQuery: setSearchQuery,
+      };
+    }, [searchedPosts, searchQuery]); //* if onAddPost will be added, it must be memoized by using (useCallback)
+  
+    return (
+      //* 2) Provide value to child components
+      <PostContext.Provider value={value}>{children}</PostContext.Provider>
+    );
+  }
+  
+  function usePosts() {
+    const context = useContext(PostContext);
+    if (context === undefined)
+      throw new Error("Post context was used outside of the PostProvider");
+    return context;
+  }
+  
+  export { PostProvider, usePosts };
+
+//*====================================================================================================
+//& Title: Optimization for function using useCallback
+function App3() {
+  const [posts, setPosts] = useState(() =>
+    Array.from({ length: 30 }, () => createRandomPost())
+  );
+  const handleAddPost = useCallback(function handleAddPost(post) {
+    setPosts((posts) => [post, ...posts]);
+  }, []);
+
+  return (
+      <Archive
+        onAddPost={handleAddPost}
+        setIsFakeDark={setIsFakeDark}
+      />
+  );
+
+}
+//? Pass Setter Function (setIsFakeDark) from useState to Archive Component
+//* Even though we did not memoize setIsFakeDark, the memoization is still working.
+//* This is because React guarantees that the setter functions of the useState hook always have a stable identity,
+//* which means they will not change on renders.
+//* We can think of these state setter functions as being automatically memoized.
+//* This is also why it's completely okay to omit them from the dependency array of all these hooks,
+//* so from useEffect, useCallback, and useMemo.
+//*====================================================================================================
+
+//& Title: Optimizing Context Re-Renders with useCallback
+
+//! Issue: getCity function in useEffect caused infinite API calls.
+//! Problem: getCity, in citiesProvider, updates state (currentCity) causing infinite loop.
+//! getCity is recreated on each re-render due to state update, triggering the effect again.
+//* Solution: Use useCallback to stabilize getCity, preventing its recreation on each re-render.
+//? This demonstrates a real-world useCallback use case: preventing infinite loops by memorizing values.
+
+//^ in CitiesContextReducer.jsx
+  //! fetch (get) current city
+  ```
+  const getCity = useCallback(function getCity(city) {
+  function body
+  }, [currentCity.id]);
+ 
+  ```;
+
+
+//^ in city.jsx
+
+function City() {
+ 
+  const { id } = useParams();
+  const { getCity } = useCities();
+
+  useEffect(
+    function () {
+      getCity(id);
+    },
+    [id, getCity]
+  );
+
+  return (
+    <div className={styles.city}>
+    </div>
+  );
+}
+
+//*====================================================================================================
+
+//& Title: Code Splitting and Lazy Loading in React
+
+// Code Splitting: Bundle split at route level for lazy loading.
+// Pages: Homepage, Product, Pricing, Login, AppLayout, PageNotFound.
+// Lazy Function: React feature for bundle splitting by Vite/Webpack.
+// Building Bundle: 'npm run build' creates bundle. Use dynamic import() for large chunks.
+// Loading Spinner: Displayed using React's Suspense API during page load.
+// Suspense API: Allows components to suspend during load, showing a fallback loading indicator.
+
+// <Suspense fallback={<div>Loading...</div>}> Routes go here </Suspense>
+
+// Recap:
+// Lazy Loading: Components loaded as needed, splitting bundle into chunks.
+// Bundlers: Vite/Webpack handle automatic splitting.
+// Tools: Feature powered by bundler, React's 'lazy' function, and JavaScript's 'import'.
+// Suspense Component: Suspends component rendering during load for better UX.
+
+
+//* in App file.js
+const HomePage = lazy(() => import("./pages2/Homepage.jsx"));
+const Product = lazy(() => import("./pages2/Product.jsx"));
+const Pricing = lazy(() => import("./pages2/Pricing.jsx"));
+const Login = lazy(() => import("./pages2/Login.jsx"));
+const AppLayout = lazy(() => import("./pages2/AppLayout.jsx"));
+const PageNotFound = lazy(() => import("./pages2/PageNotFound.jsx"));
+
+function App() {
+  return (
+   <AuthProvider>
+      <CitiesProvider>
+        <BrowserRouter>
+          <Suspense fallback={<SpinnerFullPage />}>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="product" element={<Product />} />
+              <Route path="pricing" element={<Pricing />} />
+
+              <Route path="login" element={<Login />} />
+
+              <Route
+                path="app"
+                element={
+                  <ProtectedRoute>
+                    <AppLayout />
+                  </ProtectedRoute>
+                }
+              >
+                {/* <Route path="app" element={<AppLayout />}> */}
+                <Route index element={<Navigate replace to="cities" />} />
+                <Route path="cities" element={<CityList />} />
+                <Route path="cities/:id" element={<City />} />
+                <Route path="countries" element={<CountryList />} />
+                <Route path="form" element={<Form />} />
+              </Route>
+              <Route path="*" element={<PageNotFound />} />
+            </Routes>
+          </Suspense>
+        </BrowserRouter>
+      </CitiesProvider>
+    </AuthProvider>
+  );
+}
 //?====================================================================================================================
 //?  Section 20: Redux and Modern Redux Toolkit (With Thunks)
 

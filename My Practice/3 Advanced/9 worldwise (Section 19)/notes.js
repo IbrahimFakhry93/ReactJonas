@@ -38,9 +38,10 @@
 //? Understanding the Problem
 //* The getCity function lives in the context and is created in citiesProvider Component.
 //* This function updates the state (currentCity) each time it is executed, leading to an infinite loop.
-//* When the getCity function is called, it updates the state in the citiesProvider Component,
+//* When the getCity function is called, it updates the state (currentCity) in the citiesProvider Component,
 //* causing the citiesProvider Component to re-render and the function to be recreated.
-//* Since the function is in the dependency array, getCity gets called again (because it's re-created in the citiesProvider component),
+//* Since the function is in the dependency array, getCity gets called again
+//* (because it's re-created in the citiesProvider component),
 //* updating the state and causing the effect to run over and over again.
 
 //? Solution: useCallback
@@ -55,15 +56,19 @@
 //* It’s important to remember that when we first introduced these hooks,
 //* this was exactly one of the three use cases we talked about:
 //* memorizing values that are used in the dependency array of another hook in order to prevent infinite loops.
-// ```javascript
-// const getCity = useCallback(function getCity(city) {
-// function body
-// }, [currentCity.id]);
+```
+ const getCity = useCallback(function getCity(city) {
+ function body
+ }, [currentCity.id]);
+
+ ```;
 
 //*==========================================================================
 
 //! video 253.  Bundle Size:
 //& Title: Code Splitting and Lazy Loading in React
+
+//^ open App.jsx
 
 //? Code Splitting
 //* There are many ways to split the bundle and lazily load components.
