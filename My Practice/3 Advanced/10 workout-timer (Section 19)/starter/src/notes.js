@@ -1,7 +1,9 @@
 //! 256. CHALLENGE #1: Fix Performance Issues in "Workout Timer"
 //* Memoize Components: Calculator, ToggleSound ( to solve children render when Parent (App) re-renders)
-
+//? open App.js
 import { useEffect } from "react";
+
+//^ App re-renders because time state updates continuously
 
 //* Memoize Workout object as it's a prop to Calculator,
 //* causing Calculator to re-render when App Parent Component re-renders,
@@ -17,7 +19,7 @@ import { useEffect } from "react";
 
 //? Duration (Derived State)
 //* The 'duration' needs to be turned into a new piece of state, to update it by clicking on a button.
-//* We want to calculate this duration each time we click on one of these buttons,
+//* We want to calculate this duration each time we click on one of these buttons (inc btn (+) or dec btn (-)),
 //* but also each time that one of these state variables here changes.
 
 //? Using useEffect Hook
@@ -74,7 +76,7 @@ useEffect(() => {
 //*======================================================================================================
 
 //! 258. Using Helper Functions In Effects
-
+//* playSound is the helper function
 //& Title: Understanding useEffect and its Dependencies
 //^ open Calculator.js
 
@@ -88,10 +90,11 @@ useEffect(() => {
     setDuration((number * sets * speed) / 60 + (sets - 1) * durationBreak); 
     playSound();
   }, [number, sets, speed, durationBreak, playSound]);```;
-//!  Adding playSound to useEffect causes a flicker problem
+
+//! Adding playSound to useEffect causes a flicker problem
 
 //? Understanding the Flicker Problem
-//* Each time we click the increment button (+) or dec btn (-), it sets the duration state and plays the sound.
+//* Each time we click the increment button (+) or dec btn (-), it sets the (duration state) and plays the sound.
 //* Updating the state (duration) re-renders the calculator component, which recreates playSound function.
 //* React sees a new function (playSound), and since it's part of the dependency array of the effect, it runs the effect.
 //* The duration is then set again using the current values, which haven't changed.
@@ -119,13 +122,19 @@ useEffect(() => {
     [allowSound]
   );```;
 
+/*
+//! which is a state in App, so it will cause App (the parent) to render
+//! and as well, the Calculator (the child comp) to re-render
+*/
+
 //! but here another problem, that when we click on sound icon, it will reset the allowSound
-//! that will recreate PlaySound func again , that will cause the useEffect to reset the duration again
+//! that will recreate PlaySound func again, because, allowSound, it's a dependency in useCallback
+//! that will cause the useEffect to reset the duration again
 
 //! solution:
 //? Synchronizing Sound Play with Duration State
-
-//* We want the sound to play whenever the duration changes. That's why we placed this function in three places.
+//* We want the sound to play whenever the duration changes.
+//* That's why we placed this function in three places.
 //* However, there is a better, more clear and intentional way of doing that.
 //* We can simply synchronize this side effect of playing the sound with the duration state.
 
@@ -144,9 +153,15 @@ useEffect(() => {
 
 //?: Managing Side Effects in useEffect
 
-//* This time, we were able to finally move the helper function into the effect.
+//* This time, we were able to finally move the helper function (playSound) into the effect.
 //* This is a great demonstration that we should have one effect for each side effect that we want to have.
-//* In other words, this effect here should only be responsible for setting the duration, not for setting the duration and playing a sound.
+//* In other words, this effect here
+```useEffect(() => {
+  setDuration((number * sets * speed) / 60 + (sets - 1) * durationBreak); //* add Math.ceil, so when secs is half mins (50:30), so next increment turn into 50
+}, [number, sets, speed, durationBreak]);```;
+
+//* should only be responsible for setting the duration,
+//* not for setting the duration and playing a sound.
 //* Instead, we create one effect that is responsible for playing the sound, and we do that whenever the duration changes.
 
 //*===========================================================================
@@ -156,15 +171,16 @@ useEffect(() => {
 //* useEffect to explain stale closure
 //   useEffect(() => {
 //     console.log(sets, duration);
-//     document.title(`Your ${number}-exercises workout`);
+//     document.title = `Your ${number}-exercises workout`;
 //   }, [number, sets, duration]);
 
 //& Title: Understanding useEffect and Closures in JavaScript
 
 //? Subtitle: Why useEffect needs a dependency array
-//*  When we first learned about useEffect,
-//*  we might have wondered why useEffect actually needs the dependency array in order to know when it should execute the effect.
-//*  Why can't the effect not simply rerun automatically?
+//* When we first learned about useEffect,
+//* we might have wondered why useEffect actually needs the dependency array
+//* in order to know when it should execute the effect.
+//* Why can't the effect not simply rerun automatically?
 
 //& Title: Closure Definition
 //* In JavaScript, a closure is basically the fact that a function captures all the variables from its Lexile scope.

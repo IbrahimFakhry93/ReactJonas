@@ -4911,6 +4911,135 @@ function App() {
     </AuthProvider>
   );
 }
+
+//*====================================================================================================================
+
+//&: Play Sound Icon:
+
+//? Workout timer:
+
+//* in App.js
+const [allowSound, setAllowSound] = useState(true);
+
+//* in Calculator2.js
+//! synchronize this side effect of playing the sound with the duration state update
+useEffect(() => {
+  const playSound = function () {
+    //* it's a reactive value because it has allowSound
+    if (!allowSound) return;
+    const sound = new Audio(clickSound); //* Audio is a browser feature.
+    sound.play();
+  };
+  playSound();
+}, [duration, allowSound]);
+
+//* in ToggleSounds.js 
+function ToggleSounds({ allowSound, setAllowSound }) {
+  return (
+    <button
+      className="btn-sound"
+      onClick={() => setAllowSound((allow) => !allow)}
+    >
+      {allowSound ? "🔈" : "🔇"}
+    </button>
+  );
+}
+// export default memo(ToggleSounds);
+
+
+//^===============================================================
+
+//& Update duration and display number
+
+const [duration, setDuration] = useState();
+const mins = Math.floor(duration);
+const seconds = (duration - mins) * 60;
+
+function durationInc() {
+  setDuration((duration) => Math.floor(duration) + 1); //* add Math.floor, so when secs is half mins (50:30), so next increment turn into 51
+}
+function durationDec() {
+  setDuration((duration) => (duration > 1 ? Math.ceil(duration) - 1 : 0));
+}
+
+<section>
+<button onClick={durationDec}>–</button>
+<p>
+  {mins < 10 && "0"}
+  {mins}:{seconds < 10 && "0"}
+  {seconds}
+</p>
+<button onClick={durationInc}>+</button>
+</section>
+//^===============================================================
+
+
+//& format and display time
+
+function formatTime(date) {
+  return new Intl.DateTimeFormat("en", {
+    month: "short",
+    year: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  }).format(date);
+}
+
+function App() {
+  const [allowSound, setAllowSound] = useState(true);
+  const [time, setTime] = useState(formatTime(new Date()));
+
+
+  useEffect(function () {
+    const id = setInterval(function () {
+      setTime(formatTime(new Date()));
+    }, 1000);
+
+    return () => clearInterval(id);
+  }, []);
+  // Will be be AM or PM
+  const partOfDay = time.slice(-2); //* it's a reactive value
+
+  const workouts = useMemo(() => {
+    return [
+      {
+        name: "Full-body workout",
+        numExercises: partOfDay === "AM" ? 9 : 8,
+      },
+      {
+        name: "Arms + Legs",
+        numExercises: 6,
+      },
+      {
+        name: "Arms only",
+        numExercises: 3,
+      },
+      {
+        name: "Legs only",
+        numExercises: 4,
+      },
+      {
+        name: "Core only",
+        numExercises: partOfDay === "AM" ? 5 : 4,
+      },
+    ];
+  }, [partOfDay]);
+
+  return (
+    <main>
+      <h1>Workout timer</h1>
+      <time>For your workout on {time}</time>
+    </main>
+  );
+}
+//^===============================================================
+
+  //& useEffect to explain stale closure and display browser tab title sync with number of workout
+  useEffect(() => {
+    console.log(sets, duration);
+    document.title = `Your ${number}-exercises workout`;
+  }, [number, sets, duration]);
 //?====================================================================================================================
 //?  Section 20: Redux and Modern Redux Toolkit (With Thunks)
 

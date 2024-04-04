@@ -55,7 +55,7 @@ function Calculator({ workouts, allowSound }) {
   //* useEffect to explain stale closure
   useEffect(() => {
     console.log(sets, duration);
-    document.title(`Your ${number}-exercises workout`);
+    document.title = `Your ${number}-exercises workout`;
   }, [number, sets, duration]);
 
   return (
