@@ -5260,9 +5260,6 @@ export function deposit(amount, currency) {
 
 
 
-
-
-
 function AccountOperations() {
   const [depositAmount, setDepositAmount] = useState("");
   const [withdrawalAmount, setWithdrawalAmount] = useState("");
@@ -5394,5 +5391,37 @@ export const { createCustomer, updateName } = customerSlice.actions;
 // export default customerSlice.reducer;
 
 
+//?===================================================================================================================================================================
+
+//^====================================================  Professional Level =========================================================
+
+//? Section 22: React Router With Data Loading (v6.4+)
+//?====================================================
+
+//& Setting Up a New Vite Project: "Fast React Pizza Co."
+
+//* npm create vite@4
+//? or:
+//* npm create vite@latest
+//* project name: react-fast-pizza
+//* npm i
+
+//* npm i eslint vite-plugin-eslint eslint-config-react-app --save-dev
+
+//* create: .eslintrc.json
+// {
+//     "extends": "react-app"
+// }
+
+//* then open vite.config.js
+//! add import eslint from "@vitejs/plugin-eslint";
+
+// https://vitejs.dev/config/
+// export default defineConfig({
+//   plugins: [react(), eslint()],   //! add eslint() inside the plugins array
+// });
+
+//* npm run dev
 
 
+//*====================================================================================================================
