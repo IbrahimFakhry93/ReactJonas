@@ -5414,7 +5414,7 @@ export const { createCustomer, updateName } = customerSlice.actions;
 // }
 
 //* then open vite.config.js
-//! add import eslint from "@vitejs/plugin-eslint";
+//! add import eslint from "vite-plugin-eslint";
 
 // https://vitejs.dev/config/
 // export default defineConfig({
@@ -5425,3 +5425,223 @@ export const { createCustomer, updateName } = customerSlice.actions;
 
 
 //*====================================================================================================================
+
+//& Implement Routes using React Router
+
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+
+import Home from "./ui/Home";
+import Menu from "./features/menu/Menu";
+import Cart from "./features/cart/Cart";
+import CreateOrder from "./features/order/CreateOrder";
+import Order from "./features/order/Order";
+
+
+//* this is a function now where we define all routes,
+//* and we do that by passing in an array of objects
+//* where each object is one route.
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Home />,
+  },
+  {
+    path: "/menu",
+    element: <Menu />,
+  },
+  {
+    path: "/cart",
+    element: <Cart />,
+  },
+  {
+    path: "/order/new",
+    element: <CreateOrder />,
+  },
+  {
+    path: "/order/:orderId",
+    element: <Order />,
+  },
+]);
+
+function App() {
+  return <RouterProvider router={router} />;
+}
+
+// export default App;
+
+//& Nested Route:
+
+//? App.js
+const routerNested = createBrowserRouter([
+  {
+    element: <AppLayout />,
+    children: [
+      {
+        path: "/",
+        element: <Home />,
+      },
+      {
+        path: "/menu",
+        element: <Menu />,
+      },
+      {
+        path: "/cart",
+        element: <Cart />,
+      },
+      {
+        path: "/order/new",
+        element: <CreateOrder />,
+      },
+      {
+        path: "/order/:orderId",
+        element: <Order />,
+      },
+    ],
+  },
+]);
+
+
+//? AppLayout
+
+//? Rendering Nested Routes
+//* We render the content of a nested route inside another route using the outlet component <Outlet />
+
+function AppLayout() {
+  return (
+    <div>
+      <Header />
+      <main>
+        <h1>Content</h1>
+        <Outlet />
+      </main>
+      <CartOverview />
+    </div>
+  );
+}
+
+//*====================================================================================================================
+
+
+//& Fetch Data using React Router:
+import Menu, { loader as menuLoader } from "./features/menu/Menu";
+
+//* { loader as menuLoader }: use (as) to rename named exports
+const routerNested2 = createBrowserRouter([
+  {
+    element: <AppLayout />,
+    children: [
+      {
+        path: "/",
+        element: <Home />,
+      },
+      {
+        path: "/menu",
+        element: <Menu />,
+        loader:menuLoader
+      },
+    ],
+  },
+]);
+
+function Menu() {
+  const menu = useLoaderData();
+  console.log(menu);
+  return (
+    <ul>
+      {menu.map((pizza) => (
+        <MenuItem pizza={pizza} key={pizza.id} />
+      ))}
+    </ul>
+  );
+}
+
+export async function loader() {
+  const menu = await getMenu();
+  return menu;
+}
+
+//*=================================================================================
+
+//& Error and loading indicator:
+
+//^ Error Comp
+import { useNavigate, useRouteError } from "react-router-dom";
+
+function Error() {
+  const navigate = useNavigate();
+  const error = useRouteError();
+  console.log(error);
+
+  return (
+    <div>
+      <h1>Something went wrong 😢</h1>
+      <p>{error.message || error.data}</p>
+      <button onClick={() => navigate(-1)}>&larr; Go back</button>
+    </div>
+  );
+}
+
+//^ Loader
+
+```
+
+.loader {
+  width: 45px;
+  aspect-ratio: 0.75;
+  --c: no-repeat linear-gradient(#333 0 0);
+  background: var(--c) 0% 50%, var(--c) 50% 50%, var(--c) 100% 50%;
+  background-size: 20% 50%;
+  animation: loading 1s infinite linear;
+}
+
+@keyframes loading {
+  20% {
+    background-position: 0% 0%, 50% 50%, 100% 50%;
+  }
+  40% {
+    background-position: 0% 100%, 50% 0%, 100% 50%;
+  }
+  60% {
+    background-position: 0% 50%, 50% 100%, 100% 0%;
+  }
+  80% {
+    background-position: 0% 50%, 50% 50%, 100% 100%;
+  }
+}
+
+```
+function Loader() {
+  return <div className="loader"></div>;
+}
+
+import Error from "./ui/Error";
+const router4 = createBrowserRouter([
+  {
+    element: <AppLayout />,
+    errorElement: <Error />,
+    children: [
+      {
+        path: "/",
+        element: <Home />,
+      },
+      {
+        path: "/menu",
+        element: <Menu />,
+        loader: menuLoader,
+        errorElement: <Error />, //* so the error to appear within the layout, place it because here we load data, so things can go wrong
+      },
+      {
+        path: "/cart",
+        element: <Cart />,
+      },
+      {
+        path: "/order/new",
+        element: <CreateOrder />,
+      },
+      {
+        path: "/order/:orderId",
+        element: <Order />,
+      },
+    ],
+  },
+]);
