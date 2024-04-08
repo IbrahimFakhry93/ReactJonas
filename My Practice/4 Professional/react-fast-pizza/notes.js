@@ -108,6 +108,16 @@
 //! 288. Displaying a Loading Indicator
 //? AppLayout.jsx  - loader.jsx - index.css
 
+```  AppLayout.jsx
+const navigation = useNavigation();
+console.log(navigation);
+const isLoading = navigation.state === "loading";
+
+```;
+//& Navigation State
+//* The navigation state is universal for the entire application.
+//* The loading indicator is placed in the app layout to render our loader whenever something in the app is loading.
+
 //*======================================================================================================================
 //! 289. Handling Errors With Error Elements
 //? open: Error.jsx, App.jsx, apiRestaurant.js
@@ -115,3 +125,379 @@
 //& Error Handling
 //* Specify the error element in the parent route.
 //* Errors in nested routes bubble up to the parent route.
+//*======================================================================================================================
+
+//! 290. Fetching Orders
+//? open: order.jsx - Header.jsx  - searchOrder - App  - apiRestaurant
+//& Implementing Order Search and Data Fetching
+//* We aim to read the order ID from the URL and display all related data on our page.
+//* The first step is to implement a search field in the Header Comp for inputting the order ID,
+//* accessible from everywhere.
+
+//? Creating a New Component  (SearchOrder)
+//* We create a new component related to searching an order, which is part of the order feature.
+
+//? Fetching Data from API
+//* Next, we fetch data from the API using the existing getOrder function that receives the order ID (in apiRestaurant)
+//* We create a loader function inside the Order component.
+//* We connect the loader function with the route definition in the App, and then in the Order component itself.
+
+//*==================================================================================
+
+//!  291. Writing Data With React Router "Actions"
+//? open: CreateOrder  - App
+// we can use React Router's actions
+
+// to write data or to mutate data on the server.
+
+// So while the loaders that we used earlier are to read data,
+
+// actions are used to write data or to mutate data.
+
+// So a state that is stored on some server.
+
+// Or in other words, actions allow us
+
+// to manage this remote server state using action functions
+
+// and forms that we then wire up to routes
+
+// similar to what we did earlier with the loaders.
+// from the project requirements
+
+// that orders are made by sending a post request
+
+// with the order data to the API.
+
+// And so these actions and forms
+
+// that we just talked about are ideal to create new orders.
+
+//* we will create the form and action in CreateOrder comp
+
+// So when we submit a new order,
+
+// we need to submit the user data
+
+// plus the selected pizzas which are stored in the cart.
+
+// to make this form in CreateOrder work nicely with React Router,
+
+// we need to replace this with a form component
+
+// that React Router gives us.
+
+// So let's replace this form with the uppercase form
+
+// that we can again import from react-router-dom.
+//^============================================================
+
+// Then we could also specify the action
+
+// where we could then write the path
+
+// that this form should be submitted to.
+
+// But this is not going to be necessary, because by default,
+
+// React Router will simply match the closest route,
+
+// so there's no need to write order/new,
+//^============================================================
+// as soon as we submit this special form (Form) here,
+
+// that will then create a request that will basically
+
+// be intercepted by this action function
+
+// as soon as we have it connected with React Router.
+
+// So here with this route in the App Comp
+
+// So again, whenever this form here will be submitted,
+
+// behind the scenes, React Router will then call
+
+// this action function and it will pass in the request
+
+// that was submitted.
+
+// And so here we can then get access to that.
+///^===========
+
+//* connect the action to react router in App Comp
+
+// so now whenever there will be a new form submission
+
+// on this route right here , so on this path ( path: "/order/new",)
+
+// then this action (createOrderAction) that we specified here will be called
+//^=================
+
+// what matters here is that it was really,
+
+// really easy to get all this data
+
+// out of the form here into this function.
+
+// So notice how this entire form right here
+
+// works completely without any JavaScript
+
+// and without any onSubmit handlers, for example.
+
+// So all we have is this form here,
+
+// and then React Router takes care of the rest.
+
+// We also didn't have to create any state variables here
+
+// for each of these input fields,
+
+// and we didn't even have to create a loading state.
+
+// So React Router will do all of this automatically
+
+// without us having to do anything.
+
+// And the idea behind all this is to basically allow us
+
+// to go back to the basics, so to the way HTML used to work
+
+// back in the day before everyone started using JavaScript
+
+// for the front end.
+
+// So back then, we simply created HTML forms
+
+// similar to this one, and then when we submitted them,
+
+// a request was sent to the server,
+
+// which then did the work that it needed to.
+
+// So this here is now very similar.
+
+// The only difference is that the data then gets
+
+// into this action where we can then do our action.
+
+// Well, just as the name says.
+
+// The only thing that we need to do, again, to make this work,
+
+// is to connect this URL here with the action.
+
+//^======================
+
+// Now next up we also want to get our cart data
+
+// here into this action.
+
+// So the cart is right here in this component,
+
+// but we also now want to basically submit it in the form
+
+// so that we can then get access to it in the action.
+///^=====================
+// we need to model the raw data in the action
+// then we have the data now in the shape
+
+// that we want it to be, and so now we can use it
+
+// to create a new order.
+
+// So we already, once again, have an API endpoint
+
+// for that inside a function right here in APIRestaurant.
+
+// So we have the createOrder function,
+
+// which receives a new order object as an argument.
+
+// then after receive the data from CreateOrder which will be the new Order
+
+// then what we will want to do
+
+// is to immediately redirect the page to the order/ID.
+
+// So basically showing the user all the information
+
+// about that new order
+// but we cannot do it
+
+// using the navigate function, because the navigate function
+
+// comes from calling the useNavigate hook,
+
+// but we cannot call hooks inside this function (action function)
+
+// So hooks can only be called inside components.
+
+// And so here we need to use another function,
+
+// which is called redirect.
+
+// So this is basically another function that is provided to us
+
+// by React Router, which basically will just create
+
+// a new response or a new request.
+
+// I'm not really sure, but it's also not so important.
+
+// What matters is that behind the scenes,
+
+// all of this really works with the web API's
+
+// standard request and response API's.
+
+// And so if from here we return a new response,
+
+// then React Router will automatically go
+
+// to the URL that is contained in that new response.
+
+// So again, this redirect here will actually create
+
+// that response, which we can see right here
+
+// in this TypeScript definition.
+
+// But anyway, long story short, all we have to do here
+
+// is to now specify basically this new URL.
+
+// So order/slash and then newOrder.id,
+
+// which will have been created on the server by the API.
+
+// So again, this new order that we get here
+
+// is already the new object that is coming back
+
+// from the API as a response of calling this function here.
+
+// And so this will then already contain the ID,
+
+// which will then be placed here in the URL,
+
+// which will then fetch that new order immediately
+
+// from the server and display it here.
+
+// So that's again what we implemented in the previous lecture.
+
+// So let's try this now again, and nothing happened.
+
+// So let's see here our network tab to see...
+
+// Well, maybe we should clear all of this and try that again.
+
+// So just to see if any request was created.
+
+// And indeed, it actually was.
+
+// Ah, and now it did work.
+
+// So then we quickly saw the loader here,
+
+// and then we just got our brand new order.
+
+// So mine is here on May 1st, but you will see
+
+// exactly the date that you are on right now.
+
+// And these prizes here will be the same,
+
+// because we are all using still this fake cart here,
+
+// of course.
+
+// Beautiful.
+
+// So that worked really nicely.
+
+// And so once again, this is really,
+
+// really an amazing pattern for doing data manipulation
+
+// and also for writing new data simply using these actions
+
+// and React Router's form component.
+
+// So without writing all the boilerplate code
+
+// that we used to write earlier.
+
+// So where we had to create state variables
+
+// for all these inputs, then we had to handle
+
+// the request here.
+
+// We had to prevent default, and really all that stuff.
+
+// But with this, we kind of go back to the roots.
+
+// All we do is to have a form and then we submit this form,
+
+// and then since we wired up this action that we created
+
+// to this URL, then we catch that request
+
+// right here in this action and do whatever work
+
+// that we have to do.
+
+// So in this case, we get all the data from the form,
+
+// which is probably always going to be
+
+// these two lines of code here,
+
+// which might change in the future, I think,
+
+// but for now, this is just how it works.
+
+// Then we create our new order object
+
+// and submit it with a post request
+
+// to this createOrder right here.
+
+// So the post request is really made here.
+
+// So here in this fetch request,
+
+// where we have this post method,
+
+// this is where, actually, the new order is created.
+
+// All right, then we get back that new order object
+
+// and we redirect immediately to order/ the newOrder.id.
+
+// So the ID of this newly created order is exactly this,
+
+// and for you, it's going to be another one.
+
+// So let's just copy this here.
+
+// Let's go back to the homepage,
+
+// and then we can of course paste this in here, hit enter,
+
+// and then we will get exactly that order
+
+// that we just created right here.
+
+// So in other words, the user can now search
+
+// for the order that they created.
+
+// Great, so I hope that this made sense.
+
+// And now all we have to do in the next lecture
+
+// is some error handling here.

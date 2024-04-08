@@ -5523,8 +5523,9 @@ function AppLayout() {
 
 
 //& Fetch Data using React Router:
-import Menu, { loader as menuLoader } from "./features/menu/Menu";
 
+//! App Comp
+import Menu, { loader as menuLoader } from "./features/menu/Menu";
 //* { loader as menuLoader }: use (as) to rename named exports
 const routerNested2 = createBrowserRouter([
   {
@@ -5537,13 +5538,18 @@ const routerNested2 = createBrowserRouter([
       {
         path: "/menu",
         element: <Menu />,
-        loader:menuLoader
+        loader:menuLoader     //* connect the loader function with the route definition in the App
       },
     ],
   },
 ]);
 
+//^==========
+
+//! Menu Comp
+
 function Menu() {
+  //& get the Data from the loader
   const menu = useLoaderData();
   console.log(menu);
   return (
@@ -5555,6 +5561,7 @@ function Menu() {
   );
 }
 
+//& Create the Loader in Menu Comp
 export async function loader() {
   const menu = await getMenu();
   return menu;
@@ -5583,6 +5590,7 @@ function Error() {
 
 //^ Loader
 
+//! loader css style
 ```
 
 .loader {
@@ -5610,9 +5618,36 @@ function Error() {
 }
 
 ```
+
+//! Loader Comp
 function Loader() {
   return <div className="loader"></div>;
 }
+
+//! AppLayout to place the Loader Comp
+
+//& Navigation State  (navigation.state)
+//* The navigation state is universal for the entire application.
+//* The loading indicator is placed in the app layout to render our loader whenever something in the app is loading.
+
+import Loader from "./Loader";
+function AppLayout() {
+  const navigation = useNavigation();
+  console.log(navigation);
+  const isLoading = navigation.state === "loading";
+  return (
+    <div className="layout">
+      {isLoading && <Loader />}
+      <Header />
+      <main>
+        <h1>Content</h1>
+        <Outlet />
+      </main>
+    </div>
+  );
+}
+// export default AppLayout;
+//! App Comp to place the Error Comp
 
 import Error from "./ui/Error";
 const router4 = createBrowserRouter([
@@ -5645,3 +5680,39 @@ const router4 = createBrowserRouter([
     ],
   },
 ]);
+
+
+//*=======================================================
+
+//& Get data from the URL:
+
+export async function loader({ params }) {
+  const order = await getOrder(params.orderId); //* orderId same as path: "/order/:orderId" in App.jsx
+  return order;
+}
+
+//*=======================================================
+
+//& Search and Navigate: ex. search order:
+
+function SearchOrder() {
+  const [query, setQuery] = useState("");
+  const navigate = useNavigate();
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    if (!query) return;
+    navigate(`/order/${query}`);
+    setQuery("");
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input
+        placeholder="search order #"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+      />
+    </form>
+  );
+}
