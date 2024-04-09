@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Form } from "react-router-dom";
+import { Form, redirect, useActionData, useNavigation } from "react-router-dom";
 import { createOrder } from "../../services/apiRestaurant";
 
 // https://uibakery.io/regex-library/phone-number
@@ -36,11 +36,17 @@ function CreateOrder() {
   // const [withPriority, setWithPriority] = useState(false);
   const cart = fakeCart;
 
+  const formErrors = useActionData();
+  console.log(formErrors);
+  const navigate = useNavigation();
+  const isSubmitting = navigate.state === "submitting";
+
   return (
     <div>
       <h2>Ready to order? Let's go!</h2>
 
       {/* <form> */}
+      {/* <Form method="POST" action="/order/new"> */}
       <Form method="POST">
         <div>
           <label>First Name</label>
@@ -51,6 +57,7 @@ function CreateOrder() {
           <label>Phone number</label>
           <div>
             <input type="tel" name="phone" required />
+            {formErrors?.phone && <p>{formErrors.phone}</p>}
           </div>
         </div>
 
@@ -73,8 +80,10 @@ function CreateOrder() {
         </div>
 
         <div>
-          <input type="hidden" name={cart} value={JSON.stringify(cart)} />
-          <button>Order now</button>
+          <input type="hidden" name="cart" value={JSON.stringify(cart)} />
+          <button disabled={isSubmitting}>
+            {isSubmitting ? "Placing order..." : "Order now"}
+          </button>
         </div>
         {/* </form> */}
       </Form>
@@ -96,8 +105,19 @@ export async function action({ request }) {
     priority: data.priority === "on",
   };
   console.log(order);
+
+  //& Error Handling
+  const errors = {};
+
+  if (!isValidPhone(order.phone))
+    errors.phone = "Please enter correct number to contact you Sir";
+
+  if (Object.keys(errors).length > 0) return errors;
+
+  //& getting the new order and redirect the url to show the order info page
+
   const newOrder = await createOrder(order);
-  return null;
+  return redirect(`/order/${newOrder.id}`);
 }
 
 export default CreateOrder;
