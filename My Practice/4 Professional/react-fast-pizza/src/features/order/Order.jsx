@@ -43,6 +43,7 @@ import {
 // };
 
 function Order() {
+  //& Get the data
   const order = useLoaderData();
   // Everyone can search for all orders, so for privacy reasons we're gonna gonna exclude names or address, these are only for the restaurant staff
   const {
@@ -85,6 +86,7 @@ function Order() {
   );
 }
 
+//& Create Loader
 export async function loader({ params }) {
   const order = await getOrder(params.orderId); //* orderId same as path: "/order/:orderId" in App.jsx
   return order;

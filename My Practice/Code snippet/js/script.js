@@ -5526,6 +5526,8 @@ function AppLayout() {
 
 //! App Comp
 import Menu, { loader as menuLoader } from "./features/menu/Menu";
+
+//& 2) import loader to the App
 //* { loader as menuLoader }: use (as) to rename named exports
 const routerNested2 = createBrowserRouter([
   {
@@ -5538,7 +5540,7 @@ const routerNested2 = createBrowserRouter([
       {
         path: "/menu",
         element: <Menu />,
-        loader:menuLoader     //* connect the loader function with the route definition in the App
+        loader:menuLoader     //& 3) connect the loader function (menuLoader) with the route definition (/menu) in the App
       },
     ],
   },
@@ -5549,7 +5551,7 @@ const routerNested2 = createBrowserRouter([
 //! Menu Comp
 
 function Menu() {
-  //& get the Data from the loader
+  //& 4) get the Data from the loader to the page (menu component)
   const menu = useLoaderData();
   console.log(menu);
   return (
@@ -5561,7 +5563,7 @@ function Menu() {
   );
 }
 
-//& Create the Loader in Menu Comp
+//& 1) Create the Loader in Menu Comp
 export async function loader() {
   const menu = await getMenu();
   return menu;

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function SearchOrder() {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(""); //* query here should be user ID
   const navigate = useNavigate();
 
   function handleSubmit(e) {

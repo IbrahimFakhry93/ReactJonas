@@ -8,12 +8,12 @@
 
 //* npm i eslint vite-plugin-eslint eslint-config-react-app --save-dev
 
-//* create: .eslintrc.json
+//^ create: .eslintrc.json
 // {
 //     "extends": "react-app"
 // }
 
-//* then open vite.config.js
+//^ then open vite.config.js
 //! add import eslint from "vite-plugin-eslint";
 
 // https://vitejs.dev/config/
@@ -35,26 +35,23 @@
 //*======================================================================================================================
 
 //! 285. A New Way Of Implementing Routes
+//? open: App.jsx
 
 //* React version 6.4 introduced a whole new way of defining routes and of working with React Router.
-// So from now on we can use some powerful mechanisms
 
-// inside React Router for fetching data
+//~ inside React Router has some powerful mechanisms for:
 
-// into pages and for submitting data using forms,
+//* fetching data into pages and for submitting data using forms,
 
-// so all within React Router.
+//^ npm i react-router-dom@6
 
-//* npm i react-router-dom@6
+//^ import { createBrowserRouter } from "react-router-dom";
 
-// import { createBrowserRouter } from "react-router-dom";
+//* createBrowserRouter is a function to define all routes,
+//* by passing in an array of objects
 
-// this is a function now where we define all routes,
-
-// and we do that by passing in an array of objects
-
-// where each object is one route.
-// createBrowserRouter();
+//* where each object is one route.
+//^ createBrowserRouter();
 
 //*======================================================================================================================
 
@@ -89,7 +86,11 @@
 //* Once the data has arrived, it is provided to the page component using a custom hook.
 
 //? Fetching Menu Data
-//* We start by fetching the menu data in three steps: create a loader, provide the loader, and provide the data to the page.
+//^ We start by fetching the menu data in three steps:
+//* 1) create a loader.
+//* 2) provide the loader to a route.
+//* 3) provide the data to the page (menu component) by a custom hook (useLoader)
+
 //* The data loader can be placed anywhere in our code base,
 //* but the convention is to place the loader for the data of a certain page inside the file of that page.
 
@@ -100,7 +101,8 @@
 //* which can create data loading waterfalls.
 
 //& Recap
-//* React Router is responsible not only for matching components to URLs in the browser, but also for providing the necessary data for each page.
+//* React Router is responsible not only for matching components to URLs in the browser,
+//* but also for providing the necessary data for each page.
 //* This is useful because URLs, pages, and the data that pages require are often tightly coupled together.
 //* It is practical to get both the page and the data all in one place, nicely integrated within React Router.
 //*======================================================================================================================
@@ -116,7 +118,8 @@ const isLoading = navigation.state === "loading";
 ```;
 //& Navigation State
 //* The navigation state is universal for the entire application.
-//* The loading indicator is placed in the app layout to render our loader whenever something in the app is loading.
+//* The loading indicator is placed in the app layout
+//* to render our loader whenever something in the app is loading.
 
 //*======================================================================================================================
 //! 289. Handling Errors With Error Elements
@@ -134,18 +137,19 @@ const isLoading = navigation.state === "loading";
 //* The first step is to implement a search field in the Header Comp for inputting the order ID,
 //* accessible from everywhere.
 
-//? Creating a New Component  (SearchOrder)
+//? Creating a New Component  (SearchOrder)  inside Header component
 //* We create a new component related to searching an order, which is part of the order feature.
 
 //? Fetching Data from API
 //* Next, we fetch data from the API using the existing getOrder function that receives the order ID (in apiRestaurant)
-//* We create a loader function inside the Order component.
-//* We connect the loader function with the route definition in the App, and then in the Order component itself.
+//* We create a loader function inside the Order component (that will call getOrder function inside)
+//* We connect the loader function with the route definition ("/order/:orderId") in the App,
+//* and then in the Order component itself.
 
 //*==================================================================================
 
 //! 291. Writing Data With React Router "Actions"
-//? open: CreateOrder  - App
+//? open: CreateOrder  - App  - apiRestaurant
 
 //* React Router's actions can be used to write or mutate data on the server.
 //* While loaders are used to read data, actions are used to write or mutate data.

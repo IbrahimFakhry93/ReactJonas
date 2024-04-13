@@ -10,6 +10,7 @@ function AppLayout() {
     <div className="layout">
       {isLoading && <Loader />}
       {/* <Loader /> */}
+      {/*  we want the header to be visible and fixed while we navigating to other routes so we put it alone out of outline or children routes  */}
       <Header />
       <main>
         <h1>Content</h1>
