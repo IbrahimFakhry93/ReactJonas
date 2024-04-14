@@ -5883,3 +5883,10 @@ const router5 = createBrowserRouter([
   },
 ]);
 //*===========================================================================================================================
+
+//& Title: Setting Up Tailwind CSS
+
+//* npm install -D tailwindcss postcss autoprefixer
+//* npm install -D tailwindcss@3  postcss autoprefixer
+//* npx tailwindcss init -p  : create the Tailwind  and the post CSS config files.
+
