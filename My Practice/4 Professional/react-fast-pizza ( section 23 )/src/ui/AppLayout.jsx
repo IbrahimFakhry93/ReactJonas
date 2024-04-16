@@ -9,6 +9,7 @@ function AppLayout() {
     return (
         <div className="grid h-screen grid-rows-[auto_1fr_auto]">
             {isLoading && <Loader />}
+            {/* {true && <Loader />} */}
             {/* <Loader /> */}
             {/*  we want the header to be visible and fixed while we navigating to other routes so we put it alone out of outline or children routes  */}
             <Header />

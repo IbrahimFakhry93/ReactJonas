@@ -187,10 +187,7 @@
         <main className="mx-auto max-w-3xl ">
             <Outlet />
         </main>
-</div>```
-
-// and then we got that fixed.
-
+</div>``` // and then we got that fixed.
 // The only thing that we need to do
 
 // is to then make this element actually with overflow scroll.
@@ -280,3 +277,202 @@
 // And then here we give the ring a color and an offset.
 
 // So a space between the ring and the element itself.
+
+//*===========================================================================================================
+
+//! 303. Styling Form Elements
+//? open searchOrder
+
+// in CSS, we can easily style
+
+// the placeholder pseudo element.
+
+// And so in Tailwind we can do the same,
+
+// simply by Prefixing placeholder.
+
+//^============================
+// focus:outline-none focus:ring focus:ring-yellow-500 focus:ring-opacity-50
+
+//^=====================================
+
+//* border by default is 1px
+
+//*===================================================================================
+
+//! 304. Reusing Styles With @apply
+// we're gonna learn how
+
+// we can reuse some styles using Tailwind's Apply directive.
+
+// So basically using Apply, we can create an old school class
+
+// by composing many Tailwind classes together.
+//? open: index.css
+
+``` @layer components {
+   .input{
+     @apply w-full rounded-full border border-stone-200 px-4 py-2 focus:outline-none focus:ring focus:ring-yellow-400 focus:ring-opacity-50 md:px-6 md:py-3;
+   }
+
+}
+
+```
+
+// this input class is basically composed
+
+// of all these Tailwind classes
+
+// and so I can now replace this here simply with input.
+
+// So when I give it a save,
+
+// then it still looks exactly the same as before.
+
+// And so let's do the same here.
+
+// So class name of input, and also right here.
+
+// So input and beautiful.
+
+// So we have the same styling here now
+
+// in all these three input fields.
+
+// So again, simply by composing all these Tailwind classes
+
+// together into this one new input class.
+
+// So this looks really nice and helpful, right?
+
+// But that doesn't mean that we should start using
+
+// this technique all over the place now
+
+// because basically if we started to doing this
+
+// for all our elements,
+
+// then we would simply go back to writing CSS
+
+// in the old school way.
+
+// So being back to writing classes and then applying
+
+// those classes, so that's what we did before
+
+// and so then there would be no point
+
+// in using Tailwind in the first place.
+
+// So this should really be treated
+
+// as an exception here when there are so many classes
+
+// that we are using all at the same time, like this year
+
+// and when we do not want to create a new component
+
+// because the actual better solution would be to reuse
+
+// all of this by creating a React component.
+
+// So for example, creating an input component
+
+// which we could then reuse here
+
+// in all these different places, which is actually
+
+// what we're going to do in the next video for our buttons.
+
+// So again, keep in mind that this way of creating new classes
+
+// by composing many other classes together with Apply
+
+// should really be the exception and not the rule
+
+// because with this, we are throwing out of the window
+
+// all of the advantages that Tailwind actually gives us.
+
+// Well, maybe not all of them,
+
+// but surely many of the advantages.
+
+// But of course, I still wanted you to know
+
+// about this technique because it is still
+
+// an important technique that you might see used
+
+// in Tailwind in some situations.
+
+// But now in the next lecture,
+
+// we will actually reuse some other styles.
+
+// So in particular this button here.
+
+// So all of this year we will try to reuse this
+
+// using React components which is indeed the better way
+
+// of reusing styles.
+
+//*========================================================================================================
+
+//! 305. Reusing Styles With React Components
+//? open CreateOrder.jsx
+
+//? create Button comp in ui folder.
+
+//* Use the created Button comp in CreateUser.jsx
+
+//? open Error and cart
+//* to reuse the link style
+
+//^=============
+//* in Cart comp there is (order now) link:  <Link to="/order/new">Order pizzas</Link>
+//* and we want to make this link as link and button
+
+//*==============================================================================
+
+//! 306. Absolute Positioning, z-index, and More
+
+//? open AppLayout.jsx - Loader.jsx - index.css
+
+//? style the loader
+
+// in order to format the loader,
+
+// let's actually always display it.
+
+// So, let's comment this one out.
+
+// And here, let's just say true.
+
+// And so with this, the loader will basically always be there.
+
+// So, what we want with this loader is
+
+// that it basically will cover the entire page here,
+
+// sitting kind of in the middle here.
+
+// So, on top of everything else,
+
+// and also adding a small background blur.
+
+// So, the way we can achieve this with CSS is
+
+// to basically add one parent element around this loader here,
+
+// and then absolutely position that element here
+
+// in this top left corner and making it so
+
+// that it occupies the entire page.
+
+//*==============================================================================
+//! 307. Configuring Tailwind: Custom Font Family
+//? open config file:  tailwind.config
