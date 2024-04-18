@@ -317,10 +317,7 @@
 
 }
 
-```
-
-// this input class is basically composed
-
+``` // this input class is basically composed
 // of all these Tailwind classes
 
 // and so I can now replace this here simply with input.
@@ -476,3 +473,67 @@
 //*==============================================================================
 //! 307. Configuring Tailwind: Custom Font Family
 //? open config file:  tailwind.config
+
+// 100 D.V.H
+
+// which stands for dynamic viewport height units.
+
+// And so with this, we no longer have the problem
+
+// that on mobile browsers sometimes the viewport type
+
+// is not really 100%.
+
+//*=================================================================================
+
+//! 308. Styling the Menu
+
+//? open: menuItem.jsx
+
+//* we can use space class as in CartOverview in order to create some space
+//* between the child elements.
+
+//* And with divide class, we can create a line between child elements.
+//* apply it on ul element to make lines between li elements.
+
+//! problem:
+```
+//* if you add space-y-2, so the dividing line won't be in the middle
+//* so instead: add py-2 to li element (menuItems themselves) instead of ul element
+<ul className="space-y-2 divide-y divide-stone-200 px-2">
+{menu.map((pizza) => (
+    <MenuItem pizza={pizza} key={pizza.id} />
+))}
+</ul>
+```
+
+//? open CreateUser - CreateOrder - MenuItems - Cart
+//* to add type prop to the button comp
+
+// the technique that I'm going to use
+
+// is to create an object here with the styles
+
+// and then based on the type,
+
+// we will get the style from the object.
+
+//*=================================================================================
+
+//! 309. Styling the Cart
+
+//? open: cart - cartItem
+
+//*=================================================================================
+//! 310. Styling the Order Form
+
+//? open: CreateOrder.jsx
+
+//^ emoji as a favicon (google it and get it from css-tricks website)
+//* <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎯</text></svg>">
+
+//*=================================================================================
+
+//! 311.
+
+//? open: order.jsx

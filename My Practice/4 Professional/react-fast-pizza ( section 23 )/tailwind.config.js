@@ -5,9 +5,22 @@ export default {
     content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
     theme: {
         fontFamily: {
-            pizza: 'Roboto Mono, monospace',
+            // pizza: 'Roboto Mono, monospace',
+            //? or better overwrite sans font, tp not apply font-pizza class everywhere
+            sans: 'Roboto Mono, monospace',
         },
-        extend: {},
+        //? to add new color:
+        extend: {
+            colors: {
+                pizza: '#123456',
+            },
+            fontSize: {
+                huge: ['5rem', { lineHeight: '1' }],
+            },
+            height: {
+                screen: '100dvh',
+            },
+        },
     },
 
     plugins: [],
