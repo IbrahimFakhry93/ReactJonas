@@ -5,19 +5,14 @@
 //* npx tailwindcss init -p  : create the Tailwind  and the post CSS config files.
 
 //? open: tailwind.config.js
-// to basically tell Tailwind
+//* In this file we tell Tailwind where or index HTML file is located
+//* and also where all or JavaScript files are located.
+//* So by default they are inside this source folder
+//* but if for some reason we changed all of this right here
+//^  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+//* then we would also have to change this config.
 
-// where or index HTML file is located
-
-// and also where all or JavaScript files are located.
-
-// So by default they are inside this source folder
-
-// but if for some reason we changed all of this right here
-
-// then we would also have to change this config.
-
-// But by default, this is how it works.
+//^=============================================================================
 
 //? open index.css
 
@@ -26,22 +21,14 @@
 // @tailwind base;
 // @tailwind components;
 // @tailwind utilities;
-
+//^=============================================================================
 //? open Home.jsx
 
 //* install tailwind css intellisense vs code extension
 //^ google: tailwind prettier extension => go to github link
 //* npm install -D prettier prettier-plugin-tailwindcss
 
-// this will do is to automatically sort the order
-
-// of the class names in the way that Tailwind recommends it.
-
-// And this is gonna be pretty helpful for you
-
-// because then you will always find the same class names
-
-// in the same position of this long string here.
+//* this will do is to automatically sort the order of the class names in the way that Tailwind recommends it.
 
 //? create
 //* prettier.config.cjs
@@ -73,69 +60,47 @@
 //*==============================================================================================================================================================
 //! 297. Styling Text
 //? open index.html
-// we can add some classes here to the body
+//* we can add some classes to the body element
+//* that we want every element on the page to inherit
+//* or that we want to set on the entire body element.
+//* So typically that is like a background color,
+//* or a text color that we want the entire page to inherit.
 
-// that we want every element on the page to inherit
-
-// or that we want to set on the entire body element.
-
-// So typically that is like a background color,
-
-// or a text color that we want the entire page to inherit.
-
-//^ letter spacing
-//* tracking-[.25rem] for custom letter spacing
-//* tracking-widest
-
+;(
+    <body class="bg-stone-100 text-stone-700">
+        <div id="root"></div>
+        <script type="module" src="/src/main.jsx"></script>
+    </body> //^ letter spacing
+    //* tracking-widest
+)//* tracking-[.25rem] for custom letter spacing
 //*=====================================================================
 
 //! 298. The Box Model: Spacing, Borders, and Display
 
 //*=====================================================================
+
 //! 299. Responsive Design
-// by default, Tailwind comes with five breakpoints
-
-// and these breakpoints are mobile first,
-
-// which means that they are min with media queries.
-
-// This means that when we're working with Tailwind,
-
-// it's usually a good idea to start
-
-// by implementing the mobile layout.
-
-// So a mobile-first design.
+//* By default, Tailwind comes with five breakpoints and these breakpoints are mobile first,
+//* which means that they are min with media queries.
+//* This means that when we're working with Tailwind,
+//* it's usually a good idea to start by implementing the mobile layout. So a mobile-first design.
 
 //* sm  => min width: 640px  (width of view port)
 
-//* sm:my-16
+//^ sm:my-16
 //* means whenever the width is greater than 640, then this margin (my-16) will override the default one that we had before.
+//* so that these default classes without any prefix (such as. my-10) are the mobile-first classes.
+//* So they apply only if there is no breakpoint (such as. sm, md) overriding them.
 
-// so that these default classes
-
-// without any prefix (such as. my-10) are the mobile-first classes.
-
-// So they apply only if there is no breakpoint overriding them.
-
-//* sm:px-6
-// don't make the mistake that many developers make,
-
-// which is to think that this small here means
-
-// that this class is going to apply to small screens.
-
-// So that's not how it works.
-
-// How it works instead is that this class starts being applied
-
-// from this value on.
-
-// So from the small breakpoint on which is this 640 pixels.
-
-// But below that everything that we have here
-
-// without the prefix will be applied.
+//^ sm:px-6
+//* Don't make the mistake that many developers make,
+//* which is to think that this small (sm) means
+//* that this class is going to apply to small screens.
+//* So that's not how it works.
+//* How it works instead is that this class starts being applied
+//* from this value on.
+//* So from the small breakpoint on which is this 640 pixels.
+//* But below that (sm === 640px) everything that we have here without the prefix will be applied.
 
 //^===============================================
 //? note:  open: CartOverview
@@ -143,156 +108,78 @@
 //* nothing will change because sm:px-4 has nothing to override on.
 
 //* so change it to <div className="bg-stone-800 px-4 py-4 uppercase text-stone-200 sm:px-6">
-//* so sm:px-4 can override on px-4
+//* so sm:px-6 can override on px-4
 
 //*==============================================================
 
-//! Grid
-
-// So basically what we want to do is to set up a grid
-
-// which contains three rows for the layout.
-
-// So one row here for the header, one for this content,
-
-// and one for this card overview.
-
-// The goal of that is
-
-// that we can then easily push this overview here all the way
-
-// to the bottom of the screen.
+//! 301. Using CSS Grid
+//? open: AppLayout.jsx
+//* So basically what we want to do is to set up a grid
+//* which contains three rows for the layout.
+//* So one row here for the header, one for this content (main and outlet),
+//* and one for this cartOverview.
+//* The goal of that is that we can then easily push cartOverview all the way
+//* to the bottom of the screen.
 
 //^==============================================
 
-;```
-    <main className="mx-auto max-w-3xl overflow-scroll">
+//& Title: CSS Grid and Overflow Scroll
+```<main className="mx-auto max-w-3xl overflow-scroll">
+    <Outlet />
+</main>``` //* The main element doesn't have the width we defined because it's now a grid item. That's how CSS grid works.
+//? Solution: Wrapping the main element in another div
+```<div className='overflow-scroll'>
+    <main className="mx-auto max-w-3xl ">
         <Outlet />
     </main>
-``` // and it clearly doesn't have this width
-// that we defined right here.
+</div>
 
-// But the reason for that is that this is now a grid item.
+``` //
+//* By wrapping the main element in a div, we fixed the width issue.
+//* The next step is to make this element actually overflow scroll.
 
-// So this is just how it works with CSS grid.
+//? Implementing Overflow Scroll
+//* Now the scroll bar appears nicely on the right side, and everything works as expected.
 
-// So one way around this
+//? Adding Margin
+//* We could add the margin that we have on the homepage, at the top and the bottom.
+//* We could set margin y to 10 to create some nice spacing.
 
-// is that we can wrap this into another div
+//? Individual Page Spacing
+//* However, I want different spacing at the top of the page for different pages.
+//* Therefore, let's define this margin individually for each page and not on this wrapper.
 
-// like this,
+//? Applying Styles
+//* All the styles that we define here will apply to all the pages
+//* because the pages are rendered here in this outlet and therefore inside these elements.
 
-```
-<div className='overflow-scroll'>
-        <main className="mx-auto max-w-3xl ">
-            <Outlet />
-        </main>
-</div>``` // and then we got that fixed.
-// The only thing that we need to do
-
-// is to then make this element actually with overflow scroll.
-
-// So let's grab that.
-
-// And there we go.
-
-// So now the scroll bar
-
-// is nicely appearing here on the right side,
-
-// and everything works nicely.
-
-// All right.
-
-// So let's remove this from here.
-
-// And beautiful.
-
-// Now we could also add the margin
-
-// that we have in the homepage,
-
-// so here at the top and at the bottom.
-
-// So, let's do that here maybe.
-
-// So we could do margin y and set it to 10 again.
-
-// And so that would then create some nice spacing.
-
-// But actually I want different spacing here
-
-// at the top of the page for different pages.
-
-// And therefore, let's define this margin here individually
-
-// for each page and not here on this wrapper,
-
-// so here in this layout.
-
-// So basically all the styles that we defining right here
-
-// will apply to all the pages
-
-// because the pages are rendered here in this outlet
-
-// and therefore here inside these elements.
-
-// But of course,
-
-// we can also set individual styles on the page level
-
-// simply by adding some styles,
-
-// well, to the components that make up these different pages.
+//? Individual Styles
+//* Of course, we can also set individual styles on the page level simply
+//* by adding some styles to the components that make up these different pages.
 
 //*===================================================================================
 //! 302. Styling Buttons: Element States and Transitions
-// Next up we're gonna take a look
+//& open: CreateOrder - Cart - Home
+//* In this section, we will explore element states such as "hover", "disabled", or "focus".
+//* We will also implement CSS transitions while styling some links and buttons.
 
-// at element states such as "hover", "disabled", or "focus".
-
-// And we will also implement CSS transitions,
-
-// and we will do all this
-
-// while styling some links and buttons.
-
-//^==================
-//? focus state:
-// So again, when the button is focused
-
-// we give it this yellow background color
-
-// which is the same one as the hover one.
-
-// So this one here.
-
-// And then we remove the outline and give it this ring.
-
-// And here we could also specify some values
-
-// to make it a larger ring.
-
-// And then here we give the ring a color and an offset.
-
-// So a space between the ring and the element itself.
+//? Focus State
+//* When the button is focused, we give it a yellow background color,
+//* which is the same as the hover state. We then remove the outline and give it a ring.
+//* We could specify some values to make the ring larger.
+//* We then give the ring a color and an offset, creating a space between the ring and the element itself.
 
 //*===========================================================================================================
 
 //! 303. Styling Form Elements
 //? open searchOrder
 
-// in CSS, we can easily style
+//* in CSS, we can easily style  the placeholder pseudo element.
 
-// the placeholder pseudo element.
-
-// And so in Tailwind we can do the same,
-
-// simply by Prefixing placeholder.
+//* And so in Tailwind we can do the same, simply by Prefixing placeholder.
 
 //^============================
-// focus:outline-none focus:ring focus:ring-yellow-500 focus:ring-opacity-50
+//* focus:outline-none focus:ring focus:ring-yellow-500 focus:ring-opacity-50
 
 //^=====================================
 
@@ -301,120 +188,31 @@
 //*===================================================================================
 
 //! 304. Reusing Styles With @apply
-// we're gonna learn how
+//* The input class is composed of all these Tailwind classes.
+//* We can replace the individual classes with this new input class.
+//* The styling remains the same.
 
-// we can reuse some styles using Tailwind's Apply directive.
+//? Applying the new class
+//* We apply the new input class to all three input fields. The styling is now consistent across all fields.
 
-// So basically using Apply, we can create an old school class
+//? Caution: Use of @apply
+//* While this technique is helpful, it should not be used everywhere.
+//* If we start doing this for all our elements, we would simply go back to writing CSS in the old school way.
+//* This should be treated as an exception when there are many classes that we are using all at the same time.
 
-// by composing many Tailwind classes together.
-//? open: index.css
+//? Better Solution: React Component
+//* The actual better solution would be to reuse all of this by creating a React component.
+//* For example, creating an input component which we could then reuse here in all these different places.
 
-``` @layer components {
-   .input{
-     @apply w-full rounded-full border border-stone-200 px-4 py-2 focus:outline-none focus:ring focus:ring-yellow-400 focus:ring-opacity-50 md:px-6 md:py-3;
-   }
+//? Creating New Classes with Apply
+//* Keep in mind that this way of creating new classes by composing many other classes together with Apply
+//* should really be the exception and not the rule because with this,
+//* we are throwing out of the window all of the advantages that Tailwind actually gives us.
 
-}
-
-``` // this input class is basically composed
-// of all these Tailwind classes
-
-// and so I can now replace this here simply with input.
-
-// So when I give it a save,
-
-// then it still looks exactly the same as before.
-
-// And so let's do the same here.
-
-// So class name of input, and also right here.
-
-// So input and beautiful.
-
-// So we have the same styling here now
-
-// in all these three input fields.
-
-// So again, simply by composing all these Tailwind classes
-
-// together into this one new input class.
-
-// So this looks really nice and helpful, right?
-
-// But that doesn't mean that we should start using
-
-// this technique all over the place now
-
-// because basically if we started to doing this
-
-// for all our elements,
-
-// then we would simply go back to writing CSS
-
-// in the old school way.
-
-// So being back to writing classes and then applying
-
-// those classes, so that's what we did before
-
-// and so then there would be no point
-
-// in using Tailwind in the first place.
-
-// So this should really be treated
-
-// as an exception here when there are so many classes
-
-// that we are using all at the same time, like this year
-
-// and when we do not want to create a new component
-
-// because the actual better solution would be to reuse
-
-// all of this by creating a React component.
-
-// So for example, creating an input component
-
-// which we could then reuse here
-
-// in all these different places, which is actually
-
-// what we're going to do in the next video for our buttons.
-
-// So again, keep in mind that this way of creating new classes
-
-// by composing many other classes together with Apply
-
-// should really be the exception and not the rule
-
-// because with this, we are throwing out of the window
-
-// all of the advantages that Tailwind actually gives us.
-
-// Well, maybe not all of them,
-
-// but surely many of the advantages.
-
-// But of course, I still wanted you to know
-
-// about this technique because it is still
-
-// an important technique that you might see used
-
-// in Tailwind in some situations.
-
-// But now in the next lecture,
-
-// we will actually reuse some other styles.
-
-// So in particular this button here.
-
-// So all of this year we will try to reuse this
-
-// using React components which is indeed the better way
-
-// of reusing styles.
+//? Next Steps
+//* In the next lecture, we will actually reuse some other styles.
+//* In particular, this button here. We will try to reuse this using React components
+//* which is indeed the better way of reusing styles.
 
 //*========================================================================================================
 
@@ -435,54 +233,26 @@
 //*==============================================================================
 
 //! 306. Absolute Positioning, z-index, and More
+//? Files to Open: AppLayout.jsx, Loader.jsx, index.css
 
-//? open AppLayout.jsx - Loader.jsx - index.css
+//? Styling the Loader
+//* To format the loader, let's always display it.
+//* We can do this by setting the condition that displays the loader to true. With this, the loader will always be there.
 
-//? style the loader
+//? Desired Loader Style
+//* We want the loader to cover the entire page, sitting in the middle, on top of everything else, and adding a small background blur.
 
-// in order to format the loader,
-
-// let's actually always display it.
-
-// So, let's comment this one out.
-
-// And here, let's just say true.
-
-// And so with this, the loader will basically always be there.
-
-// So, what we want with this loader is
-
-// that it basically will cover the entire page here,
-
-// sitting kind of in the middle here.
-
-// So, on top of everything else,
-
-// and also adding a small background blur.
-
-// So, the way we can achieve this with CSS is
-
-// to basically add one parent element around this loader here,
-
-// and then absolutely position that element here
-
-// in this top left corner and making it so
-
-// that it occupies the entire page.
+//? Implementing the Style
+//* We can achieve this with CSS by adding a parent element around the loader.
+//* We then absolutely position that parent element in the top left corner and make it occupy the entire page.
 
 //*==============================================================================
 //! 307. Configuring Tailwind: Custom Font Family
 //? open config file:  tailwind.config
 
-// 100 D.V.H
-
-// which stands for dynamic viewport height units.
-
-// And so with this, we no longer have the problem
-
-// that on mobile browsers sometimes the viewport type
-
-// is not really 100%.
+//* 100 D.V.H which stands for dynamic viewport height units.
+//* And so with this, we no longer have the problem that on mobile browsers sometimes the viewport type
+//* is not really 100%.
 
 //*=================================================================================
 
@@ -508,15 +278,9 @@
 ```
 
 //? open CreateUser - CreateOrder - MenuItems - Cart
-//* to add type prop to the button comp
-
-// the technique that I'm going to use
-
-// is to create an object here with the styles
-
-// and then based on the type,
-
-// we will get the style from the object.
+//* to add type prop to the button comp the technique that I'm going to use
+//* is to create an object here with the styles and then based on the type,
+//* we will get the style from the object.
 
 //*=================================================================================
 
@@ -534,6 +298,6 @@
 
 //*=================================================================================
 
-//! 311.
+//! 311. Styling the Order Overview
 
 //? open: order.jsx
