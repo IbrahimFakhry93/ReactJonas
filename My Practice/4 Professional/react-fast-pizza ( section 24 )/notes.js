@@ -103,5 +103,27 @@
 //* to make the application work
 
 //*=============================================================================
+//& Title: 315. Modeling the "Cart" State
 
-//! 315. Modeling the "Cart" State
+//? Create: cartSlice.js and open store,js
+//* Many of the state management principles learned throughout this course still apply to modeling state in Redux.
+//* For example, we should always derive state whenever possible.
+//* This is why we are not storing the total cart price here.
+//* We could store the total price and maybe even the number of items,
+//* but we can easily derive these from the cart array itself.
+//* Creating these would just create more problems
+//* because then we would have to keep them in sync while updating the cart.
+
+//? Payload Definition
+//* The payload is simply what we pass into the action creator when we dispatch an action.
+
+//? Delete Feature and ID
+//* When we delete an item, the payload that we will need will be the ID of the item.
+//* So basically the pizza ID because that's the name they have here in the cart.
+//* When we delete, we will try to find the item with that ID and then delete it.
+
+//? State Mutation
+//* Since we are allowed to directly mutate the state,
+//* we could use the splice method and directly mutate the array.
+//* However, it's a lot easier to still use the filter method like we have been doing all along
+//* because it requires a lot less code.
