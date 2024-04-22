@@ -127,3 +127,43 @@
 //* we could use the splice method and directly mutate the array.
 //* However, it's a lot easier to still use the filter method like we have been doing all along
 //* because it requires a lot less code.
+//*===========================================================================================
+//!316. Adding Menu Items to the Cart
+
+//* let's start using our cart state by adding new pizzas to the cart.
+
+//? open: MenuItem
+
+// So, where exactly are we going to do that in our code?
+
+// Well, here in the user interface,
+
+// the user is able to add new pizzas to the cart
+
+// simply by clicking here on these buttons.
+
+// And so, all we have to do is to come to the menu items
+
+// and then implement that functionality right there.
+
+// So, here is where the cart
+
+// and the menu features intersect a little bit.
+
+// And so, we now need to implement some cart functionality
+
+// here, in the item.
+
+// But of course, things are never so linear
+
+// in any real-world application.
+
+// So carts cannot be completely separated
+
+// from the menu feature.
+
+// And so, yeah, sometimes we need to implement
+
+// some parts of a feature inside another feature,
+
+// because again, of course, these will intersect.
