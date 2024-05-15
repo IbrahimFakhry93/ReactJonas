@@ -1,15 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit'
 const initialState = {
-    // cart: [],
-    cart: [
-        {
-            pizzaId: 12,
-            name: 'Mediterranean',
-            quantity: 2,
-            unitPrice: 16,
-            totalPrice: 32,
-        },
-    ],
+    cart: [],
+    // cart: [
+    //     {
+    //         pizzaId: 12,
+    //         name: 'Mediterranean',
+    //         quantity: 2,
+    //         unitPrice: 16,
+    //         totalPrice: 32,
+    //     },
+    // ],
 }
 
 const cartSlice = createSlice({
@@ -21,6 +21,7 @@ const cartSlice = createSlice({
             state.cart.push(action.payload) //* we use push because here we can mutate the data
         },
         deleteItem(state, action) {
+            console.log('delete')
             // payload === pizzaId
             state.cart = state.cart.filter(
                 (pizza) => pizza.pizzaId !== action.payload
@@ -47,6 +48,9 @@ const cartSlice = createSlice({
             pizza.quantity--
 
             pizza.totalPrice = pizza.quantity * pizza.unitPrice
+
+            if (pizza.quantity === 0)
+                cartSlice.caseReducers.deleteItem(state, action)
         },
         clearCart(state) {
             state.cart = []
@@ -62,3 +66,19 @@ export const {
     clearCart,
 } = cartSlice.actions
 export default cartSlice.reducer
+
+//^ Selector Functions to be exported to be used inside useSelector in any component wherever is needed
+
+export const getCart = (state) => state.cart.cart
+
+export const getCartTotalQuantity = (state) =>
+    state.cart.cart.reduce((sum, item) => sum + item.quantity, 0)
+
+//* cart is the name of slice
+//* cart is the property inside initial state
+
+export const getCartTotalPrice = (state) =>
+    state.cart.cart.reduce((sum, item) => sum + item.totalPrice, 0)
+
+export const getCurrentQuantity = (id) => (state) =>
+    state.cart.cart.find((item) => item.pizzaId === id)?.quantity ?? 0

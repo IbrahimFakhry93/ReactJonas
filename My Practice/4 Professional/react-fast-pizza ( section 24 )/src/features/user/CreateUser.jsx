@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 
 function CreateUser() {
     const [username, setUsername] = useState('')
-    const dispatch = useDispatch()
+    const dispatch = useDispatch() //* to get access to dispatch function by dispatch hook.
     const navigate = useNavigate()
 
     function handleSubmit(e) {

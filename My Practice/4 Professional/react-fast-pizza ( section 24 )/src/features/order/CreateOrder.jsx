@@ -2,7 +2,12 @@ import { useState } from 'react'
 import { Form, redirect, useActionData, useNavigation } from 'react-router-dom'
 import { createOrder } from '../../services/apiRestaurant'
 import Button from '../../ui/Button'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { clearCart, getCart, getCartTotalPrice } from '../cart/cartSlice'
+import EmptyCart from '../cart/EmptyCart'
+import store from '../../store'
+import { formatCurrency } from '../../utilities/helpers'
+import { fetchAddress } from '../user/userSlice'
 
 // https://uibakery.io/regex-library/phone-number
 const isValidPhone = (str) =>
@@ -10,44 +15,51 @@ const isValidPhone = (str) =>
         str
     )
 
-const fakeCart = [
-    {
-        pizzaId: 12,
-        name: 'Mediterranean',
-        quantity: 2,
-        unitPrice: 16,
-        totalPrice: 32,
-    },
-    {
-        pizzaId: 6,
-        name: 'Vegetale',
-        quantity: 1,
-        unitPrice: 13,
-        totalPrice: 13,
-    },
-    {
-        pizzaId: 11,
-        name: 'Spinach and Mushroom',
-        quantity: 1,
-        unitPrice: 15,
-        totalPrice: 15,
-    },
-]
+// const fakeCart = [
+//     {
+//         pizzaId: 12,
+//         name: 'Mediterranean',
+//         quantity: 2,
+//         unitPrice: 16,
+//         totalPrice: 32,
+//     },
+//     {
+//         pizzaId: 6,
+//         name: 'Vegetale',
+//         quantity: 1,
+//         unitPrice: 13,
+//         totalPrice: 13,
+//     },
+//     {
+//         pizzaId: 11,
+//         name: 'Spinach and Mushroom',
+//         quantity: 1,
+//         unitPrice: 15,
+//         totalPrice: 15,
+//     },
+// ]
 
 function CreateOrder() {
-    // const [withPriority, setWithPriority] = useState(false);
-    const cart = fakeCart
+    const [withPriority, setWithPriority] = useState(false)
+    // const cart = fakeCart
+    const dispatch = useDispatch()
+    const cart = useSelector(getCart)
+    const totalCartPrice = useSelector(getCartTotalPrice)
+    const priorityPrice = withPriority ? totalCartPrice * 0.2 : 0
+    const totalPrice = totalCartPrice + priorityPrice
     const username = useSelector((state) => state.user.username)
     const formErrors = useActionData()
     console.log(formErrors)
     const navigate = useNavigation()
     const isSubmitting = navigate.state === 'submitting'
 
+    if (!cart.length) return <EmptyCart />
     return (
         <div className="px-4 py-6">
             <h2 className="mb-8 text-xl font-semibold">
                 Ready to order? Let's go!
             </h2>
+            {/* <button onClick={() => dispatch()}></button> */}
 
             {/* <form> */}
             {/* <Form method="POST" action="/order/new"> */}
@@ -80,15 +92,27 @@ function CreateOrder() {
                     </div>
                 </div>
 
-                <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">
+                <div className="relative mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">
                     <label className="sm:basis-40">Address</label>
-
-                    <input
-                        className="input grow"
-                        type="text"
-                        name="address"
-                        required
-                    />
+                    <div className="grow">
+                        <input
+                            className="input w-full "
+                            type="text"
+                            name="address"
+                            required
+                        />
+                    </div>
+                    <span className="absolute right-[3px]">
+                        <Button
+                            type="small"
+                            onClick={(e) => {
+                                e.preventDefault()
+                                dispatch(fetchAddress())
+                            }}
+                        >
+                            Get Position
+                        </Button>
+                    </span>
                 </div>
 
                 <div className="mb-12 flex items-center gap-5">
@@ -97,8 +121,8 @@ function CreateOrder() {
                         name="priority"
                         id="priority"
                         className="h-6 w-6 accent-yellow-400 focus:outline-none focus:ring focus:ring-yellow-500 focus:ring-offset-2"
-                        // value={withPriority}
-                        // onChange={(e) => setWithPriority(e.target.checked)}
+                        value={withPriority}
+                        onChange={(e) => setWithPriority(e.target.checked)}
                     />
                     <label htmlFor="priority" className="font-medium">
                         Want to yo give your order priority?
@@ -112,7 +136,9 @@ function CreateOrder() {
                         value={JSON.stringify(cart)}
                     />
                     <Button disabled={isSubmitting} type="primary">
-                        {isSubmitting ? 'Placing order...' : 'Order now'}
+                        {isSubmitting
+                            ? 'Placing order...'
+                            : `Order now from ${formatCurrency(totalPrice)} `}
                     </Button>
                 </div>
                 {/* </form> */}
@@ -132,7 +158,10 @@ export async function action({ request }) {
     const order = {
         ...data,
         cart: JSON.parse(data.cart),
-        priority: data.priority === 'on',
+        // priority: data.priority === 'on',
+        //* after convert the input checkbox to controlled element and priority becomes a reactive boolean state
+        //* so it is true or false not on or off
+        priority: data.priority === 'true',
     }
     console.log(order)
 
@@ -146,9 +175,11 @@ export async function action({ request }) {
 
     //& getting the new order and redirect the url to show the order info page
 
-    // const newOrder = await createOrder(order)
-    // return redirect(`/order/${newOrder.id}`)
-    return null
+    const newOrder = await createOrder(order)
+    // don't overuse
+    store.dispatch(clearCart())
+    return redirect(`/order/${newOrder.id}`)
+    // return null
 }
 
 export default CreateOrder
