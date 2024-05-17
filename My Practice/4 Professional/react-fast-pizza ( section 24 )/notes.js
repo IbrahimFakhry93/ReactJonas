@@ -936,3 +936,526 @@
 
 //^=============
 // put getPosition button on top of address input field.
+//^======================
+// as the last step,
+
+// we, of course, also need to get this data then
+
+// here into our form action.
+
+// So right here in the form action,
+
+// when we submit the new order,
+
+// we will also want to submit it
+
+// with the actual position data,
+
+// so with the user's GPS location,
+
+// because that's going to be really important
+
+// or really helpful for the company
+
+// to deliver the pizza.
+//^==============
+
+// However, when the user denies the geolocation
+
+// or if there is some other problem with geolocation,
+
+// then we do not get this position right here.
+
+// But still, we want to allow the user to submit the form
+
+// in that situation,
+
+// so they can still manually input their address here,
+
+{
+    /*
+  <input
+                        type="hidden"
+                        name="position"
+                        value={
+                            position.latitude && position.longitude
+                                ? `${position.latitude} , ${position.longitude}`
+                                : ''
+                        }
+                    />
+*/
+}
+
+//*=========================================================
+
+//! 324. Fetching Data Without Navigation: useFetcher
+
+//^ open: Order.jsx  - OrderItem.jsx
+// let's go back to some more advanced features
+
+// of React Router,
+
+// and, in particular,
+
+// let's learn about how we can fetch and mutate data
+
+// without actually causing navigations,
+
+// so without moving to another page.
+
+//^==================================
+
+// So, the page that is already opened right here.
+
+// So, as I said in the beginning,
+
+// sometimes we need to fetch some data from another route,
+
+// so basically data that is not associated
+
+// with this current page right here,
+
+// but we want to do that
+
+// without causing a navigation sometimes.
+
+// So, for example, let's say that here in the order page,
+
+// we wanted to load the menu data again,
+
+// and we already wrote all the logic
+
+// for fetching exactly that data,
+
+// but it is associated to another route.
+
+// So, to the menu route and not to this one,
+
+// but still we want to use it here,
+
+// because there is no point in writing that logic again.
+
+// So, in other words, what we want to do
+
+// is to use the data from the menu route,
+
+// but without the user actually going there.
+
+// And, so, for that, we can use the useFetcher hook.
+
+// So, this hook will return something called a fetcher.
+//^===================================
+
+// the idea here is to load the menu data,
+
+// so that we can then associate the ingredients
+
+// to each of the different pizzas.
+
+// and so we can get that data from the menu route.
+
+// So, what we want to do is,
+
+// right after this component (Order) mounts,
+
+// we want to fetch that menu data using our fetcher.
+
+// So, if we want to do this at component mount,
+
+// then let's again use our friend use effect.
+//^================
+//!  if (!fetcher.data && fetcher.state === 'idle') fetcher.load('/menu')
+// this will then load the data,
+
+// and will store it basically in this fetcher object,
+
+// and then later we can retrieve the data from there
+
+// when we want.
+
+// And, actually, let's only fetch this data
+
+// if there is no data yet.
+
+// So, we can do if there is no fetcher.data.
+
+// And, so let's only start fetching this data
+
+// whenever the fetcher is in the idle state,
+
+//^==================
+
+// just like normal page navigations,
+//^ open: AppLayout
+// const isLoading = navigation.state === 'loading'
+
+// this fetcher can also be in different states.
+
+//^==================
+
+//? OrderItem:
+
+;<p className="text-stone text-sm capitalize italic">
+    {isLoadingIngredients ? 'loading' : ingredients.join(', ')}
+</p>
+//! problem: this : ingredients.join(', ')} execute because isLoadingIngredients is false although the fetcher is still loading at the beginning
+
+//* because in the very beginning, fetcher.state will be idle,
+
+//~ Solution
+//? Order:
+;<ul className="dive-stone-200 divide-y border-b border-t">
+    {cart.map((item) => (
+        <OrderItem
+            item={item}
+            key={item.pizzaId}
+            isLoadingIngredients={fetcher.state === 'loading'}
+            ingredients={
+                fetcher?.data?.find((el) => el.id === item.pizzaId)
+                    ?.ingredients ?? []
+            }
+        />
+    ))}
+</ul>
+// I'm guessing that the issue is that,
+
+// in the very beginning,
+
+// fetcher.state will be idle,
+
+// but that doesn't mean that we already have our ingredients,
+
+// so that we have our data already.
+
+// And, so in those very first instance,
+
+// here, we will not be loading the data,
+
+// but we also don't have the data yet.
+
+// And, so let's just try to return an empty array
+
+// then in this case.
+
+// So, basically, if this year doesn't exist,
+
+// then we just return an empty array.
+
+// So, that will then fix the problem
+
+//*=========================================================
+
+//!  325. Updating Data Without Navigation
+
+//^ open : order  - UpdateOrder  - App - apiRestaurant
+
+// let's do the same thing, but with writing.
+
+// So with updating data, using a form
+
+// but without causing a new navigation.
+
+// And by doing this,
+
+// we will be able to implement the last feature
+
+// that is still missing from this application
+
+// which is to allow users
+
+// to mark their order as a priority order
+
+// even after the order has already been placed.
+
+//* so create UpdateOrder comp
+//^=====================
+// now here we have our Make Priority button.
+
+// And so as we click this
+
+// we want to change priority from false to true.
+
+// And then this whole page here should re-render
+
+// and make this button disappear
+
+// and displaying appear the priority status.
+
+// So let's see how we can do that using again
+
+// the usefetcher hook.
+
+// So just like we did in the previous lecture.
+
+// So usefetcher like this.
+
+// And now in order to update, so to write data,
+
+// we do not use fetcher.load,
+
+// but instead we use a form component
+
+// data fetcher provides to us.
+
+// So basically what we will do is to simply
+
+// wrap this button here into a form
+
+// even though we don't have any input elements,
+
+// but still, this is how it works.
+
+//^======================
+
+// And so basically this is just like the other form
+
+// that we worked with earlier.
+
+// So just like this React Router form here (Form in CreateOrder comp)
+
+// with the only difference that submitting this one here ((Form in CreateOrder comp))
+
+// actually creates a new navigation.
+
+// So the idea with this one is to navigate away from the page
+
+// while this one,
+
+// so fetcher.Form will not navigate away,
+
+// it will simply submit a form
+
+// and then also revalidate the page.
+
+//^==============
+
+// let's write the actual logic to update to order.
+
+// And so for that, we need again an action.
+
+// So async function,
+
+// which by default should be called action.
+
+// And so here we again get access to the request
+
+// and to the params,
+
+//^=================
+
+// we need to wire everything up in our route definition. (in App.jsx open it)
+
+// So we need to connect this action with the page.
+
+// So let's come back here to App.js
+
+// where we have our route definitions.
+
+// And so this one,
+// import { action as updateOrderAction } from './features/order/UpdateOrder'
+// {
+//     path: '/order/:orderId',
+//     element: <Order />,
+//     loader: orderLoader,
+//     errorElement: <Error />,
+//     action: updateOrderAction,
+// },
+
+// we will actually connect to this route right here.
+
+// So action should be,
+
+// then first we need to of course import that.
+
+// So let's do that right here.
+
+// And it is a named import.
+
+// So loader and then let's rename it as updateOrderAction
+
+// from features order, and then UpdateOrder.
+
+// All right, and now here, let's then use that.
+
+// So updateOrderAction.
+
+// And this is going to work just fine
+
+// even though the form that we want to connect
+
+// with this action is not really on this page
+
+// but on a child component of this order page, right?
+
+// So the form that we want to be handled with this action here
+
+// is actually inside UpdateOrder
+
+// which is a child component of order,
+
+// but React Router is smart enough to figure that out
+
+//^=====================
+
+// usually when we do some kind of data updating,
+
+// we will then have a couple of inputs here also in this form.
+
+// But in this case, we don't have any inputs,
+
+// all we have is this button here.
+
+// And so in this case,
+
+// we don't even need to read any data from the request.
+
+// So opposed to what we did here. (in CreateOrder comp)
+
+export async function action({ request }) {
+    const formData = await request.formData() //* formData is a web api provided by the browser
+    const data = Object.fromEntries(formData)
+
+    //& model the raw data in the action:
+
+    const order = {
+        ...data,
+        cart: JSON.parse(data.cart),
+        // priority: data.priority === 'on',
+        //* after convert the input checkbox to controlled element and priority becomes a reactive boolean state
+        //* so it is true or false not on or off
+        priority: data.priority === 'true',
+    }
+    //& getting the new order and redirect the url to show the order info page
+    // if everything is okay, create new order and redirect it
+    //! just comment below and uncomment return null for testing purpose and check console.og(order)
+    const newOrder = await createOrder(order)
+    //* don't overuse
+    store.dispatch(clearCart())
+    return redirect(`/order/${newOrder.id}`)
+}
+
+// So here we got the request,
+
+// and then we read the data from there,
+
+// which again, in this case is not necessary.
+
+// So we don't even need that request here.
+
+// Let's just leave it there so that you know that it exists.
+
+// So let's get rid of this.
+
+// And what we are going to do now
+
+// is to use one of our services, (in apiRestaurant)
+
+// so this one right here
+
+// and call this function.
+
+// So this updateOrder function.
+
+// And as we see, this is a patch request
+
+// which is one of the two ways of updating data.
+
+// So there is the put request
+
+// where we need to pass in the entire new updated object.
+
+// And then there is patch,
+
+// which will only take in the data that has actually changed
+
+// and add that to the original object on the server.
+
+// So long story short, all we need to pass in here
+
+// in this function is the ID of the order
+
+// that should be updated
+
+// and then only the data that should be updated.
+
+// So the data that should be updated
+
+// is only the priority field,
+
+// and it should always simply be set to true
+
+// because this button is only visible here
+
+// whenever the priority is false.
+
+// So then here we basically just turn that on.
+
+// And so then here, let's await that update order function
+
+// which needs the current ID and that data.
+
+// So where do we get the order ID from?
+
+// Well, luckily for us,
+
+// we also have here this params object
+
+// which is still able to give us the information here
+
+// about the current URL,
+
+// and that contains the order ID param right there.
+
+// So we can simply do params.orderId
+
+// and then the data, and that is actually already it.
+
+// So let's click here now and see what happens.
+
+// So take good notice here of what will happen.
+
+// So let's click and immediately our page updated here.
+
+// So we got now the priority price here
+
+// and we have the priority status also displayed here.
+
+// And so this is the power of re-validation
+
+// that I mentioned earlier.
+
+// So re-validation basically means that React Router knows
+
+// that the data has changed as a result of this action.
+
+// And so then whenever that happens,
+
+// it'll automatically re-fetch the data in the background
+
+// and then re-render the page with that new data.
+
+// And so that is what is so helpful
+
+// about this fetcher form here.
+
+// So this form that we can use to update some data
+
+// without causing a navigation.
+
+// And so just like I mentioned earlier,
+
+// if you are building a highly interactive web application,
+
+// you'll use this all the time probably.
+
+// Now as I had mentioned earlier,
+
+// probably you will then also use some input fields here.
+
+// And if you want, you can now practice this new skill here
+
+// by allowing the user to update some other information,
+
+// for example, their address or their phone number.
+
+//*=========================================================

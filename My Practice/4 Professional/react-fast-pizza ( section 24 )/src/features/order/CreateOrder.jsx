@@ -47,7 +47,14 @@ function CreateOrder() {
     const totalCartPrice = useSelector(getCartTotalPrice)
     const priorityPrice = withPriority ? totalCartPrice * 0.2 : 0
     const totalPrice = totalCartPrice + priorityPrice
-    const username = useSelector((state) => state.user.username)
+    const {
+        username,
+        status: addressStatus,
+        position,
+        address,
+        error: errorAddress,
+    } = useSelector((state) => state.user)
+    const isLoadingAddress = addressStatus === 'loading'
     const formErrors = useActionData()
     console.log(formErrors)
     const navigate = useNavigation()
@@ -99,20 +106,30 @@ function CreateOrder() {
                             className="input w-full "
                             type="text"
                             name="address"
+                            disabled={isLoadingAddress}
+                            defaultValue={address}
                             required
                         />
+                        {addressStatus === 'error' && (
+                            <p className="mx-auto mt-2 w-fit rounded-md bg-red-100 p-2 text-xs text-red-700">
+                                {errorAddress}
+                            </p>
+                        )}
                     </div>
-                    <span className="absolute right-[3px]">
-                        <Button
-                            type="small"
-                            onClick={(e) => {
-                                e.preventDefault()
-                                dispatch(fetchAddress())
-                            }}
-                        >
-                            Get Position
-                        </Button>
-                    </span>
+                    {!position.latitude && !position.longitude && (
+                        <span className="absolute right-[3px]">
+                            <Button
+                                disabled={isLoadingAddress}
+                                type="small"
+                                onClick={(e) => {
+                                    e.preventDefault()
+                                    dispatch(fetchAddress())
+                                }}
+                            >
+                                Get Position
+                            </Button>
+                        </span>
+                    )}
                 </div>
 
                 <div className="mb-12 flex items-center gap-5">
@@ -135,7 +152,19 @@ function CreateOrder() {
                         name="cart"
                         value={JSON.stringify(cart)}
                     />
-                    <Button disabled={isSubmitting} type="primary">
+                    <input
+                        type="hidden"
+                        name="position"
+                        value={
+                            position.latitude && position.longitude
+                                ? `${position.latitude} , ${position.longitude}`
+                                : ''
+                        }
+                    />
+                    <Button
+                        disabled={isSubmitting || isLoadingAddress}
+                        type="primary"
+                    >
                         {isSubmitting
                             ? 'Placing order...'
                             : `Order now from ${formatCurrency(totalPrice)} `}
@@ -174,11 +203,13 @@ export async function action({ request }) {
     if (Object.keys(errors).length > 0) return errors
 
     //& getting the new order and redirect the url to show the order info page
-
+    // if everything is okay, create new order and redirect it
+    //! just comment below and uncomment return null for testing purpose and check console.og(order)
     const newOrder = await createOrder(order)
-    // don't overuse
+    //* don't overuse
     store.dispatch(clearCart())
     return redirect(`/order/${newOrder.id}`)
+
     // return null
 }
 
