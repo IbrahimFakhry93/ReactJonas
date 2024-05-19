@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { getAddress } from '../../services/apiGeocoding'
 function getPosition() {
+    //* wrap the logic in a promise so we use await when we call this function
     return new Promise(function (resolve, reject) {
         navigator.geolocation.getCurrentPosition(resolve, reject)
     })
@@ -26,6 +27,7 @@ function getPosition() {
 
 export const fetchAddress = createAsyncThunk(
     'user/fetchAddress',
+
     async function () {
         // 1) We get the user's geolocation position
         const positionObj = await getPosition()

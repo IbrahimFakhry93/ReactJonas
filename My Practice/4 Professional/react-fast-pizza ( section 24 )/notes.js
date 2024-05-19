@@ -227,7 +227,7 @@
 
 // not the entire application is re-rendered
 
-// but really only this one component.
+// but really only this one component (MenuItem).
 
 // And so that's because of the internal optimizations
 
@@ -244,862 +244,168 @@
 
 //^ open: CreateOrder.jsx
 
-//*  use the cart data to submit a new order.
+//* Use the cart data to submit a new order.
 
-// that is pretty easy now
+//* that is easy  cause all we have to do is to go to that component (createOrder)
 
-// 'cause all we have to do is to go to that component (createOrder)
-
-// and then select the entire cart
-
-// and then use that to submit the order,
-
-// because the rest of the logic
-
-// has already been written before.
+//* and then select the entire cart and then use that to submit the order,
 
 //^^===========
 
+//~ Handling Clear Cart Action
 //* after you place an order,
 //* then your cart gets automatically emptied out.
 
-// And so let's implement that here as well,
+//? Explanation:
+//* The clear cart action needs to be dispatched within this function.
+//* However, the use of the useDispatch hook is only available in components,
+//* not in regular functions like this one (async function action({ request })).
+//* To work around this limitation, we'll directly import the store object here
+//* and dispatch the action directly on that store.
 
-// even though it is not going to be super easy.
+//? Important Note:
+//* Avoid overusing this technique, as it deactivates some Redux performance optimizations on this page.
 
-// So we will have to use some kind of hack here again
-
-// because clearly the dispatching of the clear cart action
-
-// will need to happen right here inside this form action.
-
-// However, for dispatching,
-
-// we need to call the use dispatch hook,
-
-// which is only available in components
-
-// and not in a regular function like this one.
-
-// So the hack that we can use
-
-// and which we should really, really not overuse
-
-// is to directly import the store object here
-
-// into this function and then dispatch directly on that store.
-
-// So let me show you what I mean by that.
-
-// But really don't overuse this technique
-
-// because it deactivates a couple of performance optimizations
-
-// of Redux on this page.
-
-// So do not overuse.
-
+//* import store from '../../store'
+//* store.dispatch(clearCart())
 //^=================================================
-// But now what about the priority price?
-// But now what about the priority price?
 
-// So how do we calculate this?
+//& Title: Calculating Priority Price
 
-// So basically whenever we click here,
+//? Explanation:
+//? To calculate the priority price, we need to update the UI when the user clicks the checkbox.
+//? We'll use a reactive state value (withPriority) to track whether the user selects priority.
+//? If priority is selected, the price should be 20% of the total cart price; otherwise, it's zero.
 
-// we then want to update the price
+//* Implementation Steps:
+//* 1. Set up state for priority (reactive value) =>  const [withPriority, setWithPriority] = useState(false)
+//* 2. Make the checkbox a controlled element using the reactive value.
+//* 3. Compute the priority price based on the selected state.
+//* 4. Update the UI to reflect the priority status.
 
-// and we want to update it by exactly 20%
+//! note:
 
-// of this total cart price,
+//* after convert the input checkbox to controlled element and priority becomes a reactive boolean state
+//* so it is true or false not on or off as for checkbox
 
-// 'cause from the list of requirements,
+;```const order = {
+    ...data,
+    cart: JSON.parse(data.cart),
+    //! priority: data.priority === 'on',
+    priority: data.priority === 'true',
+}
+console.log(order)```
 
-// that is the price of making the order priority.
-
-// So if we want to change the UI whenever this here changes,
-
-// so whenever we click here,
-
-// that means that we need some state, right?
-
-// So basically we need a reactive value.
-
-// And so that's why here we actually already have that.
-
-// Let me place that at the very top right here.
-
-// And then let's also use this here.
-
-// So now we are making
-
-// this checkbox here a controlled element again.
-
-// Okay.
-
-// And so then we can use that reactive value,
-
-// so that piece of state, here to compute the priority price.
-
-// So in case we are with priority,
-
-// then the price should be the total cart price times 0.2,
-
-// and otherwise just zero.
-
-// Yeah. Nice.
-
-// So let's input a phone number, then this, placing our order,
-
-// and with this we are done.
-
-// Or actually, we are not really done,
-
-// because we did select priority, but it is not here.
-
-// So something strange happened,
-
-// but I think I know the reason.
-
-// I think it is because we changed now the value.
-
-// So here in this checkbox,
-
-// now the value will no longer be on and off.
-
-// So where is that?
-
-// Here.
-
-// So again here, the value will now no longer be
-
-// on like we had here earlier.
-
-// So here we were checking if that value is on,
-
-// but instead now it will be true.
-
-// So true as a string. All right.
-
-// So no longer just on, but really true or false.
-
-// And so here we then want to give this order priority
-
-// in case that the data that we receive is equal
-
-// to the string of "true".
-
-// So let's try that again.
-
-// So I said initially that this was gonna be a short
-
-// and easy video, but well, there's always a lot to do.
-
-// So let's try again.
-
-// Let's give ourselves priority again.
-
-// Well, let's wait for it.
-
-// Nice. So now that worked.
-
-// And so now indeed we are finished,
-
-// at least with what we set out to do in this video
-
-// because the list of requirements
-
-// of this app still has, I think,
-
-// one or two things that we should implement.
-
-// And so let's get to that for the rest of this section.
 //*===========================================================
 
 //! 322. Redux Thunks With createAsyncThunk
 
-//^ open:  userSlice - apiGeocoding -createOrder
+//^ open:  userSlice - apiGeocoding - createOrder
 
-// more advanced Redux Toolkit
+//~ Implementing Geolocation with Redux Toolkit
 
-// and in particular, we will now create a Thunk middleware
+//? Thunk Middleware for Geolocation
+//* This Thunk middleware is responsible for fetching the user's address based on their geolocation.
 
-// by using the built-in CreateAsyncThunk function
-
-// which is a way of creating a Thunk
-
-// that we avoided when we first learned about Redux,
-
-// and the idea here is to implement the feature
-
-// where our users can use geolocation
-
-// in order to get their GPS position and their address.
+//^ Analysis:
+//* - The `fetchAddress` Thunk performs the following steps:
+//*   1. Retrieves the user's geolocation position using the `getPosition` function.
+//*   2. Utilizes reverse geocoding to obtain address information from the latitude and longitude.
+//*   3. The goal is to display the address in a user-friendly format.
 
 //^===
 
-// let's analyze what we have here.
-
-// So we have dysfunction here called fetchAddress
-
-// which, as the name says,
-
-// is responsible for fetching some information
-
-// about the user's address
-
-// and it does so in two steps.
-
-// So first of all, it gets the user's geolocation position
-
-// which is provided by this getPosition function right here.
-
-// So basically wrapping a promise
-
-// around this function right here.
-
-// So then we can use await.
-
-// So here we get the user's position
-
-// and then with that position, so that latitude and longitude,
-
-// we use this reverse geocoding API.
-
-// So this one right here, let's open that,
-
-// and so here all we do is to make a fetch request
-
-// to this API right here
-
-// with the user's current latitude and longitude.
-
-// And so this will then do reverse geocoding
-
-// which is basically getting some information
-
-// about that GPS position like the city or the street name.
-
-// So things like that,
-
-// and so then we can display that information
-
-// later in the form.
-
-// So basically what we will want to do,
-
-// so let's just go back to our order form.
-
-// And so the idea here will be to be
-
-// that we have a button here where the user
-
-// can request their geolocation position
-
-// and then this filter
-
-// will automatically be filled with their address,
-
-// and so that address will come here from this API.
-
-// So then here we create a nice string
-
-// based on the information received there
-
-// and then we return an object,
-
-// both with the GPS position and the address string.
-//^=============================
-
-// but as we can see,
-
-// this is an async function
-
-// which means that we cannot just call this function
-
-// directly inside a Redux reducer
-
-// because remember Redux is by nature completely synchronous,
-
-// and so that's why we now need to talk about Thunks again.
-
-// So we learned all about Thunks back in the Redux section
-
-// which you can of course revisit and review,
-
-// but basically all you need to know at this point
-
-// is that a Thunk is a middleware
-
-// that sits between the dispatching
-
-// and the reducer itself.
-
-// So it will do something to the dispatched action
-
-// before actually updating the store.
-
-// Now back then when we wanted
-
-// to use Thunks with Redux Toolkit,
-
-// we manually created our own action creator
-
-// and placed the Thunk in there
-
-// so instead of using Redux Toolkit's
-
-// native way of creating a Thunk,
-
-// but now let's actually do that.
-
-// And so now in order to create a Thunk,
-
-// we will use the createAsyncThunk function.
-// let's create again fetchAddress
-
-// because we will now again, remove that one,
-
-// and so this fetch address will be the result
-
-// of calling createAsyncThunk.
-
-// And so this createAsyncThunk receives two things.
-
-// First, we need to pass in the action name,
-
-// so that's gonna be user and then fetchAddress
-
-// and then second, we need to pass in an async function
-
-// that will return the payload for the reducer later.
-
-// So this function needs to return the promise
-
-// and so an async function is ideal here.
-
-// So let's just create an anonymous function here
-
-// and then grab all this code
-
-// and place that in there.
-
-// So then we can remove this
-
-// and paste that here.
-
-// All right, and now this fetchAddress here
-
-// will actually become the action creator function
-
-// that we will later call in or code,
-
-// and so let's export this one as well.
-
-// So now besides this updateName action creator,
-
-// we also have this new one here which is fetchAddress
-
-// and we should not call it something like getAddress
-
-// because those names are reserved for selectors.
-
-// So by convention, these names for the AsyncThunks
-
-// should not be called something with get, okay?
-
-// Now this is I guess pretty confusing,
-
-// so let's just quickly recap what we did here.
-
-// So this time we used the Redux Toolkit way
-
-// of creating a Thunk function.
-
-// So we called this function right here
-
-// where we passed in the action type name
-
-// and so that's this one right here
-
-// which we will never manually use,
-
-// but still Redux needs this internally.
-
-// And then as a second argument,
-
-// we pass in the actual Thunk function,
-
-// so the code that we want to execute
-
-// as soon as this action here will be dispatched.
-
-// Now what's special about this is that this createAsyncThunk
-
-// will basically produce three additional action types.
-
-// So one for depending promise state,
-
-// one for the fulfilled state,
-
-// and one for the rejected state.
-
-// And so now we need to handle these cases
-
-// separately back in our reducers
-
-// and so this is how we then connect this Thunk
-
-// with our reducers down here.
-
-// So let's do that
-
-// and here the syntax is actually pretty confusing again.
-
-// So here we need to now specify these extra reducers
-
-// which will then get something called a builder.
-
-// So this is basically a function here
-
-// and then on this builder we call addCase.
-
-// So again, pretty confusing here,
-
-// but this is just the way Redux Toolkit works
-
-// and it's the reason why I didn't show you this earlier.
-
-// But anyway, here now let's use
-
-// that function that we just created, so that fetchAddress,
-
-// and then here we are going to handle the pending state.
-
-// So .pending, and then here is where the actual reducer
-
-// finally comes into play.
-
-// So here we can now get the state and the action again
-
-// and so here what we will want to do is to update the state
-
-// by setting the status to loading.
-
-// Okay, and so let's actually now update
-
-// also our initial state.
-
-// So besides this username,
-
-// we now need a few more things here.
-
-// So let's start with a status
-
-// and let's make it by default idle.
-
-// And then as soon as we start loading,
-
-// so that's this pending state,
-
-// we set it to loading right here.
-
-// Just place this into these curly braces
-
-// and then we also want to store the user's position.
-
-// Let's start here with this empty object, the address,
-
-// and also some possible error.
-
-// Okay, and so let's now handle the other two cases.
-
-// So for the fulfilled state,
-
-// so the case when there is success,
-
-// and also the rejected state for an error.
-
-// So builder.addCase fetchAddress.fulfilled
-
-// and then again, finally our reducer.
-
-// So state and action
-
-// and here we have this small problem
-
-// where actually we need to change this here
-
-// after the other at case.
-
-// So first of all, let's set the status then back to idle
-
-// and here I'm again forgetting this dot here.
-
-// Then let's actually take care of the important part.
-
-// So as I mentioned earlier,
-
-// this data that we return here
-
-// will become the payload of the fulfilled state.
-
-// So payload of the fulfilled state.
-
-// All right, and so let's then use that.
-
-// So let's do state.position
-
-// will be equal to the action.payload.position
-
-// and then state.address will be
-
-// equal to action.payload.address.
-
-// And finally, let's add a case for a possible error.
-
-// So for example, when the user doesn't accept geolocation,
-
-// so state and action maintained here.
-
-// Let's do state.status will be an error
-
-// and not like this, and state.error.
-
-// So here we will then also have an error string
-
-// which actually gets automatically placed on the action.
-
-// So action.error.message.
-
-// Now okay, so we actually finished this part here.
-
-// But before we review this to make this a bit less confusing,
-
-// let's quickly add just a temporary button right here
-
-// in this create order so that we can dispatch an action
-
-// and then actually see this working.
-
-// So let's create a button here
-
-// with the onClick handler
-
-// where we then put this patch.
-
-// And so let's actually get that.
-
-// I think we don't have it yet.
-
-// Let's just do that somewhere here.
-
-// So use dispatch, and so here what we want to dispatch
-
-// is exactly this action creator.
-
-// So we want to dispatch an action that is created
-
-// by this action creator that we just made here
-
-// and so that will then basically dispatch an action
-
-// with this string here,
-
-// so with this action name and attached the pending state
-
-// and the fulfilled and the rejected state.
-
-// So that's why we exported that
-
-// and so let's see if this works.
-
-// So get position like this,
-
-// but then we need to add some pizza here
-
-// actually to the cart first.
-
-// All right, and now let's actually open up
-
-// our Redux dev tools again.
-
-// So that's gonna be really handy here
-
-// and so let's click here,
-
-// and so something is definitely working.
-
-// So it's asking me here to allow geolocation,
-
-// so let's allow that.
-
-// And you see that a lot of things happened down here,
-
-// so let's check it out.
-
-// So as soon as we clicked here on get position,
-
-// in fact, the user/fetchAddress/pending action
-
-// was dispatched, and so what this did here
-
-// was set the status from idle to loading.
-
-// And so that is actually exactly what we have here,
-
-// so this one right here,
-
-// so that's what I was saying earlier.
-
-// So that dispatching the action
-
-// would create an action
-
-// with a type of user/fetchAddress/pending,
-
-// so exactly what we have here.
-
-// And so that's what this reducer right here
-
-// is then responsible for handling,
-
-// so for updating the state right here.
-
-// And then as soon as the promise was finished,
-
-// so as soon as it got fulfilled after all of this work here,
-
-// so after getting the position and then fetching the address,
-
-// so after all this,
-
-// that data was then returned here from the function.
-
-// And so remember that this then became
-
-// the payload of the fulfilled state
-
-// and so this fulfilled state
-
-// is then handled by this reducer right here.
-
-// And so this then updated the state here to idle,
-
-// to the address itself and to the GPS position.
-
-// And in case the user, for example,
-
-// did not allow the geolocation to happen,
-
-// so if we clicked here on block,
-
-// then this rejected state,
-
-// so this reducer right here would be caught.
-
-// So then we would get an error
-
-// which we could then display in the user interface.
-
-// Now okay, so our Redux logic here works
-
-// even though it is, as I keep saying, pretty confusing.
-
-// But this is basically just a recipe
-
-// that you will have to follow in case you are interested
-
-// in creating thanks with Redux Toolkit.
-
-// So just make sure to maybe review the flow of the data here
-
-// and how all of this works,
-
-// and then let's move on to the next video
-
-// where we will integrate this geoposition logic
-
-// here into this actual form.
+//& Title: Fetch User Address
+
+//? Step 1: Get User’s Geolocation Position
+//* The fetchAddress function starts by retrieving the user’s geolocation position using the getPosition function.
+//* This position includes latitude and longitude coordinates.
+//? Step 2: Reverse Geocoding
+//* Next, we perform reverse geocoding using an API.
+//* Reverse geocoding translates the GPS position into human-readable address details (e.g., city, street name).
+//* We make a fetch request to the reverse geocoding API with the user’s latitude and longitude.
+//* The API responds with address information related to that position.
+//? Displaying Address Information
+//* The resulting address string can be displayed in a form.
+//* Our goal is to create a button in the order form that allows users to request their geolocation position.
+//* Once the position is obtained, the address field will automatically populate with the relevant address details.
+^=============================
+
+//& Title: Async Thunk for Fetching User Address
+//? Step 1: Understanding Thunks
+//* Thunks are middleware that sit between dispatching and reducers.
+//* They allow us to perform actions before updating the store.
+//* Redux Toolkit provides a convenient way to create Thunks.
+
+//? Step 2: Creating the fetchAddress Thunk
+//* We'll use createAsyncThunk to create our Thunk.
+//* First, define the action name (e.g., 'user/fetchAddress').
+//* Then, create an async function that returns a promise.
+//* This function will fetch the user's geolocation position and address.
+
+//? Step 3: Handling Thunk States in Reducers
+//* Redux Toolkit generates three additional action types for Thunks:
+//* - pending (while the promise is in progress)
+//* - fulfilled (when the promise resolves successfully)
+//* - rejected (if an error occurs)
+//* We handle these states in our reducer.
 
 //*====================================================================
 
-//! 323. Integrating Geolocation
+//& Title: Integrating Geolocation
 
-//* let's finish this feature
+//? Step 1: Display Geolocation Button
+//* Place the "Get Position" button above the address input field.
+//* This button allows users to request their geolocation position.
 
-// and integrate the geolocation data
+//? Step 2: Submitting Form with Geolocation Data
+//* When submitting the order form, include the user's GPS location.
+//* This information is crucial for efficient pizza delivery.
 
-// that we just loaded using Redux
+//? Handling Geolocation Denials
+//* If the user denies geolocation access or encounters issues,
+//* allow manual input of the address in the form.
 
-// into our create order form.
+// Example code snippet:
+// <input
+//   type="hidden"
+//   name="position"
+//   value={
+//     position.latitude && position.longitude
+//       ? `${position.latitude}, ${position.longitude}`
+//       : ''
+//   }
+// />
 
-//^=============
-// put getPosition button on top of address input field.
-//^======================
-// as the last step,
-
-// we, of course, also need to get this data then
-
-// here into our form action.
-
-// So right here in the form action,
-
-// when we submit the new order,
-
-// we will also want to submit it
-
-// with the actual position data,
-
-// so with the user's GPS location,
-
-// because that's going to be really important
-
-// or really helpful for the company
-
-// to deliver the pizza.
-//^==============
-
-// However, when the user denies the geolocation
-
-// or if there is some other problem with geolocation,
-
-// then we do not get this position right here.
-
-// But still, we want to allow the user to submit the form
-
-// in that situation,
-
-// so they can still manually input their address here,
-
-{
-    /*
-  <input
-                        type="hidden"
-                        name="position"
-                        value={
-                            position.latitude && position.longitude
-                                ? `${position.latitude} , ${position.longitude}`
-                                : ''
-                        }
-                    />
-*/
-}
 
 //*=========================================================
 
 //! 324. Fetching Data Without Navigation: useFetcher
 
 //^ open: Order.jsx  - OrderItem.jsx
-// let's go back to some more advanced features
 
-// of React Router,
+//& Title: Fetching Data Without Navigation: useFetcher
 
-// and, in particular,
+//? Introduction
+//* The `useFetcher` hook allows us to fetch and mutate data without causing navigations.
+//* It provides a `fetcher` object that handles fetch cancellation, prioritizes submission actions, revalidates data, manages concurrent fetches, handles errors, and supports redirection based on action/loader redirects.
 
-// let's learn about how we can fetch and mutate data
+//? Fetching Menu Data
+//* Suppose we're working with an `Order` component. When this component mounts, we want to fetch menu data (e.g., pizza options) associated with the `/menu` route.
+//* We fetch the menu data only if it doesn't exist (`!fetcher.data`) and if the fetcher is in the idle state (`fetcher.state === 'idle'`).
 
-// without actually causing navigations,
+//? Displaying Ingredients
+//* In the `OrderItem` component, we display the ingredients.
+//* To avoid executing `ingredients.join(', ')` when `isLoadingIngredients` is false (even though the fetcher is still loading at the beginning), we adjust the logic.
+//* We pass the `isLoadingIngredients` flag to indicate whether the fetcher is currently loading ingredients.
+//* The `ingredients` are retrieved from the fetched menu data using `fetcher?.data?.find((el) => el.id === item.pizzaId)?.ingredients ?? []`.
 
-// so without moving to another page.
-
-//^==================================
-
-// So, the page that is already opened right here.
-
-// So, as I said in the beginning,
-
-// sometimes we need to fetch some data from another route,
-
-// so basically data that is not associated
-
-// with this current page right here,
-
-// but we want to do that
-
-// without causing a navigation sometimes.
-
-// So, for example, let's say that here in the order page,
-
-// we wanted to load the menu data again,
-
-// and we already wrote all the logic
-
-// for fetching exactly that data,
-
-// but it is associated to another route.
-
-// So, to the menu route and not to this one,
-
-// but still we want to use it here,
-
-// because there is no point in writing that logic again.
-
-// So, in other words, what we want to do
-
-// is to use the data from the menu route,
-
-// but without the user actually going there.
-
-// And, so, for that, we can use the useFetcher hook.
-
-// So, this hook will return something called a fetcher.
-//^===================================
-
-// the idea here is to load the menu data,
-
-// so that we can then associate the ingredients
-
-// to each of the different pizzas.
-
-// and so we can get that data from the menu route.
-
-// So, what we want to do is,
-
-// right after this component (Order) mounts,
-
-// we want to fetch that menu data using our fetcher.
-
-// So, if we want to do this at component mount,
-
-// then let's again use our friend use effect.
-//^================
-//!  if (!fetcher.data && fetcher.state === 'idle') fetcher.load('/menu')
-// this will then load the data,
-
-// and will store it basically in this fetcher object,
-
-// and then later we can retrieve the data from there
-
-// when we want.
-
-// And, actually, let's only fetch this data
-
-// if there is no data yet.
-
-// So, we can do if there is no fetcher.data.
-
-// And, so let's only start fetching this data
-
-// whenever the fetcher is in the idle state,
-
-//^==================
-
-// just like normal page navigations,
-//^ open: AppLayout
-// const isLoading = navigation.state === 'loading'
-
-// this fetcher can also be in different states.
-
-//^==================
 
 //? OrderItem:
-
 ;<p className="text-stone text-sm capitalize italic">
     {isLoadingIngredients ? 'loading' : ingredients.join(', ')}
 </p>
 //! problem: this : ingredients.join(', ')} execute because isLoadingIngredients is false although the fetcher is still loading at the beginning
-
 //* because in the very beginning, fetcher.state will be idle,
 
 //~ Solution
@@ -1117,199 +423,119 @@
         />
     ))}
 </ul>
-// I'm guessing that the issue is that,
 
-// in the very beginning,
 
-// fetcher.state will be idle,
+// Example usage:
+// <ul className="dive-stone-200 divide-y border-b border-t">
+//   {cart.map((item) => (
+//     <OrderItem
+//       item={item}
+//       key={item.pizzaId}
+//       isLoadingIngredients={fetcher.state === 'loading'}
+//       ingredients={
+//         fetcher?.data?.find((el) => el.id === item.pizzaId)?.ingredients ?? []
+//       }
+//     />
+//   ))}
+// </ul>
 
-// but that doesn't mean that we already have our ingredients,
+//& Title: Fetching Data Without Navigation: useFetcher
 
-// so that we have our data already.
+//? Introduction
+//* In some scenarios, we need to fetch data from a different route without causing a full navigation to that route. For instance, consider a situation where we want to load menu data (such as menu items and their associated ingredients) within the context of the current page (e.g., an order form). We want to use the data from the menu route without actually navigating there.
 
-// And, so in those very first instance,
+//* The useFetcher Hook
+//* The useFetcher hook is a powerful tool for handling data fetching and mutations. It provides a fetcher object with several useful features:
+//* - Data Loading: The fetcher.load() method allows us to fetch data from a specific route.
+//* - State Management: The fetcher.state property indicates the current state of the fetcher (e.g., idle, loading, etc.).
+//* - Data Storage: The fetcher.data property holds the fetched data.
+//* - Error Handling: The fetcher.error property captures any errors during fetching.
+//* - Redirection: The fetcher.redirectTo method allows us to redirect to a different route based on the action or loader.
 
-// here, we will not be loading the data,
+//? Fetching Menu Data
+// Suppose we’re working with an Order component. When this component mounts, we want to fetch menu data (e.g., pizza options) associated with the /menu route. Here’s how we can achieve this:
 
-// but we also don't have the data yet.
-
-// And, so let's just try to return an empty array
-
-// then in this case.
-
-// So, basically, if this year doesn't exist,
-
-// then we just return an empty array.
-
-// So, that will then fix the problem
-
+useEffect(() => {
+    if (!fetcher.data && fetcher.state === 'idle') {
+      fetcher.load('/menu');
+    }
+  }, []);
+  
+  // Display the ingredients for each pizza item in the OrderItem component:
+  <ul className="dive-stone-200 divide-y border-b border-t">
+    {cart.map((item) => (
+      <OrderItem
+        item={item}
+        key={item.pizzaId}
+        isLoadingIngredients={fetcher.state === 'loading'}
+        ingredients={
+          fetcher?.data?.find((el) => el.id === item.pizzaId)?.ingredients ?? []
+        }
+      />
+    ))}
+  </ul>
+  
+  //? Handling Initial State
+  //* In the initial state (when the fetcher is idle), we return an empty array for ingredients. This ensures that we don’t execute ingredients.join(', ') prematurely.
+  
+  //* By following these steps, we can effectively fetch and utilize data from another route within our current page without causing unnecessary navigations.
+  
 //*=========================================================
 
 //!  325. Updating Data Without Navigation
 
 //^ open : order  - UpdateOrder  - App - apiRestaurant
 
-// let's do the same thing, but with writing.
 
-// So with updating data, using a form
+//? Introduction
+//* In this section, we'll explore how to update data without triggering a new navigation. 
+//* Specifically, we want to allow users to mark their order as a priority order even after it has already been placed.
 
-// but without causing a new navigation.
+//^ Open Components: order, UpdateOrder, App, apiRestaurant
 
-// And by doing this,
+//? Creating the UpdateOrder Component
+//* Let's create an UpdateOrder component to handle data updates. 
+//* We'll focus on changing the priority status from false to true.
 
-// we will be able to implement the last feature
+//? Updating Data Using useFetcher
+//* We'll utilize the useFetcher hook to manage data updates. 
+//* Instead of fetcher.load, we'll use a form component provided by the fetcher.
 
-// that is still missing from this application
+//? Example:
+//* When the "Make Priority" button is clicked, we'll update the priority status. 
+//* The page will re-render, hiding the button and displaying the updated priority status.
 
-// which is to allow users
+//? Implementation Steps:
+//* 1. Create the UpdateOrder component.
+//* 2. Wrap the "Make Priority" button in a form (even without input elements) to trigger the update.
 
-// to mark their order as a priority order
+//* By following these steps, we can seamlessly update data without causing unnecessary navigations.
 
-// even after the order has already been placed.
-
-//* so create UpdateOrder comp
-//^=====================
-// now here we have our Make Priority button.
-
-// And so as we click this
-
-// we want to change priority from false to true.
-
-// And then this whole page here should re-render
-
-// and make this button disappear
-
-// and displaying appear the priority status.
-
-// So let's see how we can do that using again
-
-// the usefetcher hook.
-
-// So just like we did in the previous lecture.
-
-// So usefetcher like this.
-
-// And now in order to update, so to write data,
-
-// we do not use fetcher.load,
-
-// but instead we use a form component
-
-// data fetcher provides to us.
-
-// So basically what we will do is to simply
-
-// wrap this button here into a form
-
-// even though we don't have any input elements,
-
-// but still, this is how it works.
 
 //^======================
 
-// And so basically this is just like the other form
-
-// that we worked with earlier.
-
-// So just like this React Router form here (Form in CreateOrder comp)
-
-// with the only difference that submitting this one here ((Form in CreateOrder comp))
-
-// actually creates a new navigation.
-
-// So the idea with this one is to navigate away from the page
-
-// while this one,
-
-// so fetcher.Form will not navigate away,
-
-// it will simply submit a form
-
-// and then also revalidate the page.
+//& Title: React Router Form Navigation
+//? This form is similar to the one we worked with earlier in the CreateOrder component. The key difference is that submitting this form actually creates new navigation, whereas the previous form (fetcher.Form in CreateOrder component) does not navigate away; it simply submits the form and revalidates the page.
 
 //^==============
+// Let's write the actual logic to update the order.
+//? We need an action for this purpose. Create an async function called "action" that receives access to the request and params.
 
-// let's write the actual logic to update to order.
-
-// And so for that, we need again an action.
-
-// So async function,
-
-// which by default should be called action.
-
-// And so here we again get access to the request
-
-// and to the params,
-
-//^=================
-
-// we need to wire everything up in our route definition. (in App.jsx open it)
-
-// So we need to connect this action with the page.
-
-// So let's come back here to App.js
-
-// where we have our route definitions.
-
-// And so this one,
-// import { action as updateOrderAction } from './features/order/UpdateOrder'
+//^==============
+// To wire everything up in our route definition (in App.jsx), we need to connect this action with the page.
+//? In App.js, where we define our routes, import the updateOrderAction from './features/order/UpdateOrder'. Then, connect it to the route for '/order/:orderId' as follows:
 // {
 //     path: '/order/:orderId',
 //     element: <Order />,
 //     loader: orderLoader,
 //     errorElement: <Error />,
 //     action: updateOrderAction,
-// },
+// }
 
-// we will actually connect to this route right here.
+//^==============
+// Usually, when handling data updates, we have input fields in the form. However, in this case, we only have a button.
+//? Unlike the CreateOrder component, we don't need to read any data from the request here.
 
-// So action should be,
-
-// then first we need to of course import that.
-
-// So let's do that right here.
-
-// And it is a named import.
-
-// So loader and then let's rename it as updateOrderAction
-
-// from features order, and then UpdateOrder.
-
-// All right, and now here, let's then use that.
-
-// So updateOrderAction.
-
-// And this is going to work just fine
-
-// even though the form that we want to connect
-
-// with this action is not really on this page
-
-// but on a child component of this order page, right?
-
-// So the form that we want to be handled with this action here
-
-// is actually inside UpdateOrder
-
-// which is a child component of order,
-
-// but React Router is smart enough to figure that out
-
-//^=====================
-
-// usually when we do some kind of data updating,
-
-// we will then have a couple of inputs here also in this form.
-
-// But in this case, we don't have any inputs,
-
-// all we have is this button here.
-
-// And so in this case,
-
-// we don't even need to read any data from the request.
-
-// So opposed to what we did here. (in CreateOrder comp)
 
 export async function action({ request }) {
     const formData = await request.formData() //* formData is a web api provided by the browser
@@ -1334,128 +560,14 @@ export async function action({ request }) {
     return redirect(`/order/${newOrder.id}`)
 }
 
-// So here we got the request,
-
-// and then we read the data from there,
-
-// which again, in this case is not necessary.
-
-// So we don't even need that request here.
-
-// Let's just leave it there so that you know that it exists.
-
-// So let's get rid of this.
-
-// And what we are going to do now
-
-// is to use one of our services, (in apiRestaurant)
-
-// so this one right here
-
-// and call this function.
-
-// So this updateOrder function.
-
-// And as we see, this is a patch request
-
-// which is one of the two ways of updating data.
-
-// So there is the put request
-
-// where we need to pass in the entire new updated object.
-
-// And then there is patch,
-
-// which will only take in the data that has actually changed
-
-// and add that to the original object on the server.
-
-// So long story short, all we need to pass in here
-
-// in this function is the ID of the order
-
-// that should be updated
-
-// and then only the data that should be updated.
-
-// So the data that should be updated
-
-// is only the priority field,
-
-// and it should always simply be set to true
-
-// because this button is only visible here
-
-// whenever the priority is false.
-
-// So then here we basically just turn that on.
-
-// And so then here, let's await that update order function
-
-// which needs the current ID and that data.
-
-// So where do we get the order ID from?
-
-// Well, luckily for us,
-
-// we also have here this params object
-
-// which is still able to give us the information here
-
-// about the current URL,
-
-// and that contains the order ID param right there.
-
-// So we can simply do params.orderId
-
-// and then the data, and that is actually already it.
-
-// So let's click here now and see what happens.
-
-// So take good notice here of what will happen.
-
-// So let's click and immediately our page updated here.
-
-// So we got now the priority price here
-
-// and we have the priority status also displayed here.
-
-// And so this is the power of re-validation
-
-// that I mentioned earlier.
-
-// So re-validation basically means that React Router knows
-
-// that the data has changed as a result of this action.
-
-// And so then whenever that happens,
-
-// it'll automatically re-fetch the data in the background
-
-// and then re-render the page with that new data.
-
-// And so that is what is so helpful
-
-// about this fetcher form here.
-
-// So this form that we can use to update some data
-
-// without causing a navigation.
-
-// And so just like I mentioned earlier,
-
-// if you are building a highly interactive web application,
-
-// you'll use this all the time probably.
-
-// Now as I had mentioned earlier,
-
-// probably you will then also use some input fields here.
-
-// And if you want, you can now practice this new skill here
-
-// by allowing the user to update some other information,
-
-// for example, their address or their phone number.
+//& Title: Updating Order Priority
+//? Updates an order's priority status using the `updateOrder` function.
+//*
+// To update an order's priority, we use the `updateOrder` function from our `apiRestaurant` service.
+// This function performs a PATCH request, sending only the changed data.
+// We provide the order ID and set the priority field to `true`.
+// The button for this action is visible when the priority is `false`.
+// Re-validation ensures the page reflects the updated data.
+// Similar techniques can be used for other interactive features.
 
 //*=========================================================
