@@ -1,4 +1,9 @@
 //!  313. Modeling the "User" State With Redux Toolkit
+//* we will use Redux for all our global state.
+//* So for the user state and for the cart state.
+
+//* And storing global UI state is exactly what Redux was made for.
+//* And so it's a great choice for this app.
 
 //* The username state is going to be a global UI state.
 //* We need this state in many places in the application tree.
@@ -20,18 +25,18 @@
 //? Creating a Slice of Global UI State
 //* We created a slice of our global UI state called 'user' with an initial state.
 //* We have a reducer function responsible for updating the state object.
-//* Since we are using Redux Toolkit, we can directly mutate this state object and set 'state.username'
-//* to the one we receive as soon as we dispatch the action.
+//* Since we are using Redux Toolkit, we can directly mutate this state object 
+//* and set 'state.username' to the payload we receive as soon as we dispatch the action.
 
 //? Exporting Action Creators
 //* Inside 'userSlice.actions', we get access to the action creators.
 //* We export it as a named export so that we can use it in our application,
 //* particularly in the form to update the name using this action creator (updateName).
 //* We also export default, the 'userSlice.reducer'.
+//* We use this reducer to set up our store.
 
 //^ open: store.js
 //? Setting Up Store
-//* We use this reducer to set up our store.
 //* We create a new file in the top level of the source folder called 'store.js'.
 
 //^ open: main.jsx
@@ -60,7 +65,7 @@
 
 //! 314. Reading and Updating the User State
 
-//? Open CreateUser.jsx
+//^ Open CreateUser.jsx
 //* We're going to update the user state from our application and display that state in multiple places.
 //* We update Redux state by dispatching an action to our reducer,
 //* using the action creator (updateName) that was automatically created by the create slice function.
@@ -103,9 +108,7 @@
 
 //^======================
 
-//* next up it's time to start working on the cart global state.
-
-//* to make the application work
+//* next up it's time to start working on the cart global state to make the application work
 
 //*=============================================================================
 //! Title: 315. Modeling the "Cart" State
