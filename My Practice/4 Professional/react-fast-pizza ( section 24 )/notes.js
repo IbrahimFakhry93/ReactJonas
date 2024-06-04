@@ -93,10 +93,10 @@
 //* To update the store, we dispatch an action.
 //* We get access to the dispatch function by using the useDispatch hook provided by React Redux.
 //* We need to pass in the updateName function the username
-//* because this username will then become the action.payload which will then become assigned to state.username.
+//* because this username (the local state in createUser comp) will then become the action.payload which will then become assigned to state.username.
 //* As soon as that happens, the entire application will re-render and display that username everywhere.
 
-//^ open Home.jsx
+//^ open: Home.jsx
 
 //* use global state (userName) for conditionally rendering createUser comp
 //^===============================
@@ -106,14 +106,13 @@
 
 //* defaultValue={username}: normal html element that adds default value to the input field but still can change it
 
-//^======================
-
-//* next up it's time to start working on the cart global state to make the application work
 
 //*=============================================================================
+//~  Next up it's time to start working on the cart global state to make the application work
+
 //! Title: 315. Modeling the "Cart" State
 
-//? Create: cartSlice.js and open store,js
+//^ Create: cartSlice.js and open store,js
 //* Many of the state management principles learned throughout this course still apply to modeling state in Redux.
 //* For example, we should always derive state whenever possible.
 //* This is why we are not storing the total cart price here.
@@ -140,9 +139,9 @@
 
 //* let's start using our cart state by adding new pizzas to the cart.
 
-//? open: MenuItem
+//^ open: MenuItem.jsx
 
-//^ Cart Functionality in User Interface
+//~ Cart Functionality in User Interface
 
 //? Location of Implementation
 //* The cart functionality is implemented in the user interface.
@@ -175,10 +174,17 @@
 //* We use the useSelector hook to read some state from the Redux store.
 //* We pass a selector function to this hook.
 
-//? Writing a Complex Selector
+//~ Selector Functions in cartSlice.js to be exported to be used inside useSelector in any component wherever is needed
+
+//? Writing a Complex Selector (getCartTotalQuantity)
 //* This time, we're writing a more complex selector.
-//* This function receives the state, reads state.cart.cart,
+//* This function getCartTotalQuantity receives the state, reads state.cart.cart,
 //* and calculates the number of pizzas in the cart using the reduce method.
+
+//^ in Cart Slice
+export const getCartTotalQuantity = (state) =>
+    state.cart.cart.reduce((sum, item) => sum + item.quantity, 0)
+
 
 //? Total Cart Quantity
 //* We call the result of this operation the total cart quantity.
@@ -197,7 +203,9 @@
 
 //? Calculating the Total Price
 //* We write another selector function to calculate the total price.
-//* This function is similar to the previous one but changes item.quantity to item.totalprice.
+//* This function is similar to the previous one but changes item.quantity to item.totalPrice.
+export const getCartTotalPrice = (state) =>
+    state.cart.cart.reduce((sum, item) => sum + item.totalPrice, 0)
 
 //? Performance Considerations
 //* Having these selector functions might cause performance issues in larger applications.
@@ -234,7 +242,7 @@
 
 // And so that's because of the internal optimizations
 
-// that Redux has now, all right?
+// that Redux has now,
 
 //*================================================
 
@@ -249,7 +257,7 @@
 
 //* Use the cart data to submit a new order.
 
-//* that is easy  cause all we have to do is to go to that component (createOrder)
+//* that is easy because all we have to do is to go to that component (createOrder)
 
 //* and then select the entire cart and then use that to submit the order,
 
@@ -316,7 +324,7 @@ console.log(order)```
 //*   2. Utilizes reverse geocoding to obtain address information from the latitude and longitude.
 //*   3. The goal is to display the address in a user-friendly format.
 
-//^===
+//^=======================================================================================
 
 //& Title: Fetch User Address
 
@@ -332,7 +340,7 @@ console.log(order)```
 //* The resulting address string can be displayed in a form.
 //* Our goal is to create a button in the order form that allows users to request their geolocation position.
 //* Once the position is obtained, the address field will automatically populate with the relevant address details.
-^=============================
+//^=============================
 
 //& Title: Async Thunk for Fetching User Address
 //? Step 1: Understanding Thunks
@@ -385,13 +393,14 @@ console.log(order)```
 
 //! 324. Fetching Data Without Navigation: useFetcher
 
-//^ open: Order.jsx  - OrderItem.jsx
+//^ open: Order.jsx - OrderItem.jsx
 
 //& Title: Fetching Data Without Navigation: useFetcher
 
 //? Introduction
 //* The `useFetcher` hook allows us to fetch and mutate data without causing navigations.
-//* It provides a `fetcher` object that handles fetch cancellation, prioritizes submission actions, revalidates data, manages concurrent fetches, handles errors, and supports redirection based on action/loader redirects.
+//* It provides a `fetcher` object that handles fetch cancellation, prioritizes submission actions, 
+//* revalidates data, manages concurrent fetches, handles errors, and supports redirection based on action/loader redirects.
 
 //? Fetching Menu Data
 //* Suppose we're working with an `Order` component. When this component mounts, we want to fetch menu data (e.g., pizza options) associated with the `/menu` route.
@@ -405,15 +414,15 @@ console.log(order)```
 
 
 //? OrderItem:
-;<p className="text-stone text-sm capitalize italic">
+;```<p className="text-stone text-sm capitalize italic">
     {isLoadingIngredients ? 'loading' : ingredients.join(', ')}
-</p>
+</p>```
 //! problem: this : ingredients.join(', ')} execute because isLoadingIngredients is false although the fetcher is still loading at the beginning
 //* because in the very beginning, fetcher.state will be idle,
 
 //~ Solution
 //? Order:
-;<ul className="dive-stone-200 divide-y border-b border-t">
+;```<ul className="dive-stone-200 divide-y border-b border-t">
     {cart.map((item) => (
         <OrderItem
             item={item}
@@ -425,7 +434,7 @@ console.log(order)```
             }
         />
     ))}
-</ul>
+</ul>```
 
 
 // Example usage:
@@ -458,14 +467,14 @@ console.log(order)```
 //? Fetching Menu Data
 // Suppose we’re working with an Order component. When this component mounts, we want to fetch menu data (e.g., pizza options) associated with the /menu route. Here’s how we can achieve this:
 
-useEffect(() => {
+```useEffect(() => {
     if (!fetcher.data && fetcher.state === 'idle') {
       fetcher.load('/menu');
     }
-  }, []);
+  }, []);```
   
   // Display the ingredients for each pizza item in the OrderItem component:
-  <ul className="dive-stone-200 divide-y border-b border-t">
+ ``` <ul className="dive-stone-200 divide-y border-b border-t">
     {cart.map((item) => (
       <OrderItem
         item={item}
@@ -476,10 +485,11 @@ useEffect(() => {
         }
       />
     ))}
-  </ul>
+  </ul>```
   
   //? Handling Initial State
-  //* In the initial state (when the fetcher is idle), we return an empty array for ingredients. This ensures that we don’t execute ingredients.join(', ') prematurely.
+  //* In the initial state (when the fetcher is idle), we return an empty array for ingredients. 
+  //* This ensures that we don’t execute ingredients.join(', ') prematurely.
   
   //* By following these steps, we can effectively fetch and utilize data from another route within our current page without causing unnecessary navigations.
   
@@ -540,13 +550,14 @@ useEffect(() => {
 //? Unlike the CreateOrder component, we don't need to read any data from the request here.
 
 
+```
 export async function action({ request }) {
     const formData = await request.formData() //* formData is a web api provided by the browser
     const data = Object.fromEntries(formData)
 
     //& model the raw data in the action:
 
-    const order = {
+   const order = {
         ...data,
         cart: JSON.parse(data.cart),
         // priority: data.priority === 'on',
@@ -561,7 +572,7 @@ export async function action({ request }) {
     //* don't overuse
     store.dispatch(clearCart())
     return redirect(`/order/${newOrder.id}`)
-}
+} ```
 
 //& Title: Updating Order Priority
 //? Updates an order's priority status using the `updateOrder` function.
