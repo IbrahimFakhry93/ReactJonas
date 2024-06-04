@@ -102,7 +102,7 @@
 //^===============================
 
 //* reuse username in different components
-//? open Cart - CreateOrder
+//^ open Cart - CreateOrder
 
 //* defaultValue={username}: normal html element that adds default value to the input field but still can change it
 
