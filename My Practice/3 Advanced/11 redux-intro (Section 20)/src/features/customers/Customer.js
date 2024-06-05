@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 function Customer() {
   //* useSelector to read the data from store
-  const customer = useSelector((store) => store.customer.fullName);
+  const customer = useSelector((store) => store.customer.fullName); //* customer here is the name of customerReducer (open store.js)
   console.log(customer);
   //* note:
   //! the name customer in (store) => store.customer is the name provided down:

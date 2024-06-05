@@ -76,17 +76,21 @@ function deposit(amount) {
 //! 266. Professional Redux File Structure: State Slices
 
 //? Traditional Redux Structure
-//* Initially, Redux developers created separate folders for reducers and actions, with one file per reducer/action.
-//*  This led to a lot of jumping around in the code base.
+//* Initially, Redux developers created separate folders for reducers and actions,
+//* with one file per reducer/action.
+//* This led to a lot of jumping around in the code base.
 
 //? Modern Redux Structure
-//* The modern approach is to create a folder for each feature (e.g., account, customer), making the code more organized.
+//* The modern approach is to create a folder for each feature (e.g., account, customer),
+//* making the code more organized.
 
 //? Creating a Slice
-//* A slice is a part of the total state in the store. For each feature, we take one slice of that state.
+//* A slice is a part of the total state in the store.
+//* For each feature, we take one slice of that state.
 //* In each slice, we co-locate as much Redux logic as possible in one file.
 //* This includes the reducer, action creators, and initial state.
-//* We then export these and put them back together in the store, reducing the need to jump around between files.
+//* We then export these and put them back together in the store,
+//* reducing the need to jump around between files.
 
 //! store-v-1 => store-v-2
 
@@ -110,18 +114,14 @@ root.render(
       <App />
     </Provider>
   </React.StrictMode>
-);```// import { createCustomer } from "./customerSlice"; // import { useDispatch } from "react-redux"; //? open: CreateCustomers component.
-
-//* need to complete handleClick logic
-//* in this function where we will want to dispatch now an action
-//* that will create the new customer.
+);```//* that will create the new customer. //? open: CreateCustomer.js component. // import { useDispatch } from "react-redux"; // import { createCustomer } from "./customerSlice"; //* need to complete handleClick logic //* in this function where we will want to dispatch now an action
 
 // const dispatch = useDispatch();
 // function handleClick() {
 //   dispatch(createCustomer(fullName, nationalId));
 // }
 
-//* learn how to dispatch actions to the Redux store from within React components.
+//* learn how to dispatch actions to the Redux store from within React components in next lecture
 
 //*=============================================================================================================
 
@@ -130,13 +130,17 @@ root.render(
 //* Redux implements performance optimizations behind the scenes, similar to those in the Context API.
 //* When the store changes, the subscribed component (ex. customer) re-renders.
 //* The useSelector hook in Redux creates a subscription to the store.
+
+// const customer = useSelector((store) => store.customer.fullName); //* customer here is the name of customerReducer (open store.js)
 //? Using useSelector Hook
 //? open customer.js
 
-//* This behavior is similar to the Context API, which broadcasts global state into every component that wants to read it.
+//* This behavior is similar to the Context API,
+//* which broadcasts global state into every component that wants to read it.
 
 //? Context API Similarity
-//* The application is aware of the Redux store, allowing every component to read data from the store and dispatch actions.
+//* The application is aware of the Redux store,
+//* allowing every component to read data from the store and dispatch actions.
 
 //^=====================================================================
 
@@ -312,7 +316,7 @@ function handleDeposit() {
 //*=============================================================================================================
 
 //! 274. Creating the Store With RTK
-//? store.js
+//? open: store.js
 //* npm i @reduxjs/toolkit
 
 //& Title: Configuring Store and Connecting React with Redux
@@ -328,6 +332,7 @@ function handleDeposit() {
 //     customer: customerReducer,
 //   },
 // });
+
 //? Connecting React with Redux
 //* The part where we connect the React application with Redux works in the exact same way as before.
 //* Nothing changes with the React Redux package that we use on the React side.

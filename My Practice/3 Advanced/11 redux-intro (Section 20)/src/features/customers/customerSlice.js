@@ -1,3 +1,4 @@
+//& initial state
 const initialStateCustomer = {
   fullName: "",
   nationalId: "",

@@ -46,10 +46,10 @@ function accountReducer(state = initialStateAccount, action) {
   }
 }
 
-// default: return state;
-// Return state in default so in case that the reducer receives an action
-// that it doesn't know about
-// it will simply return the original state back.
+//? default: return state;
+//* Return state in default so in case that the reducer receives an action
+//* that it doesn't know about
+//* it will simply return the original state back.
 
 //! const store = createStore(accountReducer);
 
@@ -131,15 +131,15 @@ function customerReducer(state = initialStateCustomer, action) {
 }
 
 //& create Root reducer
-// const rootReducer = combineReducers({
-//   account: accountReducer,
-//   customer: customerReducer,
-// });
+//* const rootReducer = combineReducers({
+//*   account: accountReducer,
+//*   customer: customerReducer,
+//* });
 
 //& create Store:
-// const store = createStore(rootReducer);
+//* const store = createStore(rootReducer);
 
 //& Dispatch create actions to reducer by store
-// store.dispatch(createCustomer("Jonas Schmidtmann", "234334343"));
-// store.dispatch(deposit(400));
-// console.log(store.getState());
+//* store.dispatch(createCustomer("Jonas Schmidtmann", "234334343"));
+//* store.dispatch(deposit(400));
+//* console.log(store.getState());
