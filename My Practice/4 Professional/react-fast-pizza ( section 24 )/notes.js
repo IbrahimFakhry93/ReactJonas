@@ -398,17 +398,19 @@ console.log(order)```
 //& Title: Fetching Data Without Navigation: useFetcher
 
 //? Introduction
-//* The `useFetcher` hook allows us to fetch and mutate data without causing navigations.
+//* The `useFetcher` hook allows us to fetch and mutate data without causing navigation.
 //* It provides a `fetcher` object that handles fetch cancellation, prioritizes submission actions, 
-//* revalidates data, manages concurrent fetches, handles errors, and supports redirection based on action/loader redirects.
+//* revalidate data, manages concurrent fetches, handles errors, and supports redirection based on action/loader redirects.
 
 //? Fetching Menu Data
-//* Suppose we're working with an `Order` component. When this component mounts, we want to fetch menu data (e.g., pizza options) associated with the `/menu` route.
+//* Suppose we're working with an `Order` component. 
+//* When this component mounts, we want to fetch menu data (e.g., pizza options) associated with the `/menu` route.
 //* We fetch the menu data only if it doesn't exist (`!fetcher.data`) and if the fetcher is in the idle state (`fetcher.state === 'idle'`).
 
 //? Displaying Ingredients
 //* In the `OrderItem` component, we display the ingredients.
-//* To avoid executing `ingredients.join(', ')` when `isLoadingIngredients` is false (even though the fetcher is still loading at the beginning), we adjust the logic.
+//* To avoid executing `ingredients.join(', ')` when `isLoadingIngredients` is false (even though the fetcher is still loading at the beginning),
+//* we adjust the logic.
 //* We pass the `isLoadingIngredients` flag to indicate whether the fetcher is currently loading ingredients.
 //* The `ingredients` are retrieved from the fetched menu data using `fetcher?.data?.find((el) => el.id === item.pizzaId)?.ingredients ?? []`.
 
@@ -454,11 +456,13 @@ console.log(order)```
 //& Title: Fetching Data Without Navigation: useFetcher
 
 //? Introduction
-//* In some scenarios, we need to fetch data from a different route without causing a full navigation to that route. For instance, consider a situation where we want to load menu data (such as menu items and their associated ingredients) within the context of the current page (e.g., an order form). We want to use the data from the menu route without actually navigating there.
+//* In some scenarios, we need to fetch data from a different route without causing a full navigation to that route. 
+//* For instance, consider a situation where we want to load menu data (such as menu items and their associated ingredients)
+//* within the context of the current page (e.g., an order form). We want to use the data from the menu route without actually navigating there.
 
-//* The useFetcher Hook
+//? The useFetcher Hook
 //* The useFetcher hook is a powerful tool for handling data fetching and mutations. It provides a fetcher object with several useful features:
-//* - Data Loading: The fetcher.load() method allows us to fetch data from a specific route.
+//* - Data Loading: The fetcher.load() method allows us to fetch data from a specific route. for (ex. '/menu')
 //* - State Management: The fetcher.state property indicates the current state of the fetcher (e.g., idle, loading, etc.).
 //* - Data Storage: The fetcher.data property holds the fetched data.
 //* - Error Handling: The fetcher.error property captures any errors during fetching.
@@ -491,7 +495,7 @@ console.log(order)```
   //* In the initial state (when the fetcher is idle), we return an empty array for ingredients. 
   //* This ensures that we don’t execute ingredients.join(', ') prematurely.
   
-  //* By following these steps, we can effectively fetch and utilize data from another route within our current page without causing unnecessary navigations.
+  //* By following these steps, we can effectively fetch and utilize data from another route (menu) within our current page (Order) without causing unnecessary navigation.
   
 //*=========================================================
 
@@ -504,15 +508,13 @@ console.log(order)```
 //* In this section, we'll explore how to update data without triggering a new navigation. 
 //* Specifically, we want to allow users to mark their order as a priority order even after it has already been placed.
 
-//^ Open Components: order, UpdateOrder, App, apiRestaurant
-
 //? Creating the UpdateOrder Component
 //* Let's create an UpdateOrder component to handle data updates. 
 //* We'll focus on changing the priority status from false to true.
 
 //? Updating Data Using useFetcher
 //* We'll utilize the useFetcher hook to manage data updates. 
-//* Instead of fetcher.load, we'll use a form component provided by the fetcher.
+//* Instead of fetcher.load, we'll use a form component provided by the fetcher (fetcher.Form)
 
 //? Example:
 //* When the "Make Priority" button is clicked, we'll update the priority status. 
@@ -528,15 +530,20 @@ console.log(order)```
 //^======================
 
 //& Title: React Router Form Navigation
-//? This form is similar to the one we worked with earlier in the CreateOrder component. The key difference is that submitting this form actually creates new navigation, whereas the previous form (fetcher.Form in CreateOrder component) does not navigate away; it simply submits the form and revalidates the page.
+//? This form is similar to the one we worked with earlier in the CreateOrder component. 
+//* The key difference is that submitting this previous form in CreateOrder comp actually creates new navigation,
+//* whereas the this form (fetcher.Form in updateOrder component) does not navigate away;
+//* it simply submits the form and revalidates the page.
 
 //^==============
-// Let's write the actual logic to update the order.
-//? We need an action for this purpose. Create an async function called "action" that receives access to the request and params.
+//? Let's write the actual logic to update the order.
+//* We need an action for this purpose. 
+//*Create an async function called "action" that receives access to the request and params.
 
 //^==============
-// To wire everything up in our route definition (in App.jsx), we need to connect this action with the page.
-//? In App.js, where we define our routes, import the updateOrderAction from './features/order/UpdateOrder'. Then, connect it to the route for '/order/:orderId' as follows:
+//? To wire everything up in our route definition (in App.jsx), we need to connect this action with the page.
+//* In App.js, where we define our routes, import the updateOrderAction from './features/order/UpdateOrder'. 
+//* Then, connect it to the route for '/order/:orderId' as follows:
 // {
 //     path: '/order/:orderId',
 //     element: <Order />,
@@ -546,8 +553,8 @@ console.log(order)```
 // }
 
 //^==============
-// Usually, when handling data updates, we have input fields in the form. However, in this case, we only have a button.
-//? Unlike the CreateOrder component, we don't need to read any data from the request here.
+//* Usually, when handling data updates, we have input fields in the form. However, in this case, we only have a button.
+//* Unlike the CreateOrder component, we don't need to read any data from the request here.
 
 
 ```
@@ -576,12 +583,12 @@ export async function action({ request }) {
 
 //& Title: Updating Order Priority
 //? Updates an order's priority status using the `updateOrder` function.
-//*
-// To update an order's priority, we use the `updateOrder` function from our `apiRestaurant` service.
-// This function performs a PATCH request, sending only the changed data.
-// We provide the order ID and set the priority field to `true`.
-// The button for this action is visible when the priority is `false`.
-// Re-validation ensures the page reflects the updated data.
-// Similar techniques can be used for other interactive features.
+
+//* To update an order's priority, we use the `updateOrder` function from our `apiRestaurant` service.
+//* This function performs a PATCH request, sending only the changed data.
+//* We provide the order ID and set the priority field to `true`.
+//* The button for this action is visible when the priority is `false`.
+//* Re-validation ensures the page reflects the updated data.
+//* Similar techniques can be used for other interactive features.
 
 //*=========================================================
