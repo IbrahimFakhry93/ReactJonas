@@ -19,3 +19,7 @@ export async function action({ request, params }) {
     await updateOrder(params.orderId, data)
     return null
 }
+
+//! why request parameter in action function is not used this time
+//* Usually, when handling data updates, we have input fields in the form. However, in this case, we only have a button.
+//* Unlike the CreateOrder component, we don't need to read any data from the request here.

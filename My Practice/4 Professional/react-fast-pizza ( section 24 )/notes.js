@@ -405,6 +405,8 @@ console.log(order)```
 //? Fetching Menu Data
 //* Suppose we're working with an `Order` component. 
 //* When this component mounts, we want to fetch menu data (e.g., pizza options) associated with the `/menu` route.
+//! Why we want to fetch menu data when Order comp mounts?
+//* so we can access to ingredients of the order meal where these ingredients located in menu data  
 //* We fetch the menu data only if it doesn't exist (`!fetcher.data`) and if the fetcher is in the idle state (`fetcher.state === 'idle'`).
 
 //? Displaying Ingredients
@@ -419,8 +421,16 @@ console.log(order)```
 ;```<p className="text-stone text-sm capitalize italic">
     {isLoadingIngredients ? 'loading' : ingredients.join(', ')}
 </p>```
-//! problem: this : ingredients.join(', ')} execute because isLoadingIngredients is false although the fetcher is still loading at the beginning
+//! problem: this : ingredients.join(', ')} is executed because isLoadingIngredients is false although the fetcher is still loading at the beginning
 //* because in the very beginning, fetcher.state will be idle,
+
+//! Why Idle at the Beginning?:
+//* When your component first mounts, there is no ongoing fetch or submission action. 
+//* Therefore, the fetcher starts in the idle state.
+//* As soon as you trigger a fetch (e.g., by calling fetcher.load(href)), it transitions to the loading state,
+//* indicating that data retrieval is in progress.
+//* By starting in the idle state, the useFetcher hook ensures that fetches are only initiated when needed, 
+//* avoiding unnecessary network requests on component mount
 
 //~ Solution
 //? Order:
@@ -458,7 +468,8 @@ console.log(order)```
 //? Introduction
 //* In some scenarios, we need to fetch data from a different route without causing a full navigation to that route. 
 //* For instance, consider a situation where we want to load menu data (such as menu items and their associated ingredients)
-//* within the context of the current page (e.g., an order form). We want to use the data from the menu route without actually navigating there.
+//* within the context of the current page (Current Order Comp) (e.g., an order form). 
+//* We want to use the data from the menu route without actually navigating there (to menu route).
 
 //? The useFetcher Hook
 //* The useFetcher hook is a powerful tool for handling data fetching and mutations. It provides a fetcher object with several useful features:
@@ -530,15 +541,16 @@ console.log(order)```
 //^======================
 
 //& Title: React Router Form Navigation
-//? This form is similar to the one we worked with earlier in the CreateOrder component. 
+//? The form (fetcher.Form) in UpdateOrder comp is similar to the one we worked with earlier in the CreateOrder component. 
 //* The key difference is that submitting this previous form in CreateOrder comp actually creates new navigation,
 //* whereas the this form (fetcher.Form in updateOrder component) does not navigate away;
 //* it simply submits the form and revalidates the page.
 
 //^==============
-//? Let's write the actual logic to update the order.
+//? open: updateOrder
+//? Let's write the actual logic to update the order
 //* We need an action for this purpose. 
-//*Create an async function called "action" that receives access to the request and params.
+//* Create an async function called "action" that receives access to the request and params.
 
 //^==============
 //? To wire everything up in our route definition (in App.jsx), we need to connect this action with the page.
@@ -553,6 +565,8 @@ console.log(order)```
 // }
 
 //^==============
+//! why request parameter in action function in UpdateOrder comp is not used this time?
+//? reason
 //* Usually, when handling data updates, we have input fields in the form. However, in this case, we only have a button.
 //* Unlike the CreateOrder component, we don't need to read any data from the request here.
 
