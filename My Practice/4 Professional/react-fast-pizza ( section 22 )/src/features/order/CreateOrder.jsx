@@ -114,7 +114,7 @@ export async function action({ request }) {
 
   if (Object.keys(errors).length > 0) return errors;
 
-  //& getting the new order and redirect the url to show the order info page
+  //& Posting the new order to the server and getting here again and redirect the url to show the order info page
 
   const newOrder = await createOrder(order);
   return redirect(`/order/${newOrder.id}`);

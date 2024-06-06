@@ -53,6 +53,8 @@
 //* where each object is one route.
 //^ createBrowserRouter();
 
+//* element is the component that should be rendered when we go the url mentioned in the path.
+
 //*======================================================================================================================
 
 //! 286.  Building the App Layout
@@ -74,6 +76,8 @@
 //* We created an app layout component to use as the parent route of every other route in our application.
 //* All other routes are now child routes of the app layout (nested routes).
 //* Inside the parent route, we use the outlet component to render the current nested route.
+
+//* nested
 //*======================================================================================================================
 
 //! 287. Fetching Data With React Router "Loaders": Pizza Menu
@@ -82,14 +86,15 @@
 
 //& Title: Implementing a Loader
 //* The idea behind a loader is to create a function that fetches data from an API.
-//* This loader function is provided to a route, which fetches the data as soon as the application navigates to that route.
-//* Once the data has arrived, it is provided to the page component using a custom hook.
+//* This loader function is provided to a route,
+//* which fetches the data as soon as the application navigates to that route.
+//* Once the data has arrived, it is provided to the page component using a custom hook (useLoaderData)
 
 //? Fetching Menu Data
 //^ We start by fetching the menu data in three steps:
-//* 1) create a loader.
-//* 2) provide the loader to a route.
-//* 3) provide the data to the page (menu component) by a custom hook (useLoader)
+//* 1) create a loader inside the involved component (Menu)
+//* 2) provide the loader to a route. (in App.js)
+//* 3) provide the data to the page (menu component) by a custom hook (useLoaderData)
 
 //* The data loader can be placed anywhere in our code base,
 //* but the convention is to place the loader for the data of a certain page inside the file of that page.
@@ -126,7 +131,8 @@ const isLoading = navigation.state === "loading";
 //? open: Error.jsx, App.jsx, apiRestaurant.js
 
 //& Error Handling
-//* Specify the error element in the parent route.
+//? in App.jsx:
+//* Specify the error element in the parent route
 //* Errors in nested routes bubble up to the parent route.
 //*======================================================================================================================
 
@@ -141,7 +147,8 @@ const isLoading = navigation.state === "loading";
 //* We create a new component related to searching an order, which is part of the order feature.
 
 //? Fetching Data from API
-//* Next, we fetch data from the API using the existing getOrder function that receives the order ID (in apiRestaurant)
+//* Next, we fetch data from the API using the existing getOrder function
+//* that receives the order ID (in apiRestaurant)
 //* We create a loader function inside the Order component (that will call getOrder function inside)
 //* We connect the loader function with the route definition ("/order/:orderId") in the App,
 //* and then in the Order component itself.
@@ -270,6 +277,8 @@ const isLoading = navigation.state === "loading";
 //* The form submits user data and selected pizzas.
 //* The form component from React Router is used for compatibility.
 
+//* note createOrder exists in App comp
+
 //? About Action
 //* Actions can specify the path for form submission.
 //* By default, React Router matches the closest route.
@@ -307,7 +316,8 @@ const isLoading = navigation.state === "loading";
 
 //? Benefits of Actions and React Router's Form Component
 //* This pattern simplifies data manipulation and writing new data.
-//* It eliminates the need for boilerplate code, state variables for inputs, request handling, and default prevention.
+//* It eliminates the need for boilerplate code, state variables for inputs, request handling,
+//* and default prevention.
 //* The form submits and the action catches the request.
 
 //? Form Data and New Order Creation
@@ -349,7 +359,7 @@ const isLoading = navigation.state === "loading";
 //* We don't get redirected to the other order page if there are errors.
 
 //? Displaying Errors
-//* In the component wired up with this action,
+//* In the component (createOrder) wired up with this action,
 //* we can get access to the data returned from the action.
 //* We use another custom hook, useActionData, to get the result.
 //* If there is formErrors.phone, we render a paragraph with that text.
