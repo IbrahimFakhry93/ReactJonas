@@ -1,5 +1,6 @@
 import styled, { css } from "styled-components";
 
+//* Object for styling
 const sizes = {
   small: css`
     font-size: 1.2rem;
@@ -20,6 +21,7 @@ const sizes = {
   `,
 };
 
+//* Object for styling
 const variations = {
   primary: css`
     color: var(--color-brand-50);
@@ -47,3 +49,43 @@ const variations = {
     }
   `,
 };
+
+// const Button = styled.button`
+//   font-size: 1.4rem;
+//   padding: 1.2rem 1.6rem;
+//   font-weight: 500;
+//   border: none;
+//   /* border-radius: 7px; */
+//   border-radius: var(--border-radius-sm);
+//   /* background-color: purple; */
+//   background-color: var(--color-brand-600);
+//   /* color: white; */
+//   color: var(--color-brand-50);
+//   box-shadow: var(--shadow-sm);
+//   /* margin: 20px; */
+//   cursor: pointer;
+//   &:hover {
+//     background-color: var(--color-brand-700);
+//     //* the transition mode is in GlobalStyles.js
+//   }
+//`;
+
+const Button = styled.button`
+  border: none;
+  border-radius: var(--border-radius-sm);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+
+  ${(props) => sizes[props.size]}
+  ${(props) => variations[props.variation]}
+`;
+
+Button.defaultProps = {
+  variation: "primary",
+  size: "medium",
+};
+
+//* if you use default props as above so in App.jsx
+//* the button element doesn't need props 
+//* since it will take the same values from default props above
+export default Button;
