@@ -58,6 +58,7 @@ function CabinRow({ cabin }) {
 
   const { isLoading: isDeleting, mutate } = useMutation({
     mutationFn: (id) => deleteCabin(id),
+    //* or:  mutationFn: deleteCabin,
 
     //* onSuccess if mutation is successful
     onSuccess: () => {

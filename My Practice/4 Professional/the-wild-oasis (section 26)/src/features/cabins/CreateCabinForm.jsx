@@ -67,7 +67,9 @@ function CreateCabinForm() {
   });
 
   function onSubmit(data) {
-    mutate(data);
+    console.log(data);
+    mutate({ ...data, image: data.image[0] });
+    // mutate(data);
   }
 
   function onError(errors) {
@@ -75,7 +77,7 @@ function CreateCabinForm() {
   }
   return (
     <Form onSubmit={handleSubmit(onSubmit, onError)}>
-      <FormRow>
+      {/* <FormRow>
         <Label htmlFor="name">Cabin name</Label>
         <Input
           type="text"
@@ -85,7 +87,7 @@ function CreateCabinForm() {
           })}
         />
         {errors?.name?.message && <Error>{errors.name.message}</Error>}
-      </FormRow>
+      </FormRow> */}
 
       <FormRow2 label="Cabin name" error={errors?.name?.message}>
         <Input
@@ -97,8 +99,7 @@ function CreateCabinForm() {
         />
       </FormRow2>
 
-      <FormRow>
-        <Label htmlFor="maxCapacity">Maximum capacity</Label>
+      <FormRow2 label="maxCapacity" error={errors?.name?.message}>
         <Input
           type="number"
           id="maxCapacity"
@@ -110,10 +111,9 @@ function CreateCabinForm() {
             },
           })}
         />
-      </FormRow>
+      </FormRow2>
 
-      <FormRow>
-        <Label htmlFor="regularPrice">Regular price</Label>
+      <FormRow2 label="regularPrice" error={errors?.name?.message}>
         <Input
           type="number"
           id="regularPrice"
@@ -124,10 +124,9 @@ function CreateCabinForm() {
               "Discount should be less than regular price",
           })}
         />
-      </FormRow>
+      </FormRow2>
 
-      <FormRow>
-        <Label htmlFor="discount">Discount</Label>
+      <FormRow2 label="discount" error={errors?.name?.message}>
         <Input
           type="number"
           id="discount"
@@ -136,10 +135,9 @@ function CreateCabinForm() {
             required: "This Field is required",
           })}
         />
-      </FormRow>
+      </FormRow2>
 
-      <FormRow>
-        <Label htmlFor="description">Description for website</Label>
+      <FormRow2 label="description" error={errors?.name?.message}>
         <Textarea
           type="number"
           id="description"
@@ -148,12 +146,17 @@ function CreateCabinForm() {
             required: "This Field is required",
           })}
         />
-      </FormRow>
+      </FormRow2>
 
-      <FormRow>
-        <Label htmlFor="image">Cabin photo</Label>
-        <FileInput id="image" accept="image/*" />
-      </FormRow>
+      <FormRow2 label="image" error={errors?.name?.message}>
+        <FileInput
+          id="image"
+          accept="image/*"
+          {...register("image", {
+            required: "This Field is required",
+          })}
+        />
+      </FormRow2>
 
       <FormRow>
         {/* type is an HTML attribute! */}
