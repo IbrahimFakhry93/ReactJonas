@@ -373,3 +373,291 @@
 //*===============================================================================
 
 //! 356. Editing a Cabin
+
+//^ open: CabinRow v-2.jsx after we duplicated it
+
+//* Use the pre builded form for cabin creation again to edit a pre created cabin
+
+//* First, add edit button in the cabin row
+
+//* second, temporarily create a state variable (showForm) toggled by the edit button
+//* which, if showForm is true, it will display the form right below a clicked row.
+
+//* Third, we need to pre-fill input filed values with the data from the current cabin
+//* so pass that data (cabin) into cabin form (CreateCabinForm component) as prop (CabinToEdit)
+
+//& Title: Toggling State in React Components
+
+//? Note:
+//* When toggling state in a React component, consider two approaches:
+
+//~ 1. Direct Toggle:
+//*   - Use () => setShowForm(!show) to directly negate the 'showForm' state.
+//*   - Concise and recommended for simple boolean toggling.
+
+//~ 2. Functional Update:
+//*   - Use () => setShowForm((show) => !show) to ensure the latest state value.
+//*   - Useful when the new state depends on the previous state.
+//*   - Ensures correctness even with rapid state updates.
+
+//* Choose based on readability and context in your specific use case
+//~===========================================================================
+
+//^ open: CreateCabinForm v-2.jsx after we duplicated it
+
+//* Receive cabinToEdit and assign as a default value to an empty object,
+//* because this data (editValues) sometimes are not existed
+//* then get some data out of cabinToEdit and rename the id to be more clear and readable
+
+//? Refill the form inputs before edit
+//* get the editValues into the input fields by defaultValues in React Hook Form
+//* by passing options object to useForm and get defaultValues
+// const { register, handleSubmit, reset, getValues, formState } = useForm({
+//   defaultValues: isEditSession ? editValues : {},
+// });
+//? Check for editing cabin status:
+//* If we are just using this form to create a new cabin, then we will not want any default values.
+//* And therefore, first of all, let's actually figure out if we are using this form to edit
+//* or to add a new cabin. So let's create a variable (isEditSession) which will contain that information.
+//* And then, let's simply convert the editId to a Boolean.
+//* So basically if there is an editId, then this will become true.
+//* And if it's not, then the Boolean will convert it to false.
+// const isEditSession = Boolean(editId);
+
+//? File upload
+//* usually when we edit cabin's data here we simply want the image to stay the same.
+//* So, in this case, we want to be able to submit this form here
+//* without actually having this photo. And so this should then not be required in this case.
+
+//~ We made this cabin photo upload here optional for the editing session.
+
+//* so isEditSession to return false to image required, while editing the cabin
+
+```<FileInput
+id="image"
+accept="image/*"
+{...register("image", {
+ //! required: isEditSession ? false: "This Field is required",
+})}
+/>```;
+
+//^ open: apiCabins:
+
+//* Reuse the createCabin function to edit the cabin but rename it to CreateEditCabin
+//* rename the import name in CreateCabinForm
+//! add .select().single to insert function
+//! why?
+// by default, this insert function right here
+
+// when we create a new row in the table
+
+// will not immediately return that row.
+
+// All right, so many times we actually do need that
+
+// and we do return the data actually from this function.
+
+// But right now that data will be empty.
+
+// And so if we want to actually return
+
+// that newly created object,
+
+// here we need to attach .select,
+
+// and then we can also attach .single
+
+// which will then basically take that new element
+
+// out of the array that it will be in.
+
+//~  if we want to edit a cabin, then we need to pass in the new cabin data
+//~ plus the ID of the cabin that is being edited. And so that's how we will know
+//~ if we are in an edit session or not.
+
+//* export async function createEditCabin(newCabin, id)
+
+//! So we want to create the cabin here only if there is no id. So if there is no id,
+
+//* remember how we made this cabin photo upload here optional for the editing session.
+//* This means that sometimes when we edit the cabin we will get a new file,
+//* so if we select one of cabin photos stored in src => data folder => cabins,
+//* but if not, we will just get a photo URL we get from Supabase
+
+//? Two different situations that we need to account for:
+
+//* 1) Update the cabin without specifying (uploading) a new cabin photo
+
+//~ here in console.log (data in onSubmit(data) function, the image will have the image path that we specified earlier
+//~ ex.: image: "https://dbxshcsearexonqnmrwr.supabase.co/storage/v1/object/public/cabins-images/cabin-001.jpg"
+
+//* 2) Update the cabin and specifying (uploading) a new cabin photo
+//~ the image in the console will be assigned to fileList
+
+//* so to account for those both two situations, we need to create a variable (hasImagePath) in
+//* createEditCabin function in apiCabins to check what image is this.
+//!  const hasImagePath = newCabin.image.startsWith(supabaseUrl);
+// const hasImagePath = newCabin.image?.startsWith?.(supabaseUrl);
+// const imageName = `${Math.random()}-${newCabin.image.name}`.replaceAll(
+//   "/",
+//   ""
+// );
+//*  remove the slash: because if this cabin name contains any slashes, then super base will create folders based on that.
+
+//? const imagePath = hasImagePath ? newCabin.image : `${supabaseUrl}/storage/v1/object/public/cabins-images/${imageName}`;
+//* cabins-images: name of the bucket
+//* imagePath url form, we get from the url in the created bucket in Supabase then we make it generic as above
+//~ use optional chaining
+//* because image might not be a string so we can not call .startsWith  method
+//* const hasImagePath = newCabin.image?.startsWith?.(supabaseUrl);
+
+//? note:
+//* mutationFn: ({ newCabinData, id }) => createEditCabin(newCabinData,id),
+//* in the mutation function. in React Query,
+//* we can actually only pass one element to this function.
+//* but so let's create an arrow function here.
+//* And only accept exactly one argument
+//* which will be this object with the newCabinData, And also the id.
+//* And so then we immediately destructure that  and pass it in the function as necessary.
+//* Create isWorking variable and use it for disabled attribute for input
+
+//? Account for different image property values while editing:
+// now it's time to again account for the fact that the image
+// can either be this string right here
+// or it can be this object that we saw earlier.
+// So this image file list right there.
+// So this array basically.
+// So let's check for that
+// so that we can actually determine what image
+// we need to pass into editCabin.
+// So here we can use the type of operator
+// to check whether data.image
+// is a string.
+// And so if it is a string,
+// then the image will just become data.image.
+// And otherwise, so if it is that file list,
+// then we will again need the data
+// to be data.image at position zero.
+
+// const image = typeof data.image === "string" ? data.image : data.image[0];
+// if (isEditSession)
+//   editCabin({ newCabinData: { ...data, image }, id: editId });
+// else createCabin({ ...data, image: image });
+
+//*====================================================================================================
+
+//! 357. Abstracting React Query Into Custom Hooks
+
+//^ create: useDeleteCabin in cabins folder
+// we didn't place
+
+// this hook into this hooks folder because this one
+
+// is really only for hooks that are reusable
+
+// across multiple features, but this one here
+
+// really is related to the cabin's feature
+
+//^ open: CabinRow.jsx after we duplicate it
+
+//^ open: CreateCabinForm.jsx
+
+//* reset() problem:
+
+// we can not only use the on success handler
+
+// here on use mutation but also right where the mutation
+
+// actually happens, or in other words
+
+// we can also pass a similar thing right here
+
+// into the mutation function which in this case
+
+// we renamed to create cabin but that's the same thing
+
+// so this is just simply the mutate function
+
+// that is coming from React query so basically
+
+// that is coming from right here
+
+// so it's the result of use mutation and so again we can
+
+// place this on success handler function
+
+// not only right here but also right in the function
+
+// where the mutation actually happens (inside createCabin look at onSubmit function)
+
+// so all we need to do is to pass in an object of options
+
+// and so then there we can do on success
+
+// and then here we can very simply call the reset function
+
+// and also this call back right here
+
+// actually gets access to the data
+
+// that the mutation function returns
+
+// or in other words we can here get access
+
+// to this new cabin data that we return right here
+
+// and so this data again is going to be the newly created
+
+// cabin or the edited one so just to see that here
+
+//~==========
+
+// this call back in onSuccess (look down)
+
+// actually gets access to the data
+
+// that the mutation function returns
+
+// or in other words we can get access
+
+// to this new cabin data that we return in  createEditCabin function in apiCabins
+
+// and so this data again is going to be the newly created
+
+// cabin or the edited one
+
+```function onSubmit(data) {
+  console.log(data);
+  const image = typeof data.image === "string" ? data.image : data.image[0];
+  if (isEditSession)
+    // editCabin({ newCabinData: { ...data, image }, id: editId });
+    editCabin({ newCabinData: data, id: editId });
+  else
+    createCabin(
+      { ...data, image: image },
+      { 
+
+        //! this callback
+        onSuccess: (data) => {
+          reset();
+          console.log(data);
+        },
+      }
+    );
+  }```;
+
+//^ create: useEditCabin.js
+
+//^ open: CabinTable.jsx
+
+// so now if for some reason we need this data (cabins)
+
+// somewhere else, it's as easy as just grabbing this
+//   const { isLoading, cabins } = useCabins();
+
+// and then for example, well let's say for some reason
+
+// we need this in the sidebar,
+
+//^ oepn Sidebar.jsx

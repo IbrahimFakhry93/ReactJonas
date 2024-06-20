@@ -39,25 +39,42 @@ export async function deleteCabin(id) {
   return data;
 }
 
-export async function createCabin(newCabin) {
+export async function createEditCabin(newCabin, id) {
+  console.log(newCabin, id);
+  const hasImagePath = newCabin.image?.startsWith?.(supabaseUrl);
   const imageName = `${Math.random()}-${newCabin.image.name}`.replaceAll(
     "/",
     ""
   ); //*  remove the slash: because if this cabin name contains any slashes, then super base will create folders based on that.
 
-  const imagePath = `${supabaseUrl}/storage/v1/object/public/cabins-images/${imageName}`; //* cabins-images: name of the bucket
+  const imagePath = hasImagePath
+    ? newCabin.image
+    : `${supabaseUrl}/storage/v1/object/public/cabins-images/${imageName}`;
+  //* cabins-images: name of the bucket
   //* imagePath url form, we get from the url in the created bucket in Supabase then we make it generic as above
-  //* 1. Create Cabin
-  const { data, error } = await supabase
-    .from("cabins")
-    .insert([{ ...newCabin, image: imagePath }])
-    .select();
+
+  //~ 1. Create / Edit Cabin
+
+  //* create query and attach to rest of methods
+  //*  it's a commonly used technique  when we want to reuse parts of the query.
+  let query = supabase.from("cabins");
+
+  //* A) Create Cabin
+  if (!id) query = query.insert([{ ...newCabin, image: imagePath }]);
+
+  if (id)
+    query = query
+      .update({ ...newCabin, image: imagePath })
+      .eq("id", id)
+      .select();
+  const { data, error } = await query.select().single();
+
   if (error) {
     console.error(error);
     throw new Error("Cabin could not be created");
   }
 
-  //* 2. Upload Data:
+  //~ 2. Upload Data:
 
   const { error: storageError } = await supabase.storage
     .from("cabins-images")

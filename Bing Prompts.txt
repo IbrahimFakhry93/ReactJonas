@@ -10,6 +10,8 @@ rewrite these comments notes in a code snippet in a more suitable way to make it
  rewrite your last prompt in a code snippet in a more suitable way to make it easier to study later without losing important information //& Title: title name  //?Note //* subnote //* subnote
 
 
+rewrite these commnet notes in  a code snippet in concise way but without losing any of the core important key points and keep the format the same
+
 
 I will provide you some react code projects of a React course I'm studying now into number of prompts, I want to you to tell me what is the ReactJS learing aim of this project and what subjects, keypoints, important takeawyas, special and new React, programming and coding concepts, coding tricks, coding and programming critical thinking techniques that the tutor want to deliever by this project , make your answer clear useful and concise and write your analysis in this format:  //& Title: title name  //?Note  //* subnote  //* subnote
 
