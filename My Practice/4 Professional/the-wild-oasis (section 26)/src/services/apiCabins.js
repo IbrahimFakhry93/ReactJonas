@@ -41,12 +41,13 @@ export async function deleteCabin(id) {
 
 export async function createEditCabin(newCabin, id) {
   console.log(newCabin, id);
-  const hasImagePath = newCabin.image?.startsWith?.(supabaseUrl);
+
   const imageName = `${Math.random()}-${newCabin.image.name}`.replaceAll(
     "/",
     ""
   ); //*  remove the slash: because if this cabin name contains any slashes, then super base will create folders based on that.
 
+  const hasImagePath = newCabin.image?.startsWith?.(supabaseUrl);
   const imagePath = hasImagePath
     ? newCabin.image
     : `${supabaseUrl}/storage/v1/object/public/cabins-images/${imageName}`;
@@ -62,6 +63,7 @@ export async function createEditCabin(newCabin, id) {
   //* A) Create Cabin
   if (!id) query = query.insert([{ ...newCabin, image: imagePath }]);
 
+  //* B) Edit Cabin
   if (id)
     query = query
       .update({ ...newCabin, image: imagePath })
@@ -74,8 +76,8 @@ export async function createEditCabin(newCabin, id) {
     throw new Error("Cabin could not be created");
   }
 
-  //~ 2. Upload Data:
-
+  //~ 2. Upload image:
+  if (hasImagePath) return data;
   const { error: storageError } = await supabase.storage
     .from("cabins-images")
     .upload(imageName, newCabin.image); //* newCabin.image is the actual image

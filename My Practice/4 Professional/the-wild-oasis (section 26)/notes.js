@@ -305,11 +305,11 @@
 
 //! 355. Uploading Images to Supabase
 
-//^ open: CreateCabinForm.jsx - fileInput.jsx
+//^ open: CreateCabinForm v-1.jsx - fileInput.jsx
 
 //& Title: Handling File Uploads
 
-//? In this video, we'll manage file uploads and send images to a Superbase bucket.
+//? In this video, we'll manage file uploads and send images to a Supabase bucket.
 
 //* To make this part of the form functional, we'll handle uploading cabin photos.
 
@@ -317,21 +317,29 @@
 
 //* This component is essentially another input element, specifically for files.
 
-//* Since it's designed as a file input, it should automatically handle file selection.
-
-//* We don't need to manually specify the type each time we use this component.
-
-//* With styled components, we can achieve this seamlessly.
-
-//* After declaring that this input field exists, we can set its attributes.
-
-//* Here, we'll set the type attribute to "file."
-
-//? note:
-
+//? before this lesson FileInput
+// ```
+// <FileInput
+// id="image"
+// accept="image/*" />``
+//* without registering this filed, without required attribute so we can submit the form without image to create a cabin
+// ```
+// <FileInput
+// id="image"
+// accept="image/*"
+// {...register("image", {
+//   required: "This Field is required",
+// })}
+// />```
 //* name of id of the input fields must correlate with the name of the columns in supabase
 
-//* Go to OnSubmit function
+//! styled.input.attrs({ type: "file" })`   (when using styled components)
+//* Here, we'll set the type attribute to "file."
+//* We don't need to manually specify the type each time we use this component.
+//* Since it's designed as a file input, it should automatically handle file selection.
+//* With styled components, we can achieve this seamlessly.
+
+//* Go to OnSubmit function in CreateCabinForm v-1.jsx
 
 // function onSubmit(data) {
 //   console.log(data);
@@ -346,31 +354,67 @@
   "image":FileList
       "0":File {name: 'cabin-006.jpg', lastModified: 1684508687000, lastModifiedDate: Fri May 19 2023 08:04:47 GMT-0700 (Pacific Daylight Time), webkitRelativePath: '', size: 262253, …}
 }```;
-//   mutate({ ...data, image: data.image.at(0) });
 
-// }
+//*! to retrieve very first element (data.image[0])
+//* so overwrite image property by data.image[0] to get to image name (cabin-006.jpg) in the FileList as above
+//!   mutate({ ...data, image: data.image[0] });
 
-//^ open: apiCabins.js
+//* { ...data, image: data.image[0] }
+//* (the property name must be image)
+//! why:
+//* it is called image for the exact same reason that all these other fields have their names.
+//* name, max capacity and so on. And so, that's because in super base,
+//* that's exactly the name that we gave our fields so to our columns.
+//* And so, here, we then of course, need to match exactly those.
 
-//* Go to CreateCabin function:
+//^ open: apiCabins v-1.js
 
+//* Go to createEditCabin function in apiCabins.js, where in this function we will upload the image
+//? function logic
 //* 1) Create Cabin
 //* 2) then if cabin creation is success, upload the image
 
-//* we still need to do is to actually specify the image path here in this new cabin that we create.
-//*
-
-//* create imageName, create imagePath
-//* go to supabase javascript documentation then storage then upload file
-//* but first create new policy in buckets because to upload a file
-//* we need a RLS POLICY PERMISSION
-
-//^ open: Supabase.js and export supabaseUrl
-
-//* https://dbxshcsearexonqnmrwr.supabase.co/storage/v1/object/public/cabin-images/0.26401972249044037-cabin-006.jpg
+//! we still need to specify the image path in the new cabin that we created
+//* imagePath contains the url to the bucket in Supabase that the images will be uploaded to
 //* https://dbxshcsearexonqnmrwr.supabase.co/storage/v1/object/public/cabins-images/0.26401972249044037-cabin-006.jpg
 
-//*===============================================================================
+//~ Create imageName:
+
+// const imageName = `${Math.random()}-${newCabin.image.name}`.replaceAll(
+//   "/",
+//   ""
+// );
+
+//* To make sure the image name is unique, use Math.random() and prefix that to cabin image name itself
+//* remove the slash: because if this cabin name contains any slashes, then super base will create folders based on that.
+
+//~ Create imagePath:
+//^ open: Supabase.js and export supabaseUrl
+//! const imagePath = `${supabaseUrl}/storage/v1/object/public/cabins-images/${imageName}`;
+//* cabins-images: name of the bucket
+//* imagePath url form, we get from the url in the created bucket in Supabase then we make it generic as above
+//* imagePath will be ultimately stored in the cabin row in Supabase table
+
+//! I made error while developing that I forgot the(s) of cabins so I wrote cabin-image as down
+//! while the correct name of the bucket: cabins-images
+//* https://dbxshcsearexonqnmrwr.supabase.co/storage/v1/object/public/cabin-images/0.26401972249044037-cabin-006.jpg
+
+//? correct url⬇️
+//* https://dbxshcsearexonqnmrwr.supabase.co/storage/v1/object/public/cabins-images/0.26401972249044037-cabin-006.jpg
+//? so correct imagePath should contain cabins-images
+
+//~ Upload image
+
+//? to get upload code as down:
+//* go to supabase javascript documentation then storage then upload file
+// const { error: storageError } = await supabase.storage
+//   .from("cabins-images")
+//   .upload(imageName, newCabin.image);   //* newCabin.image is the actual image
+
+//* but first create new policy for cabins-images in buckets in Supabase to upload a file
+//* we need a RLS POLICY PERMISSION
+//* select full customization and enable everything, select, insert, update, delete
+//*====================================================================================================
 
 //! 356. Editing a Cabin
 
@@ -380,7 +424,7 @@
 
 //* First, add edit button in the cabin row
 
-//* second, temporarily create a state variable (showForm) toggled by the edit button
+//* Second, temporarily create a state variable (showForm) toggled by the edit button
 //* which, if showForm is true, it will display the form right below a clicked row.
 
 //* Third, we need to pre-fill input filed values with the data from the current cabin
@@ -660,4 +704,197 @@ accept="image/*"
 
 // we need this in the sidebar,
 
-//^ oepn Sidebar.jsx
+//^ open: Sidebar.jsx
+
+//*====================================================================================================
+
+//! 358. Duplicating Cabins
+
+//^ open: CabinRow.jsx
+
+//* Add button for duplicating (creating new cabin with identical data )
+//* so use the pre created custom hook (useCreateCabin), it will be easy
+//* create function to handle that duplicating action
+//* Add icons instead of texts to fit the space left
+
+//^ open: apiCabins.js
+
+//* if image already has a path (has already been uploaded)
+//* so no need to upload again.
+//* so add this:  if (hasImagePath) return data;
+
+//* after click on duplicate:
+
+// we got that nice notification up there.
+
+// And so that's the great thing
+
+// about centralizing all the success logic
+
+// in this one place here.
+
+// So wherever in our application,
+
+// we use this createCabin function now.
+
+// Whenever there is a success,
+
+// all this code here will be executed.
+
+// We have that all in one nice central place.
+
+// And so maybe with this, you can start to see
+
+// why this useMutation hook is also very useful.
+
+//*=======================
+
+// So for now, I think that we are finally ready
+
+// to leave this domain of cabins behind.
+
+// So, we really did all the CRUD operations.
+
+// So create, read, update, and delete
+
+// using React Query on the cabins.
+
+//*========================================================================================
+
+//! 359. Fetching Applications Settings
+
+//^ open: settings.jsx
+
+//* Place UpdateSettingsForm component in settings page
+
+//! watch the video again better if needed
+
+//^ open: apiSettings.js
+
+//* create new RLS security policies for settings in supaBase
+
+// And so remember how I mentioned earlier
+
+// that for the settings,
+
+// we will actually not create any more rows.
+
+// So we will only have this one row with the ID number one.
+
+// And so this is where the four settings are stored.
+
+// All right.
+
+// And so basically reading the settings
+
+// is just reading this one row from this table.
+
+// And so that's actually the reason
+
+// why here there is something different.
+
+// Cause here in function getSettings() in apiSettings
+//  we then attach in the end single.
+
+// And what this does, as it says down here
+
+// is to take one single object instead of an entire array. as here:
+//* const { data, error } = await supabase.from("settings").select("*").single();
+
+//? or:  without single method
+//* const { data, error } = await supabase.from("settings").select("*")
+//* but return data[0] instead of return data
+
+//^ open: UpdateSettingsForm.jsx
+
+// we are using the form row that we created a bit earlier
+
+// and also the input field.
+
+// Because what we're going to do now
+
+// is to actually fetch that data
+
+// and then immediately place it here
+
+// in each of these input fields
+
+// so that then in the next lecture
+
+// we can basically very simply update them one by one.
+
+//* we will use ReactQuery to fetch the data in UpdateSettingsForm component
+//* but not directly, we will custom hook.
+
+//^ create: useSettings.js
+
+// Query key
+
+// and then it needs to be an array with some string in there.
+
+// So again, to uniquely identify this Query in our cache then.
+
+// And then also the Query function
+
+// which is just going to be get settings.
+
+// So again, this needs to be a function that returns a promise
+
+// or in other words, an asynchronous function.
+
+```const {
+  settings: {  //* this is a destruction
+    minBookingLength,
+    maxBookingLength,
+    maxGuestsPerBooking,
+    breakfastPrice,
+  } = {}, //* assign settings to an empty object, because at start these properties (minBookingLength etc.) are undefined
+  isLoading,
+} = useSettings();```;
+
+//* The reason the settings object is initially assigned to an empty object ({})
+//* is to prevent destructuring errors when accessing properties like minBookingLength, maxBookingLength, etc.
+//* These properties are undefined until the query fetches the actual data.
+//* By using an empty object as the default value, we avoid issues with destructuring
+//* and allow the query to populate the settings object once the data is available.
+
+//*==================================================================================================
+
+//! 360. Updating Application Settings
+
+//* let's update each of the settings value individually by using a very nice, clever trick.
+
+//^ open: apiSetting.js
+//* in updateSetting function:
+//* we pass only id, because we only update row number one as you found on supaBase table for settings
+// so the object that we need to pass in here
+
+// is simply an object with the column
+
+// that needs to be updated.
+
+// So with the field that needs to be updated.
+
+// So it doesn't have to be the complete new settings object.
+
+// Only the fields, or the columns, that we want to update.
+
+//^ Copy useEditCabin.js and rename it useEditSettings.js
+
+//? Way of applying update:
+
+// let's do the actual updating right now.
+
+// Getting a bit more space here.
+
+// And so, the way that we want to do this
+
+// is that whenever we click here,
+
+// then we write some new value.
+
+// And then as soon as we leave the field,
+
+// we want the updating to happen.
+
+// And so, we can do that with the onBlur event handler.
