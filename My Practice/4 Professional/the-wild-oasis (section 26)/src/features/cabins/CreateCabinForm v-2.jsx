@@ -27,7 +27,12 @@ function CreateCabinForm({ cabinToEdit = {} }) {
   });
   const { errors } = formState;
   // console.log(errors);
+
+
   const queryClient = useQueryClient();
+ 
+  //! Create Cabin:
+
   const { mutate: createCabin, isLoading: isCreating } = useMutation({
     mutationFn: (newCabin) => createEditCabin(newCabin),
     onSuccess: () => {
@@ -37,6 +42,10 @@ function CreateCabinForm({ cabinToEdit = {} }) {
     },
     onError: (err) => toast.error(err.message),
   });
+
+
+  //! Edit Cabin:
+  
   const { mutate: editCabin, isLoading: isEditing } = useMutation({
     mutationFn: ({ newCabinData, id }) => createEditCabin(newCabinData, id),
     onSuccess: () => {
@@ -53,7 +62,10 @@ function CreateCabinForm({ cabinToEdit = {} }) {
     console.log(data);
     const image = typeof data.image === "string" ? data.image : data.image[0];
     if (isEditSession)
+    //! Edit Cabin:
       editCabin({ newCabinData: { ...data, image }, id: editId });
+
+    //! Create Cabin:
     else createCabin({ ...data, image: image });
     // else createCabin({ ...data, image: data.image[0] });
     // mutate({ ...data, image: data.image[0] });

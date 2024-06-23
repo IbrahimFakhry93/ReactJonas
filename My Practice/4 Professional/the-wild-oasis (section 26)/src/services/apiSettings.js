@@ -25,3 +25,10 @@ export async function updateSetting(newSetting) {
   }
   return data;
 }
+
+// UPDATE MATCHING ROWS
+// const { data, error } = await supabase
+//   .from('settings')
+//   .update({ other_column: 'otherValue' })
+//   .eq('some_column', 'someValue')
+//   .select()

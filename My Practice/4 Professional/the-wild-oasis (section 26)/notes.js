@@ -333,6 +333,13 @@
 // />```
 //* name of id of the input fields must correlate with the name of the columns in supabase
 
+//& accept attribute:
+//* The accept attribute in the HTML <input> element specifies the types of files that the input field can accept.
+//* It restricts the file selection to those specified types
+//* accept="image/*" allows the user to pick image files (such as JPEG, PNG, GIF, etc.).
+//* The attribute can only be used with <input type="file">.
+//* Note that it’s not a validation tool; server-side validation for file uploads is still necessary
+
 //! styled.input.attrs({ type: "file" })`   (when using styled components)
 //* Here, we'll set the type attribute to "file."
 //* We don't need to manually specify the type each time we use this component.
@@ -429,6 +436,7 @@
 
 //* Third, we need to pre-fill input filed values with the data from the current cabin
 //* so pass that data (cabin) into cabin form (CreateCabinForm component) as prop (CabinToEdit)
+// {showForm && <CreateCabinForm cabinToEdit={cabin} />}
 
 //& Title: Toggling State in React Components
 
@@ -452,6 +460,10 @@
 //* Receive cabinToEdit and assign as a default value to an empty object,
 //* because this data (editValues) sometimes are not existed
 //* then get some data out of cabinToEdit and rename the id to be more clear and readable
+
+// function CreateCabinForm({ cabinToEdit = {} }) {
+//   const { id: editId, ...editValues } = cabinToEdit;
+// }
 
 //? Refill the form inputs before edit
 //* get the editValues into the input fields by defaultValues in React Hook Form
@@ -540,8 +552,8 @@ accept="image/*"
 
 //* so to account for those both two situations, we need to create a variable (hasImagePath) in
 //* createEditCabin function in apiCabins to check what image is this.
-//!  const hasImagePath = newCabin.image.startsWith(supabaseUrl);
-// const hasImagePath = newCabin.image?.startsWith?.(supabaseUrl);
+
+//! const hasImagePath = newCabin.image?.startsWith?.(supabaseUrl);
 // const imageName = `${Math.random()}-${newCabin.image.name}`.replaceAll(
 //   "/",
 //   ""
@@ -562,26 +574,17 @@ accept="image/*"
 //* but so let's create an arrow function here.
 //* And only accept exactly one argument
 //* which will be this object with the newCabinData, And also the id.
-//* And so then we immediately destructure that  and pass it in the function as necessary.
-//* Create isWorking variable and use it for disabled attribute for input
+//* And so then we immediately destructure that and pass it in the function as necessary.
 
-//? Account for different image property values while editing:
-// now it's time to again account for the fact that the image
-// can either be this string right here
-// or it can be this object that we saw earlier.
-// So this image file list right there.
-// So this array basically.
-// So let's check for that
-// so that we can actually determine what image
-// we need to pass into editCabin.
-// So here we can use the type of operator
-// to check whether data.image
-// is a string.
-// And so if it is a string,
-// then the image will just become data.image.
-// And otherwise, so if it is that file list,
-// then we will again need the data
-// to be data.image at position zero.
+//~ Create isWorking variable and use it for disabled attribute for input
+
+//! Return again to onSubmit function in CreateCabinForm.jsx
+
+//& Title: Handling Cabin Image During Editing
+
+//? Note: Account for different image property values while cabin editing
+//* If data.image is a string, use it directly (no new image selected while editing the cabin).
+//* Otherwise, if it's an array (file list), use data.image[0] as the new image has been selected
 
 // const image = typeof data.image === "string" ? data.image : data.image[0];
 // if (isEditSession)
@@ -593,102 +596,52 @@ accept="image/*"
 //! 357. Abstracting React Query Into Custom Hooks
 
 //^ create: useDeleteCabin in cabins folder
-// we didn't place
-
-// this hook into this hooks folder because this one
-
-// is really only for hooks that are reusable
-
-// across multiple features, but this one here
-
-// really is related to the cabin's feature
+//* we didn't place this hook into this hooks folder because this one
+//* is really only for hooks that are reusable across multiple features, but this one here
+//* really is related to the cabin's feature
 
 //^ open: CabinRow.jsx after we duplicate it
 
 //^ open: CreateCabinForm.jsx
 
-//* reset() problem:
+//& reset() problem:
 
-// we can not only use the on success handler
-
-// here on use mutation but also right where the mutation
-
-// actually happens, or in other words
-
-// we can also pass a similar thing right here
-
-// into the mutation function which in this case
-
-// we renamed to create cabin but that's the same thing
-
-// so this is just simply the mutate function
-
-// that is coming from React query so basically
-
-// that is coming from right here
-
-// so it's the result of use mutation and so again we can
-
-// place this on success handler function
-
-// not only right here but also right in the function
-
-// where the mutation actually happens (inside createCabin look at onSubmit function)
-
-// so all we need to do is to pass in an object of options
-
-// and so then there we can do on success
-
-// and then here we can very simply call the reset function
-
-// and also this call back right here
-
-// actually gets access to the data
-
-// that the mutation function returns
-
-// or in other words we can here get access
-
-// to this new cabin data that we return right here
-
-// and so this data again is going to be the newly created
-
-// cabin or the edited one so just to see that here
-
-//~==========
-
-// this call back in onSuccess (look down)
-
-// actually gets access to the data
-
-// that the mutation function returns
-
-// or in other words we can get access
-
-// to this new cabin data that we return in  createEditCabin function in apiCabins
-
-// and so this data again is going to be the newly created
-
-// cabin or the edited one
+//? We can use the `onSuccess` callback handler not only when defining the mutation
+//? but also directly where the mutation occurs as in onSubmit function in CreateCabinForm Component
+//*  When creating a cabin (or editing), we can pass an options object to the mutation function.
+//*  Inside this object, we specify the `onSuccess` callback.
+//*  In the `onSuccess` callback, we can perform actions like resetting form fields.
+//*  Importantly, this callback gives us access to the data returned
+//*  by the mutation function (ex. createEditCabin fn in apiCabins)
 
 ```function onSubmit(data) {
   console.log(data);
   const image = typeof data.image === "string" ? data.image : data.image[0];
   if (isEditSession)
-    // editCabin({ newCabinData: { ...data, image }, id: editId });
-    editCabin({ newCabinData: data, id: editId });
-  else
-    createCabin(
-      { ...data, image: image },
-      { 
+  
+   editCabin(
+        { newCabinData: data, id: editId },
+        {
 
-        //! this callback
-        onSuccess: (data) => {
-          reset();
-          console.log(data);
-        },
-      }
-    );
+        //! onSuccess callback
+          onSuccess: (data) => {
+            reset();
+            console.log(data);
+          },
+        }
+      );
+    else
+    
+      createCabin(
+        { ...data, image: image },
+          //! onSuccess callback
+        {
+          onSuccess: (data) => {
+            reset();
+            console.log(data);
+          },
+        }
+      );
   }```;
 
 //^ create: useEditCabin.js
@@ -696,12 +649,10 @@ accept="image/*"
 //^ open: CabinTable.jsx
 
 // so now if for some reason we need this data (cabins)
-
 // somewhere else, it's as easy as just grabbing this
-//   const { isLoading, cabins } = useCabins();
+// const { isLoading, cabins } = useCabins();
 
 // and then for example, well let's say for some reason
-
 // we need this in the sidebar,
 
 //^ open: Sidebar.jsx
@@ -714,7 +665,7 @@ accept="image/*"
 
 //* Add button for duplicating (creating new cabin with identical data )
 //* so use the pre created custom hook (useCreateCabin), it will be easy
-//* create function to handle that duplicating action
+//* create function to handle that duplicating action (handleDuplicate)
 //* Add icons instead of texts to fit the space left
 
 //^ open: apiCabins.js
@@ -723,29 +674,17 @@ accept="image/*"
 //* so no need to upload again.
 //* so add this:  if (hasImagePath) return data;
 
-//* after click on duplicate:
+//~ After click on duplicate:
+//* we got that nice notification up there ( toast.success("New cabin successfully created");)
+//* And so that's the great thing about centralizing all the success logic
 
-// we got that nice notification up there.
+//& Title: Centralizing Success Logic
 
-// And so that's the great thing
-
-// about centralizing all the success logic
-
-// in this one place here.
-
-// So wherever in our application,
-
-// we use this createCabin function now.
-
-// Whenever there is a success,
-
-// all this code here will be executed.
-
-// We have that all in one nice central place.
-
-// And so maybe with this, you can start to see
-
-// why this useMutation hook is also very useful.
+//? When using the `createCabin` function, we centralize success logic.
+//* No matter where in our application we use this function (createCabin)
+//* the same code executes upon success including:  toast.success("New cabin successfully created");
+//* It's like having a dedicated hub for handling successful mutations.
+//* The `useMutation` hook simplifies this process.
 
 //*=======================
 
@@ -798,7 +737,8 @@ accept="image/*"
 
 // And what this does, as it says down here
 
-// is to take one single object instead of an entire array. as here:
+// is to take one single object instead of an entire array in getSettings function in apiSettings
+//* as here:
 //* const { data, error } = await supabase.from("settings").select("*").single();
 
 //? or:  without single method
@@ -807,40 +747,45 @@ accept="image/*"
 
 //^ open: UpdateSettingsForm.jsx
 
-// we are using the form row that we created a bit earlier
-
-// and also the input field.
-
-// Because what we're going to do now
-
-// is to actually fetch that data
-
-// and then immediately place it here
-
-// in each of these input fields
-
-// so that then in the next lecture
-
-// we can basically very simply update them one by one.
+//* we are using the form row that we created  earlier and also the input field.
+//* Because what we're going to do is to fetch that data
+//* and place it in each of input fields as default values
+//* so that then in the next lecture we can simply update them one by one.
 
 //* we will use ReactQuery to fetch the data in UpdateSettingsForm component
-//* but not directly, we will custom hook.
+//* but not directly, we will custom hook (useSettings)
+//* and this data we will use it to assign them as default values to Input Fields
+
+//* as a in following example of fetching data and receive minBookingLength
+
+// function UpdateSettingsForm() {
+//   const {
+//!     settings: { minBookingLength },
+//     isLoading,
+//   } = useSettings();
+
+//   return (
+//     <Form>
+//       <FormRow label="Minimum nights/booking">
+//         <Input
+//           type="number"
+//!           defaultValue={minBookingLength}
+//           onBlur={(e) => handleBlur(e, "minBookingLength")}
+//           disabled={isUpdating}
+//           id="min-nights"
+//         />
+//       </FormRow>
+//     </Form>
+//   );
+// }
 
 //^ create: useSettings.js
 
-// Query key
+//* Query key: it needs to be an array with some string ("settings")
+//* to uniquely identify this Query in our cache
 
-// and then it needs to be an array with some string in there.
-
-// So again, to uniquely identify this Query in our cache then.
-
-// And then also the Query function
-
-// which is just going to be get settings.
-
-// So again, this needs to be a function that returns a promise
-
-// or in other words, an asynchronous function.
+//* the Query function: is getSettings.
+//* getSettings needs to be a function that returns a promise  (an asynchronous function)
 
 ```const {
   settings: {  //* this is a destruction
@@ -866,35 +811,89 @@ accept="image/*"
 
 //^ open: apiSetting.js
 //* in updateSetting function:
-//* we pass only id, because we only update row number one as you found on supaBase table for settings
-// so the object that we need to pass in here
+//* we don't need to pass only id, because we only update row number one
+//* as you found on supaBase table for settings
+// export async function updateSetting(newSetting) {
+//   const { data, error } = await supabase
+//     .from("settings")
+//     .update(newSetting)
+//     //! There is only ONE row of settings, and it has the ID=1, and so this is the updated one
+//!     .eq("id", 1)
+//     .single();
 
-// is simply an object with the column
+//   if (error) {
+//     console.error(error);
+//     throw new Error("Settings could not be updated");
+//   }
+//   return data;
+// }
 
-// that needs to be updated.
+//* so the object (newSetting that we need to pass in updateSetting function
+//* is simply an object with (the column) that needs to be updated.
+//* column of one of columns in supabase table for settings such as (minBookingLength)
+//* So with the field that needs to be updated.
+//* So it doesn't have to be the complete new settings object.
+//* Only the fields, or the columns, that we want to update.
 
-// So with the field that needs to be updated.
-
-// So it doesn't have to be the complete new settings object.
-
-// Only the fields, or the columns, that we want to update.
-
-//^ Copy useEditCabin.js and rename it useEditSettings.js
+//^ Copy useEditCabin.js and rename it useUpdateSettings.js
 
 //? Way of applying update:
 
-// let's do the actual updating right now.
+//* when we write some new value in input field
+//* And then as soon as we leave the field, we want the updating to happen.
+//* And we can do that with the onBlur event handler.
 
-// Getting a bit more space here.
+//! handleBlur for updating
+// function handleBlur(e, field) {
+//   const { value } = e.target;
+//   console.log(value);
 
-// And so, the way that we want to do this
+//   if (!value) return;
+//*   updateSetting({ [field]: value });  //* dynamically generate an object by passing field name
+// }
 
-// is that whenever we click here,
+// <Input
+//   type="number"
+//   defaultValue={minBookingLength}
+//*   onBlur={(e) => handleBlur(e, "minBookingLength")}
+//   disabled={isUpdating}
+//   id="min-nights"
+// />
 
-// then we write some new value.
+//*^=======================================================================
 
-// And then as soon as we leave the field,
+//^ in apiSetting.js
 
-// we want the updating to happen.
+// We expect a newSetting object that looks like {setting: newValue}
+// export async function updateSetting(newSetting) {
+//   const { data, error } = await supabase
+//     .from("settings")
+//     .update(newSetting)
+//     //! There is only ONE row of settings, and it has the ID=1, and so this is the updated one
+//     .eq("id", 1)
+//     .single();
 
-// And so, we can do that with the onBlur event handler.
+//   if (error) {
+//     console.error(error);
+//     throw new Error("Settings could not be updated");
+//   }
+//   return data;
+// }
+
+//* UPDATE MATCHING ROWS
+// const { data, error } = await supabase
+//   .from('settings')
+//*   .update({ other_column: 'otherValue' })
+//*   .eq('some_column', 'someValue')
+//   .select()
+
+//* update lets you update rows. update will match all rows by default.
+//* You can update specific rows using horizontal filters, e.g. eq
+
+//& from Supabase documentation:
+
+// const { data, error } = await supabase
+//   .from('countries')
+//   .update({ name: 'Australia' })
+//*   .eq('id', 1)
+//   .select()

@@ -24,6 +24,7 @@ function UpdateSettingsForm() {
   // return <Spinner />;
   if (isLoading) return <Spinner />;
 
+  //! handleBlur for updating
   function handleBlur(e, field) {
     const { value } = e.target;
     console.log(value);
