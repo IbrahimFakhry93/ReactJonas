@@ -80,12 +80,16 @@ const Button = styled.button`
   ${(props) => variations[props.variation]}
 `;
 
+//* remember sizes and variations are objects
+//* so we set there properties dynamically using []
+//?===========================
+
 Button.defaultProps = {
   variation: "primary",
   size: "medium",
 };
 
 //* if you use default props as above so in App.jsx
-//* the button element doesn't need props 
+//* the button element doesn't need props
 //* since it will take the same values from default props above
 export default Button;

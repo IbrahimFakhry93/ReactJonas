@@ -1,6 +1,18 @@
+//! 327. Application Planning
+//* slides and video
+//*=======================================================
 //! 328. Setting Up the Project: "The Wild Oasis"
 
 import styled, { css } from "styled-components";
+
+//* npm create vite@4
+
+//* a Vite project doesn't come with all the NPM packages installed by default,
+//* so we need to open up our terminal and manually do that.
+
+//* npm i
+
+//* npm install --save-dev vite-plugin-eslint-config-react-app eslint
 
 //& Title: ESLint Configuration for React Applications
 
@@ -24,7 +36,7 @@ import styled, { css } from "styled-components";
 
 //^ then open vite.config.js
 //! add import eslint from "vite-plugin-eslint";
-
+//* import eslint from "vite-plugin-eslint";
 // https://vitejs.dev/config/
 // export default defineConfig({
 //   plugins: [react(), eslint()],   //! add eslint() inside the plugins array
@@ -80,23 +92,45 @@ export default App;
 
 //~ Working of Styled Components
 
-//* We take a regular HTML element and using the styled function, we create a new React component with some CSS styles applied to it.
+//* We take a regular HTML element and using the styled function,
+//* we create a new React component with some CSS styles applied to it.
 //* We can then use and reuse that new component instead of the regular HTML element.
 
 //~ Advantages of Styled Components
 
-//* The CSS we write is only scoped to the exact component, eliminating problems of global CSS such as name collisions between class names.
-//* This prevents issues like another developer changing the class without some other developer knowing about it, which could create problems.
+//* The CSS we write is only scoped to the exact component, eliminating problems of global CSS
+//* such as name collisions between class names.
+//* This prevents issues like another developer changing the class
+//* without some other developer knowing about it,
+//* which could create problems.
 
 //~ Applying Styles
 
-//* This CSS will only be available for this exact component which we can then use all over the place in our application.
-//* In order for this CSS to have this styling, where it looks like actual CSS, we need a special VS code extension.
+//* This CSS will only be available for this exact component
+//* which we can then use all over the place in our application.
+//* In order for this CSS to have this styling,
+//* where it looks like actual CSS, we need a special VS code extension.
 //* Let's install the Styled Components extension.
+//* instal it from vs code extension: vscode-styled-components
+//* to get also autocompletion when writing css
 
 //^ npm i styled-components
 
 //^ open: App v-1.jsx
+
+//* H1 is a react component. so it starts with uppercase.
+
+//* styled.html element name such as:h1, button
+//* then write template literal which is basically the string
+//* in which we are going to write our styles.
+
+// const H1 = styled.h1`
+//   font-size: 30px;
+//   font-weight: 600;
+//   background-color: yellow;
+// `;
+
+//* this is a nice trick that leverages he ES6 feature called Tagged Template Literals.
 
 //~ Styled Components and Props
 
@@ -106,7 +140,8 @@ export default App;
 //~  Event Handling with Styled Components
 
 //* If we click on a styled component, it triggers the event handler.
-//* We don't need to do any additional work, like manually accepting the onClick prop and passing it to the HTML element.
+//* We don't need to do any additional work,
+//* like manually accepting the onClick prop and passing it to the HTML element.
 
 //? Example: <Button onClick={() => alert("check in")}>Check In</Button>
 
@@ -123,41 +158,34 @@ export default App;
 //^ open index.css  App v-1.jsx
 
 //* after we created these global styles,
+//* but now, in order to actually apply them,
+//* let's come back to our App v-1.jsx component here,
+//* and then include these global styles in App v-1.jsx.
+//* And the way that this works is that
+//* the GlobalStyles component that we just exported needs to be added
+//* to the component tree, but it cannot accept any children.
+//* So, basically, we want this to be a sibling of this StyledApp as this.
 
-// but now, in order to actually apply them,
-
-// let's come back to our app component here,
-
-// and then include them right here.
-
-// And the way that this works is
-
-// that the GlobalStyles component
-
-// that we just exported needs to be added
-
-// to the component tree,
-
-// but it cannot accept any children.
-
-// So, basically, we want this to be
-
-// a sibling of this styled app.
+```
+function App() {
+  return (
+    <>
+      <GlobalStyles />
+      <StyledApp>
+        {/* some jsx  */}
+      </StyledApp>
+    </>
+  );
+}```;
 
 //^ open: index.html to copy and paste the font links in the head
 
 //?==============================================================================================
-// next up, I want to turn our attention
-
-// to all of these CSS variables in GlobalStyles.js like --color-brand-50: #eef2ff; that we have right here.
-
-// So basically, the idea of these is to have
-
-// all the different design tokens in one central place,
-
-// so that we can then use them in all,
-
-// or different, styled-components that we're gonna build.
+//* Next up, I want to turn our attention in index.css
+//* to all of these CSS variables in GlobalStyles.js
+//* like --color-brand-50: #eef2ff; that we have right here.
+//* So basically, the idea of these is to have all the different design tokens in one central place,
+//* so that we can then use them in all, or different, styled-components that we're gonna build.
 
 //?====================================
 
@@ -199,21 +227,26 @@ export default App;
 
 // you can as always go to
 
-// the styled-component documentation.
+// the styled-component documentation to learn about themes, it is in advanced topics
 
 //?===============================================
 
-// Move the styles of button, h1 and input to their files in Ui Folder
+//* Move the styles of button, h1 and input to their files in Ui Folder
 
-// we now want to actually export
+//* we now want to actually export these components (H1, Button, Input) in App into their own files in UI Folder
 
-// these components (H1, Button, Input) in App into their own files in UI Folder
+//* So we really want to reuse these components that we just wrote throughout the entire application.
 
-// So we really want to reuse
+//& Button Hover:
 
-// these components that we just wrote here
+// const Button =Styled.button`
+// font-size:12.4rem;
+// padding:1.2rem 1.6rem;
+// background-color:orangered;
 
-// throughout the entire application.
+// &:hover{   & : selects the elements itself which is button
+//   background-color:red;
+// }
 
 //*===========================================================================================================================================================
 
@@ -225,15 +258,19 @@ export default App;
 
 // So let's say that we wanted to make a more reusable
 
-// heading component similar to this one,
+// heading component similar to this on (H1)
+// const H1 = styled.h1`
+//   font-size: 30px;
+//   font-weight: 600;
+//   background-color: yellow;
+// `;
 
-// but instead of the component just working for the H1 element
-
-// we also want it to work as an H2 and an H3 element.
+//* but instead of the component just working for the H1 element
+//* we also want it to work as an H2 and an H3 element.
 
 //^ Create Heading.jsx  and move H1 from App to there
 
-// const H1 = styled.h1`
+// const H1 = styled.h1`;
 //   font-size: 30px;
 //   font-weight: 600;
 //   background-color: yellow;
@@ -242,29 +279,52 @@ export default App;
 //* remember `` in H1 after h1 is template literals so we can write JavaScript inside it
 //* and pass some props to this Heading component and use them to conditionally set some styles
 
-const test = css`
-  text-align: center;
-`;
+// const test = css`
+//   text-align: center;
+//!   ${10 > 5 && background-color:yellow}
+// `;
 
-//* css keyword here to get the syntax highlighting
+//* If we write big blocks of CSS this way,
+//* so basically in an external variable like (test)
+//* then we don't get the syntax highlighting
+//* so use css keyword here to get the syntax highlighting
+//* css keyword is used to write some JavaScript expression inside template literals ``
+//* as above:  ${10 > 5 && background-color:yellow}
 
 // eslint-disable-next-line no-unused-vars
-const Heading = styled.h1`
-  font-size: 30px;
-  font-size: ${(props) => (props.large ? "30px" : "5px")};
-  font-weight: 600;
-  background-color: yellow;
-  ${test}
-`;
+// const Heading = styled.h1`
+//   font-size: 30px;
+//   font-size: ${(props) => (props.large ? "30px" : "5px")};
+//   font-weight: 600;
+//   background-color: yellow;
+//   //* ${test}
+// `;
 
-//? as prop:
+//? (as) prop:
 
-// a special prop to our components
+//* (.as) is a special prop to our components
+//* to tell them as which HTML element they should be rendered,
+//* and that special prop is called the (as) prop.
 
-// to tell them as which HTML element they should be rendered,
+//! in App v-1.jsx:
+{
+  /* <Heading as="h1">The Wild Oasis</Heading> */
+  // <Heading as="h2">Check in and out</Heading>
+  // <Heading as="h3">Forms</Heading>
+}
+//! note:
+//* if you use type prop instead of as prop in App v-1
+{
+  /* <Heading type="h1">The Wild Oasis</Heading> */
+  // <Heading type="h2">Check in and out</Heading>
+  // <Heading type="h3">Forms</Heading>
+}
+//* the HTML element is still an h1 even for other Heading with type h2, h3,
+//* And so this is really not good for SEO and for accessibility issues.
+//* so use (as) prop instead of type prop
+//* so our elements h1, h2 , h3 are semantically correct in the mark up
 
-// and that special prop is called the (as) prop.
-
+//! in Heading.jsx:
 // eslint-disable-next-line no-unused-vars
 // const Heading2 = styled.h1`
 //   ${(props) =>
@@ -293,23 +353,29 @@ const Heading = styled.h1`
 
 //* use ${} inside template literals to enter Javascript to write JS inside ${}
 //* pass props as a parameter to arrow function
-//* set condition and use && operator to render css string
-//* use css keyword to get styling highlight
+//* set condition  (props.as === "h1")  and use && operator to render css string
+//* use css keyword to get syntax highlighting
 
 //*======================================================================================================================================================
 
 //! 332. Building More Reusable Styled Components
 
-//^ Create Row.jsx in ui folder
+//^ Create Row.jsx in ui folder and open: App-v1.jsx
+//* 1) Add Row to contain the desired elements in App v-1.js
+//* 2) Have decision which row which place its nested elements horizontal or vertical
+//* 3) then start add common styling for both types such as type: flex
+//* 4) then add styling depends on horizontal type and vertical type
 
 //? to apply default props"
-
 /* 
 Row.defaultProps = {
   type: "vertical",
 }; 
 */
 
+//^ open Button.jsx
+
+//* create reusable buttons with different options for colors and size
 //*======================================================================================================================================================
 
 //! 333. Setting Up Pages and Routes
@@ -322,7 +388,7 @@ Row.defaultProps = {
 //* by running npm list react-router-dom in your terminal. It should display the version as 6.x.x.
 
 //* Rename the old App to App v-1
-//* Create new App.
+//^ Create new App.jsx
 
 // it's time to set up our routes.
 
@@ -338,11 +404,11 @@ Row.defaultProps = {
 
 // So basically in a declarative way.
 
-//? Declarative Navigate to set default route wen open the App
+//? Declarative Navigate to set default route when open the App
 
-// we use the navigate component provided
+// we use the Navigate component provided
 
-// by React Router, then replace so that the URL
+// by React Router, then (replace to so) that the URL
 
 // gets replaced in the history stack.
 
@@ -460,7 +526,7 @@ Row.defaultProps = {
 
 // but we still want to style them somehow.
 
-//* instead of a element we pass NavLink component to style it
+//* instead of (a) element we pass NavLink component to style it
 // const StyledNavLink = styled(NavLink)`
 //   &:link,
 //   &:visited {
@@ -534,9 +600,7 @@ function MainNav() {
 
 //^ create supabase.js in services folder
 
-// So supabase.js is basically a supabase client
-
-// where we will initialize the supabase API
+// So supabase.js is basically a supabase client where we will initialize the supabase API
 
 // and create a client so that we can then start querying our database.
 
@@ -546,14 +610,16 @@ function MainNav() {
 
 //? Note:
 //* - A "client" refers to a software application that communicates with a server.
-//* - "Querying our database" means sending requests to the database to retrieve, insert, update, or delete data. These requests are known as queries.
+//* - "Querying our database" means sending requests to the database to retrieve (fetch), insert, update, or delete data.
+//* These requests are known as queries.
 
 //! Initialize the Supabase API:
 //* - This is where you set up your connection to the Supabase service by providing your unique Supabase URL and public anon key.
 //* - This allows your application to communicate with the Supabase server.
 //! Create a client:
 //* - Once the API is initialized, you create a client.
-//* - This client is an object that contains methods for interacting with your database.
+//~ const supabase = createClient(supabaseUrl, supabaseKey);
+//* - This client (supabase) is an object that contains methods for interacting with your database.
 //* - For example, it could have methods for creating a new user, fetching data, updating data, etc.
 //! Start querying our database:
 //* - Now that you have a client, you can start sending queries to your database.
@@ -563,9 +629,5 @@ function MainNav() {
 
 //! 344. Setting Up Storage Buckets
 
-//* upload cabins images from data folder in src folder to the bucket in supabase
-// in one of the lectures a bit later,
-
-// we will also learn how to programmatically upload images
-
-// to one of our buckets
+//* upload cabins images from data folder in src folder to the bucket in supabase.
+//* in next lectures, we'll learn how to programmatically upload images supabase buckets.

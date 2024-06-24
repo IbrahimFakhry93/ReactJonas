@@ -27,7 +27,7 @@ const NavList = styled.ul`
 //     transition: all 0.3s;
 //   }
 
-//* instead of a element we pass NavLink component to style it
+//* instead of (a) element we pass NavLink component to style it
 const StyledNavLink = styled(NavLink)`
   &:link,
   &:visited {

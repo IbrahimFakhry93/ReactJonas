@@ -7,7 +7,7 @@ import Row from "./ui/Row";
 
 //* H1 is a react component. so it starts with uppercase.
 
-//* styled.html element name such as:h1, Button
+//* styled.html element name such as:h1, button
 // const H1 = styled.h1`
 //   font-size: 30px;
 //   font-weight: 600;
@@ -55,6 +55,12 @@ function App() {
       <GlobalStyles />
       <StyledApp>
         <Row type="vertical">
+          {/* note if you add Row.defaultProps = {
+               type: "vertical",
+          };
+          
+          so no need for type = vertical in Row
+          */}
           {/* <Heading type="h1">The Wild Oasis</Heading> */}
           <Row type="horizontal">
             <Heading as="h1">The Wild Oasis</Heading>

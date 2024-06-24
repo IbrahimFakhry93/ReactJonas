@@ -8,7 +8,7 @@
 
 //* npm i @tanstack/react-query@4
 
-//^ open App.jsx
+//^ open App v-1.jsx
 
 //& Title: Setting up React Query in App.jsx
 //~ Step 1: Create a place where the data lives
@@ -37,7 +37,7 @@
 //* So instead of manually fetching the data in a use effect as we did in Cabins.jsx
 //* We will now let React Query do this work
 
-//^ open: CabinTable.jsx - CabinRow.jsx - apiCabins.js - Cabins.jsx - helpers.js - App.jsx
+//^ open: CabinTable v-1.jsx - CabinRow v-1.jsx - apiCabins v-1.js - Cabins.jsx - helpers.js - App v-1.jsx
 
 // function CabinTable() {
 //   const x = useQuery({
