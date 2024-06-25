@@ -5,14 +5,14 @@
 
 import styled, { css } from "styled-components";
 
-//* npm create vite@4
+//^ npm create vite@4
 
 //* a Vite project doesn't come with all the NPM packages installed by default,
 //* so we need to open up our terminal and manually do that.
 
-//* npm i
+//^ npm i
 
-//* npm install --save-dev vite-plugin-eslint-config-react-app eslint
+//^ npm install --save-dev vite-plugin-eslint-config-react-app eslint
 
 //& Title: ESLint Configuration for React Applications
 
@@ -111,7 +111,7 @@ export default App;
 //* In order for this CSS to have this styling,
 //* where it looks like actual CSS, we need a special VS code extension.
 //* Let's install the Styled Components extension.
-//* instal it from vs code extension: vscode-styled-components
+//^ instal it from vs code extension: vscode-styled-components
 //* to get also autocompletion when writing css
 
 //^ npm i styled-components
@@ -130,7 +130,7 @@ export default App;
 //   background-color: yellow;
 // `;
 
-//* this is a nice trick that leverages he ES6 feature called Tagged Template Literals.
+//* this is a nice trick that leverages the ES6 feature called Tagged Template Literals.
 
 //~ Styled Components and Props
 
@@ -252,11 +252,11 @@ function App() {
 
 //! 331. Styled Component Props and the "css" Function
 
-// In this lecture, we'll build a reusable heading component by learning
+//* In this lecture, we'll build a reusable heading component by learning
 
-// about some more advanced-styled component topics such as accepting props and the CSS function.
+//* about some more advanced-styled component topics such as accepting props and the CSS function.
 
-// So let's say that we wanted to make a more reusable
+//* So let's say that we wanted to make a more reusable
 
 // heading component similar to this on (H1)
 // const H1 = styled.h1`
@@ -265,8 +265,8 @@ function App() {
 //   background-color: yellow;
 // `;
 
-//* but instead of the component just working for the H1 element
-//* we also want it to work as an H2 and an H3 element.
+//* but instead of the component just working for the h1 element
+//* we also want it to work as an h2 and an h3 element.
 
 //^ Create Heading.jsx  and move H1 from App to there
 
@@ -313,7 +313,7 @@ function App() {
   // <Heading as="h3">Forms</Heading>
 }
 //! note:
-//* if you use type prop instead of as prop in App v-1
+//* if you use (type) prop instead of (as) prop in App v-1
 {
   /* <Heading type="h1">The Wild Oasis</Heading> */
   // <Heading type="h2">Check in and out</Heading>
@@ -596,15 +596,17 @@ function MainNav() {
 
 //! 343. Connecting Supabase With Our React App
 
-//*  npm install --save @supabase/supabase-js
+//^ instal js library in our project
+//^  npm install --save @supabase/supabase-js
 
 //^ create supabase.js in services folder
 
-// So supabase.js is basically a supabase client where we will initialize the supabase API
-
-// and create a client so that we can then start querying our database.
+//* So supabase.js is basically a supabase client where we will initialize the supabase API
+//* and create a client so that we can then start querying our database.
 
 //^ create apiCabins.js in services folder
+
+//* So for each of our tables we will create one service here basically.
 
 //& Title: Understanding Supabase.js and Database Querying
 
@@ -614,7 +616,8 @@ function MainNav() {
 //* These requests are known as queries.
 
 //! Initialize the Supabase API:
-//* - This is where you set up your connection to the Supabase service by providing your unique Supabase URL and public anon key.
+//* - This is where you set up your connection to the Supabase service
+//* by providing your unique Supabase URL and public anon key.
 //* - This allows your application to communicate with the Supabase server.
 //! Create a client:
 //* - Once the API is initialized, you create a client.
@@ -629,5 +632,159 @@ function MainNav() {
 
 //! 344. Setting Up Storage Buckets
 
+//* create two storage buckets, one for avatars (for application users) and one for cabins' images
+
+//* No problem to make them public buckets
+//* because role level security policies are still gonna be required for operations
+//* such as uploading or deleting files.
+
 //* upload cabins images from data folder in src folder to the bucket in supabase.
 //* in next lectures, we'll learn how to programmatically upload images supabase buckets.
+
+//* remember image in cabins table will be stored as text or string
+//* because what we're gonna store in here is just a URL to the image
+//* that we are going to upload to a storage bucket.
+
+// function Cabins() {
+//* just for experiment, we will make a side effect in this page
+//   useEffect(function () {
+//     getCabins().then((data) => console.log(data));
+//   }, []);
+//   return (
+//     <Row type="horizontal">
+//       <Heading as="h1">All cabins</Heading>
+//       <p>TEST</p>
+//*       <img src="https://dbxshcsearexonqnmrwr.supabase.co/storage/v1/object/public/cabins-images/cabin-001.jpg" />
+//     </Row>
+//   );
+// }
+
+//* add that url manually to cabins table in image column
+//* then if you load data and  you log that data in the console
+//* We should be able to see that URL in image property inside the received data object in the console
+
+//? notes:
+
+//* In Postgres, dates are called timestamp
+
+//& Model Data Relations:
+//* if in the future you want to model
+//* these kind of data relations on your own,
+//* you need to think of these relations in terms of the number
+//* of entities that can be involved.
+
+//~ For example:
+//* the bookings and the cabins, each booking can only have exactly one cabin
+//* So one booking can only be about one cabin
+//* not two, not three, but really only one.
+
+//* On the other hand, one cabin can be involved in many different bookings.
+
+//* So over time a cabin might be booked, for example, 100 times
+
+//* but each booking can really only be for one exact cabin.
+
+//* so we need to take into account the number of entities that are involved.
+//* and this is important
+
+//* because we need to place the foreign key in the table
+
+//* that can only reference exactly one other row from another table.
+
+//* And so that's why the cabin ID and the guest ID are in booking table.
+
+//* because each booking can only be about one exact cabin and one exact guest.
+
+//^=========
+
+//^=============
+
+//* create a new cabin is a post request
+
+//^================
+
+//* we can access our data in the tables in Supabase
+
+//~ using the client JavaScript library, so by using this,
+// READ ALL ROWS
+// let { data: cabins, error } = await supabase
+//   .from('cabins')
+//   .select('*')
+
+//* the code above will be used in side getCabins async function in apiCabins.js
+
+//~ or we can use it as an actual RESTful API (Bash tab)
+
+// READ ALL ROWS
+// curl 'https://dbxshcsearexonqnmrwr.supabase.co/rest/v1/cabins?select=*' \
+// -H "apikey: SUPABASE_KEY" \
+// -H "Authorization: Bearer SUPABASE_KEY"
+
+//* So we can basically just send a request to this URL
+//* here this first part here is the URL of our project
+//* 'https://dbxshcsearexonqnmrwr.supabase.co/'
+
+//* and then we have here our table (cabins)
+//* Then we need to send our API key,
+//* show the hidden API Key, choose anon(public)
+//* and use this key in frontend to access the data
+//* that key has an authorization header.
+
+//* open the terminal and make curl request
+//* A curl request is to make some HTTP requests in the terminal.
+
+//* But the data will be received empty, so we need to change the security policy
+
+//*=====================================================================================================
+
+//& users Authorization:
+
+//* If you're wondering why we didn't create that users table for authentication,
+//* it's because we will do that separately.
+//* So the Supabase authentication feature doesn't require us to manually create a table,
+//* but instead, Supabase will do that automatically.
+//* Our users are then gonna be saved here in this table (built in table by supabase)
+//* under user management
+
+//*=====================================================================================================
+
+//& Title: Understanding RESTful APIs
+
+//? Note: A concise overview of RESTful APIs and their principles.
+
+//~  1: API Definition
+//* - RESTful APIs allow systems to exchange information over the internet.
+//* - Developers create APIs for programmatic interaction with their software.
+
+//~  2: REST Principles
+//* - Uniform Interface: Consistent rules for communication.
+//* - Client-Server Architecture: Separation of concerns.
+//* - Statelessness: Each request contains all necessary info.
+//* - Resource-Based: Exposed via URLs.
+//* - Representation: Data format (e.g., JSON, XML).
+//* - State Transfer: Clients change resource state.
+
+//~  3: Benefits
+//* - Flexibility: Integrating applications and components.
+//* - Microservices: Common in microservices architectures.
+//* - Interoperability: Leverage web technologies.
+
+//* Remember, RESTful APIs are powerful tools for communication!
+
+//*=====================================================================================================
+
+//& Title: Understanding Supabase Anon Key
+
+//? Note: An overview of the anon key in Supabase.
+
+//~  1: Anon Key Overview
+//* - The anon key is a JWT token representing an anonymous user.
+//* - Include it in the `apikey` header for unauthenticated requests.
+//* - Ideal for operations not requiring user authentication.
+
+//~  2: Permissions and Usage
+//* - Anon key has minimal privileges.
+//* - Use it in Row Level Security (RLS) policies.
+//* - Automatically updates to authenticated once a user logs in.
+
+//! Remember, the anon key ensures secure data access for unauthenticated users!
