@@ -53,9 +53,12 @@ const Error = styled.span`
 
 function CreateCabinForm() {
   const { register, handleSubmit, reset, getValues, formState } = useForm();
+  //! Form Submission Error
   const { errors } = formState;
   console.log(errors);
+
   const queryClient = useQueryClient();
+
   const { mutate, isLoading: isCreating } = useMutation({
     mutationFn: (newCabin) => createCabin(newCabin),
     onSuccess: () => {
@@ -63,9 +66,11 @@ function CreateCabinForm() {
       queryClient.invalidateQueries({ queryKeys: ["cabins"] });
       reset();
     },
+    //! Error
     onError: (err) => toast.error(err.message),
   });
 
+  //! Form Submission
   function onSubmit(data) {
     console.log(data);
     mutate({ ...data, image: data.image[0] });

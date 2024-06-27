@@ -20,7 +20,8 @@ function Cabins() {
         <p>Filter / Sort</p>
       </Row>
 
-      {/* You will see here CabinTable and CreateCabinForm are vertically aligned because Row is set by default as type = vertical*/}
+      {/* You will see here CabinTable and CreateCabinForm are vertically aligned 
+      because Row is set by default as type = vertical*/}
       <Row>
         <CabinTable />
         <Button onClick={() => setShowForm((show) => !show)}>

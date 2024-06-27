@@ -6,38 +6,44 @@
 
 //! 347. Setting Up React Query
 
-//* npm i @tanstack/react-query@4
+//^ npm i @tanstack/react-query@4
 
-//^ open App v-1.jsx
+//^ open App.jsx
 
 //& Title: Setting up React Query in App.jsx
 //~ Step 1: Create a place where the data lives
 //* - This is similar to what we did with the Context API or Redux.
+//* 1) Create a place where data lives
+//* 2) Provide this data to the application
 //* - In the case of React Query, we set up the cache and the Query client using "new QueryClient."
 
 //* const queryClient = new QueryClient({});
 
 //? staleTime
-//* - "staleTime" is the amount of time that the data in the cache will stay fresh until it is refetched again.
+//* - "staleTime" is the amount of time that the data in the cache will stay fresh  (valid)
+//* until it is refetched again.
 
 //? Note:
 //* - With this, we have created our "QueryClient," which sets up the cache behind the scenes.
 
-//~ Step 2: Provide this to the application
+//~ Step 2: Provide Query Data to the application:
 //* - We want to provide our Query data to the entire application tree.
 //* - We make this a parent component of our entire tree and pass the created client
 //* as a prop to the provider component.
 
-//* npm i @tanstack/react-query-devtools
+//? Install React Query DevTools
+//^ npm i @tanstack/react-query-devtools
 
-//*================================================================================
+//* Once we fetch a new data, it will appear in the devtools.
+
+//*========================================================================================================
 
 //! 349. Fetching Cabin Data
 
 //* So instead of manually fetching the data in a use effect as we did in Cabins.jsx
 //* We will now let React Query do this work
 
-//^ open: CabinTable v-1.jsx - CabinRow v-1.jsx - apiCabins v-1.js - Cabins.jsx - helpers.js - App v-1.jsx
+//^ open: CabinTable v-1.jsx - CabinRow v-1.jsx - apiCabins v-1.js - Cabins.jsx - helpers.js - App.jsx
 
 // function CabinTable() {
 //   const x = useQuery({
@@ -47,14 +53,15 @@
 
 // console.log(x)
 
-//* useQuery hook: it is used to fetch and store data in the cache
+//? useQuery hook:
+//* it is used to fetch and store data in the cache
 
-//* queryKey:
+//? queryKey:
 //* It will uniquely identify this data that we're going to query.
 //* we would use useQuery again on another page with this exact key,
 //* then the data would be read from the cache.
 
-//* queryFn:
+//? queryFn:
 //* this is the function is responsible for querying.
 //* So basically for fetching the data from the API.
 //* and the function that we specify here (ex. getCabins)
@@ -85,8 +92,8 @@
 //}
 
 //* popular library for manipulating and for doing calculations with dates.
-//* npm i date-fns
-
+//^     npm i date-fns
+//^===================================================================================================================
 //& Title: Understanding React Query Caching Mechanism
 //* React Query's caching mechanism allows data to persist even when a component unmounts.
 //* This is different from traditional data fetching with useEffect,
@@ -136,14 +143,14 @@
 //* it will immediately then re-fetch that.
 
 //? always make staleTime = 0;
-//*================================================================================
+//*===================================================================================================================
 
 //! 350. Mutations: Deleting a Cabin
 
 //* let's learn how we can use the power of React Query to Delete a cabin
 //* and automatically re-render the user interface.
 
-//^ open: apiCabins - CabinRow
+//^ open: apiCabins - CabinRow v-1
 
 //* you have to change row level security policies to be able to delete a cabin
 
@@ -158,14 +165,8 @@
 //? onSuccess Callback function
 //* We specify the "onSuccess" callback for this purpose.
 //* "onSuccess" accepts a function.
-
-//? Post-Mutation Actions
 //* Here we can instruct React Query on what to do post-mutation.
 //* when the mutation is successful at this point.
-
-//? Data Re-fetching
-//* What do we want to do next?
-//* We want to re-fetch the data in this situation.
 
 //? Manual Cache Invalidation
 //* This is achieved in React Query by invalidating the cache.
@@ -195,17 +196,18 @@
 
 //! 352. Introducing Another Library: React Hook Form
 
-//^ open: CreateCabinForm.jsx  - Cabins.jsx  - apiCabins.jsx
+//^ open: CreateCabinForm v-1.jsx  - Cabins.jsx  - apiCabins.jsx
 
 //* npm i react-hook-form@7
 
 //? {...register("description")}
 
-//* this register here can become a bit more complex by adding some validators and we can then also
+//* this register here can become a bit more complex by adding some validators
 
-//* handle the results of an error when submitting the form.
+//* and we can then also handle the results of an error when submitting the form.
 
-//* note: handleSubmit function is called each time we attempt to submit the form
+//? note:
+//* handleSubmit function is called each time we attempt to submit the form
 //*=================================================================================
 
 //! 353. Creating a New Cabin
@@ -277,16 +279,18 @@
 //* so it will console error too.
 
 //! Two types of errors are handled in CreateCabinForm function in CreateCabinForm component:
-//* Mutation error inside useMutation
-//* Submission Error that comes from fromState from useForm hook
+//* Mutation error inside useMutation that handled by onError
+//* Submission Error that comes from formState from useForm hook
 
 //^================
 
-//* apply abstraction:
+//& Apply abstraction on FormRow Component:
 //^ create FormRow component
 
 //* label and input are connected by Id,
 //* means whenever selects label we select the input.
+
+//~ Before Abstraction
 {
   /* <FormRow>
         <Label htmlFor="name">Cabin name</Label>
@@ -300,7 +304,32 @@
         {errors?.name?.message && <Error>{errors.name.message}</Error>}
       </FormRow> */
 }
+//~ After Abstraction
 
+//? in CreateCabinForm.jsx
+{
+  /* <FormRow2 label="Cabin name" error={errors?.name?.message}>
+        <Input
+          type="text"
+          id="name"
+          {...register("name", {
+            required: "This Field is required",
+          })}
+/>
+     </FormRow2> */
+}
+
+//?  FormRow.jsx
+
+// function FormRow2({ label, error, children }) {
+//   return (
+//     <StyledFormRow>
+//       {label && <Label htmlFor={children.props.id}>{label}</Label>}
+//       {children}
+//       {error && <Error>{error}</Error>}
+//     </StyledFormRow>
+//   );
+// }
 //*========================================================================================================
 
 //! 355. Uploading Images to Supabase
@@ -317,12 +346,15 @@
 
 //* This component is essentially another input element, specifically for files.
 
-//? before this lesson FileInput
+//? before this lesson, FileInput was like that
 // ```
 // <FileInput
 // id="image"
 // accept="image/*" />``
-//* without registering this filed, without required attribute so we can submit the form without image to create a cabin
+//* without registering this field for image ( without adding required attribute )
+//* so we can submit the form without image to create a cabin
+
+//? After this lesson
 // ```
 // <FileInput
 // id="image"
@@ -376,12 +408,12 @@
 
 //^ open: apiCabins v-1.js
 
-//* Go to createEditCabin function in apiCabins.js, where in this function we will upload the image
+//* Go to createEditCabin function in apiCabins v-1.js, where in this function we will upload the image
 //? function logic
 //* 1) Create Cabin
 //* 2) then if cabin creation is success, upload the image
 
-//! we still need to specify the image path in the new cabin that we created
+//! We still need to specify the image path in the new cabin that we created
 //* imagePath contains the url to the bucket in Supabase that the images will be uploaded to
 //* https://dbxshcsearexonqnmrwr.supabase.co/storage/v1/object/public/cabins-images/0.26401972249044037-cabin-006.jpg
 

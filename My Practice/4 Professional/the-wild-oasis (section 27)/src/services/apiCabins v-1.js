@@ -1,8 +1,10 @@
 import supabase, { supabaseUrl } from "./supabase";
 
 export async function getCabins() {
+  //* this line of code from supabase API Docs
   const { data, error } = await supabase.from("cabins").select("*");
 
+  //* error handling by Jonas
   if (error) {
     console.error(error);
     throw new Error("error in supa");
