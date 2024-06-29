@@ -45,7 +45,7 @@ const Discount = styled.div`
   font-weight: 500;
   color: var(--color-green-700);
 `;
-
+//*============================================================================
 function CabinRow({ cabin }) {
   const [showForm, setShowForm] = useState(false);
   const {
@@ -60,6 +60,11 @@ function CabinRow({ cabin }) {
 
   const { isDeleting, deleteCabin } = useDeleteCabin();
   const { isCreating, createCabin } = useCreateCabin();
+
+  // Callback function to toggle showForm
+  const toggleForm = () => {
+    setShowForm((showForm) => !showForm);
+  };
 
   function handleDuplicate() {
     createCabin({
@@ -99,7 +104,9 @@ function CabinRow({ cabin }) {
           </button> */}
         </div>
       </TableRow>
-      {showForm && <CreateCabinForm cabinToEdit={cabin} />}
+      {showForm && (
+        <CreateCabinForm onCancel={toggleForm} cabinToEdit={cabin} />
+      )}
     </>
   );
 }

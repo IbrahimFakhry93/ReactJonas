@@ -503,6 +503,7 @@
 // const { register, handleSubmit, reset, getValues, formState } = useForm({
 //   defaultValues: isEditSession ? editValues : {},
 // });
+
 //? Check for editing cabin status:
 //* If we are just using this form to create a new cabin, then we will not want any default values.
 //* And therefore, first of all, let's actually figure out if we are using this form to edit
@@ -533,7 +534,7 @@ accept="image/*"
 
 //* Reuse the createCabin function to edit the cabin but rename it to CreateEditCabin
 //* rename the import name in CreateCabinForm
-//! add .select().single to insert function
+//! add .select().single:
 //! why?
 // by default, this insert function right here
 
@@ -559,18 +560,19 @@ accept="image/*"
 
 // out of the array that it will be in.
 
-//~  if we want to edit a cabin, then we need to pass in the new cabin data
+//~ If we want to edit a cabin, then we need to pass in the new cabin data
 //~ plus the ID of the cabin that is being edited. And so that's how we will know
 //~ if we are in an edit session or not.
 
 //* export async function createEditCabin(newCabin, id)
 
-//! So we want to create the cabin here only if there is no id. So if there is no id,
+//! So we want to create the cabin only if there is no id. So if there is no id,
 
 //* remember how we made this cabin photo upload here optional for the editing session.
 //* This means that sometimes when we edit the cabin we will get a new file,
-//* so if we select one of cabin photos stored in src => data folder => cabins,
-//* but if not, we will just get a photo URL we get from Supabase
+//* and we select one of cabin photos from the files browser
+//* and these photos stored in src => data folder => cabins,
+//* but if not selecting new photo, we will just get a pre uploaded photo URL we get from Supabase
 
 //? Two different situations that we need to account for:
 
@@ -595,6 +597,7 @@ accept="image/*"
 //? const imagePath = hasImagePath ? newCabin.image : `${supabaseUrl}/storage/v1/object/public/cabins-images/${imageName}`;
 //* cabins-images: name of the bucket
 //* imagePath url form, we get from the url in the created bucket in Supabase then we make it generic as above
+
 //~ use optional chaining
 //* because image might not be a string so we can not call .startsWith  method
 //* const hasImagePath = newCabin.image?.startsWith?.(supabaseUrl);
@@ -627,8 +630,10 @@ accept="image/*"
 
 //! 357. Abstracting React Query Into Custom Hooks
 
+//^ open: CabinRow v-2.jsx and CabinRow.jsx to compare the effect of using custom hook
+
 //^ create: useDeleteCabin in cabins folder
-//* we didn't place this hook into this hooks folder because this one
+//* We didn't place this hook into this hooks folder because this one
 //* is really only for hooks that are reusable across multiple features, but this one here
 //* really is related to the cabin's feature
 
@@ -636,7 +641,7 @@ accept="image/*"
 
 //^ open: CreateCabinForm.jsx
 
-//& reset() problem:
+//! reset() problem and its solution:
 
 //? We can use the `onSuccess` callback handler not only when defining the mutation
 //? but also directly where the mutation occurs as in onSubmit function in CreateCabinForm Component
@@ -651,20 +656,20 @@ accept="image/*"
   const image = typeof data.image === "string" ? data.image : data.image[0];
   if (isEditSession)
   
-   editCabin(
+   editCabin(   //* editCabin came from custom hook (useEditCabin)
         { newCabinData: data, id: editId },
         {
 
         //! onSuccess callback
           onSuccess: (data) => {
             reset();
-            console.log(data);
+            console.log(data); 
           },
         }
       );
     else
     
-      createCabin(
+      createCabin(  //* createCabin came from custom hook (useCreateCabin)
         { ...data, image: image },
           //! onSuccess callback
         {
@@ -679,7 +684,7 @@ accept="image/*"
 //^ create: useEditCabin.js
 
 //^ open: CabinTable.jsx
-
+//^ create useCabins.js
 // so now if for some reason we need this data (cabins)
 // somewhere else, it's as easy as just grabbing this
 // const { isLoading, cabins } = useCabins();

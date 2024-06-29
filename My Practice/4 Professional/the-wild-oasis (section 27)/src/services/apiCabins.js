@@ -11,24 +11,10 @@ export async function getCabins() {
   return data;
 }
 
-// So from the supabase client
-
-// we can now create queries with the from method.
-
-// And so then we specify the name
-
-// of the table and then the fields that we want.
-
-// And so here we want basically all of them.
-// So from the supabase client
-
-// we can now create queries with the from method.
-
-// And so then we specify the name
-
-// of the table and then the fields that we want.
-
-// And so here we want basically all of them.
+//* From the supabase client (supabase)
+//* we can now create queries with the from method (.from("cabins"))
+//* And then we specify the name of the table (cabins)
+//* and then the fields that we want and so we want all of them (select("*"))
 
 export async function deleteCabin(id) {
   const { data, error } = await supabase.from("cabins").delete().eq("id", id);
@@ -42,11 +28,12 @@ export async function deleteCabin(id) {
 export async function createEditCabin(newCabin, id) {
   console.log(newCabin, id);
 
-  const imageName = `${Math.random()}-${newCabin.image.name}`.replaceAll(
+  const imageName = `${Math.random()}-${newCabin.image?.name}`?.replaceAll(
     "/",
     ""
   ); //*  remove the slash: because if this cabin name contains any slashes, then super base will create folders based on that.
 
+  console.log(imageName);
   const hasImagePath = newCabin.image?.startsWith?.(supabaseUrl);
   const imagePath = hasImagePath
     ? newCabin.image
@@ -57,13 +44,13 @@ export async function createEditCabin(newCabin, id) {
   //~ 1. Create / Edit Cabin
 
   //* create query and attach to rest of methods
-  //*  it's a commonly used technique  when we want to reuse parts of the query.
+  //* It's a commonly used technique  when we want to reuse parts of the query.
   let query = supabase.from("cabins");
 
-  //* A) Create Cabin
+  //! A) Create Cabin
   if (!id) query = query.insert([{ ...newCabin, image: imagePath }]);
 
-  //* B) Edit Cabin
+  //! B) Edit Cabin
   if (id)
     query = query
       .update({ ...newCabin, image: imagePath })
@@ -82,7 +69,7 @@ export async function createEditCabin(newCabin, id) {
   //* so add this:
   if (hasImagePath) return data;
 
-  //? code to upload image
+  //? code to upload image to bucket storage in Supabase
   const { error: storageError } = await supabase.storage
     .from("cabins-images")
     .upload(imageName, newCabin.image); //* newCabin.image is the actual image

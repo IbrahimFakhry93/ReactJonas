@@ -53,6 +53,7 @@ const Error = styled.span`
 
 function CreateCabinForm() {
   const { register, handleSubmit, reset, getValues, formState } = useForm();
+
   //! Form Submission Error
   const { errors } = formState;
   console.log(errors);
@@ -66,6 +67,7 @@ function CreateCabinForm() {
       queryClient.invalidateQueries({ queryKeys: ["cabins"] });
       reset();
     },
+
     //! Error
     onError: (err) => toast.error(err.message),
   });

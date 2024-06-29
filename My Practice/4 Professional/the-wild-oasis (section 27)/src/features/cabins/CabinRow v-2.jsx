@@ -92,7 +92,13 @@ function CabinRow({ cabin }) {
           </button>
         </div>
       </TableRow>
-      {showForm && <CreateCabinForm cabinToEdit={cabin} />}
+      {showForm && (
+        <CreateCabinForm
+          showForm={showForm}
+          setShowForm={setShowForm}
+          cabinToEdit={cabin}
+        />
+      )}
     </>
   );
 }

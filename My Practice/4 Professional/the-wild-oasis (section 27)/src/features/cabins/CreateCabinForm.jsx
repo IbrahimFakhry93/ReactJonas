@@ -18,7 +18,7 @@ import FormRow2 from "../../ui/FormRow";
 import { useCreateCabin } from "./useCreateCabin";
 import { useEditCabin } from "./useEditCabin";
 
-function CreateCabinForm({ cabinToEdit = {} }) {
+function CreateCabinForm({ cabinToEdit = {}, onCancel }) {
   const { id: editId, ...editValues } = cabinToEdit;
 
   const { isCreating, createCabin } = useCreateCabin();
@@ -143,6 +143,9 @@ function CreateCabinForm({ cabinToEdit = {} }) {
 
       <FormRow2>
         {/* type is an HTML attribute! */}
+        <Button onClick={onCancel} variation="danger" type="reset">
+          Close Form
+        </Button>
         <Button variation="secondary" type="reset">
           Cancel
         </Button>
