@@ -13,24 +13,10 @@ export async function getCabins() {
   return data;
 }
 
-// So from the supabase client
-
-// we can now create queries with the from method.
-
-// And so then we specify the name
-
-// of the table and then the fields that we want.
-
-// And so here we want basically all of them.
-// So from the supabase client
-
-// we can now create queries with the from method.
-
-// And so then we specify the name
-
-// of the table and then the fields that we want.
-
-// And so here we want basically all of them.
+//* From the supabase client (supabase)
+//* we can now create queries with the from method (.from("cabins"))
+//* And then we specify the name of the table (cabins)
+//* and then the fields that we want and so we want all of them (select("*"))
 
 export async function deleteCabin(id) {
   const { data, error } = await supabase.from("cabins").delete().eq("id", id);

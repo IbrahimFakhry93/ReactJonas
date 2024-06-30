@@ -497,6 +497,13 @@
 //   const { id: editId, ...editValues } = cabinToEdit;
 // }
 
+//? When to Use Default Values:
+//? Consider using default values when:
+//* The prop is optional, and the component can function without it.
+//* And CreateCabinForm component can function without cabinToEdit.
+//* in case of only creating new Cabin, not editing existing one.
+//! Document your component’s props clearly to guide other developers using your component.
+
 //? Refill the form inputs before edit
 //* get the editValues into the input fields by defaultValues in React Hook Form
 //* by passing options object to useForm and get defaultValues
@@ -534,31 +541,12 @@ accept="image/*"
 
 //* Reuse the createCabin function to edit the cabin but rename it to CreateEditCabin
 //* rename the import name in CreateCabinForm
-//! add .select().single:
+//! add .select().single to insert function
 //! why?
-// by default, this insert function right here
-
-// when we create a new row in the table
-
-// will not immediately return that row.
-
-// All right, so many times we actually do need that
-
-// and we do return the data actually from this function.
-
-// But right now that data will be empty.
-
-// And so if we want to actually return
-
-// that newly created object,
-
-// here we need to attach .select,
-
-// and then we can also attach .single
-
-// which will then basically take that new element
-
-// out of the array that it will be in.
+//* by default, this insert function will not immediately return the row which we created in the table.
+//* so if we want to actually return that newly created object,
+//* so here we need to attach .select and then .single which will then basically take that new element
+//* out of the array that it will be in.
 
 //~ If we want to edit a cabin, then we need to pass in the new cabin data
 //~ plus the ID of the cabin that is being edited. And so that's how we will know
@@ -739,7 +727,7 @@ accept="image/*"
 
 //! 359. Fetching Applications Settings
 
-//^ open: settings.jsx
+//^ open: settings.jsx in pages folder
 
 //* Place UpdateSettingsForm component in settings page
 
@@ -747,34 +735,21 @@ accept="image/*"
 
 //^ open: apiSettings.js
 
-//* create new RLS security policies for settings in supaBase
+//* create new RLS security policies for settings in supaBase.
 
-// And so remember how I mentioned earlier
+//? for the settings,
+//* we will not create any more rows.
+//* we will only have one row with the ID number one.
+//* And so this is where the four settings are stored.
 
-// that for the settings,
+//* And so reading the settings is just reading this one row from this table.
+//* And so that's the reason why here there is something different.
+//* Cause here in function getSettings() in apiSettings
+//* we then attach in the end single.
 
-// we will actually not create any more rows.
+//* And what this does, that it takes one single object instead of an entire array
+//* in getSettings function in apiSettings
 
-// So we will only have this one row with the ID number one.
-
-// And so this is where the four settings are stored.
-
-// All right.
-
-// And so basically reading the settings
-
-// is just reading this one row from this table.
-
-// And so that's actually the reason
-
-// why here there is something different.
-
-// Cause here in function getSettings() in apiSettings
-//  we then attach in the end single.
-
-// And what this does, as it says down here
-
-// is to take one single object instead of an entire array in getSettings function in apiSettings
 //* as here:
 //* const { data, error } = await supabase.from("settings").select("*").single();
 
@@ -784,7 +759,7 @@ accept="image/*"
 
 //^ open: UpdateSettingsForm.jsx
 
-//* we are using the form row that we created  earlier and also the input field.
+//* we are using the form row that we created earlier and also the Input component field.
 //* Because what we're going to do is to fetch that data
 //* and place it in each of input fields as default values
 //* so that then in the next lecture we can simply update them one by one.
@@ -793,7 +768,7 @@ accept="image/*"
 //* but not directly, we will custom hook (useSettings)
 //* and this data we will use it to assign them as default values to Input Fields
 
-//* as a in following example of fetching data and receive minBookingLength
+//* as a in following example of fetching data and receive minBookingLength:
 
 // function UpdateSettingsForm() {
 //   const {
@@ -830,11 +805,12 @@ accept="image/*"
     maxBookingLength,
     maxGuestsPerBooking,
     breakfastPrice,
-  } = {}, //* assign settings to an empty object, because at start these properties (minBookingLength etc.) are undefined
+  } = {}, //* assign settings to an empty object, because at start these properties 
+          //* (minBookingLength etc.) are undefined
   isLoading,
 } = useSettings();```;
 
-//* The reason the settings object is initially assigned to an empty object ({})
+//! The reason the settings object is initially assigned to an empty object ({})
 //* is to prevent destructuring errors when accessing properties like minBookingLength, maxBookingLength, etc.
 //* These properties are undefined until the query fetches the actual data.
 //* By using an empty object as the default value, we avoid issues with destructuring
@@ -847,7 +823,7 @@ accept="image/*"
 //* let's update each of the settings value individually by using a very nice, clever trick.
 
 //^ open: apiSetting.js
-//* in updateSetting function:
+//? in updateSetting function:
 //* we don't need to pass only id, because we only update row number one
 //* as you found on supaBase table for settings
 // export async function updateSetting(newSetting) {
@@ -868,9 +844,11 @@ accept="image/*"
 //* so the object (newSetting that we need to pass in updateSetting function
 //* is simply an object with (the column) that needs to be updated.
 //* column of one of columns in supabase table for settings such as (minBookingLength)
-//* So with the field that needs to be updated.
+//* So with the input field that needs to be updated.
 //* So it doesn't have to be the complete new settings object.
 //* Only the fields, or the columns, that we want to update.
+
+//? note: column in settings table in supaBase === input field in UpdateSettingForm
 
 //^ Copy useEditCabin.js and rename it useUpdateSettings.js
 
@@ -878,7 +856,7 @@ accept="image/*"
 
 //* when we write some new value in input field
 //* And then as soon as we leave the field, we want the updating to happen.
-//* And we can do that with the onBlur event handler.
+//* And we can do that with the (onBlur) event handler.
 
 //! handleBlur for updating
 // function handleBlur(e, field) {
