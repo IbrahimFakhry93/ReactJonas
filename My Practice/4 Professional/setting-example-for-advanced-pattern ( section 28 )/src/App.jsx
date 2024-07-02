@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { faker } from "@faker-js/faker";
 import "./index.css";
+import withToggles from "./HOC";
+
+//? Companies:
 
 const companies = Array.from({ length: 15 }, () => {
   return {
@@ -28,6 +31,10 @@ function CompanyItem({ company, defaultVisibility }) {
   );
 }
 
+//*=========================================================================
+
+//? Products
+
 const products = Array.from({ length: 20 }, () => {
   return {
     productName: faker.commerce.productName(),
@@ -48,7 +55,10 @@ function ProductItem({ product }) {
 
 //!=========================================================================================
 //* items === products
-function List({ title, items }) {
+
+function List({ title, items, render }) {
+  //* Stateful logic
+  //* Logic for collapsing
   const [isOpen, setIsOpen] = useState(true);
   const [isCollapsed, setIsCollapsed] = useState(false);
 
@@ -67,13 +77,7 @@ function List({ title, items }) {
           {isOpen ? <span>&or;</span> : <span>&and;</span>}
         </button>
       </div>
-      {isOpen && (
-        <ul className="list">
-          {displayItems.map((product) => (
-            <ProductItem key={product.productName} product={product} />
-          ))}
-        </ul>
-      )}
+      {isOpen && <ul className="list">{displayItems.map(render)}</ul>}
 
       <button onClick={() => setIsCollapsed((isCollapsed) => !isCollapsed)}>
         {isCollapsed ? `Show all ${items.length}` : "Show less"}
@@ -84,21 +88,10 @@ function List({ title, items }) {
 
 //!=========================================================================================
 
-export default function App() {
-  return (
-    <div>
-      <h1>Render Props Demo</h1>
-
-      <div className="col-2">
-        <List title="Products" items={products} />
-      </div>
-    </div>
-  );
-}
-
-//!=========================================================================================
-
-// LATER: Let's say we got this component from a 3rd-party library, and can't change it. But we still want to add the 2 toggle functionalities to it
+//? LATER: for HOC Lecture (video 365)
+//* Let's say we got this component from a 3rd-party library,
+//* and can't change it. But we still want to add the 2 toggle functionalities to it
+//* toggle open /close button , toggle collapse button
 function ProductList({ title, items }) {
   return (
     <ul className="list">
@@ -108,3 +101,40 @@ function ProductList({ title, items }) {
     </ul>
   );
 }
+const ProductListWithToggles = withToggles(ProductList);
+
+//^=============================================
+export default function App() {
+  return (
+    <div>
+      <h1>Render Props Demo</h1>
+
+      <div className="col-2">
+        <List
+          title="Products"
+          items={products}
+          render={(product) => (
+            <ProductItem key={product.productName} product={product} />
+          )}
+        />
+        <List
+          title="Companies"
+          items={companies}
+          render={(company) => (
+            <CompanyItem
+              key={company.companyName}
+              company={company}
+              defaultVisibility={false}
+            />
+          )}
+        />
+      </div>
+
+      <div className="col-2">
+        <ProductListWithToggles title="Products with HOC" items={products} />
+      </div>
+    </div>
+  );
+}
+
+//!=========================================================================================

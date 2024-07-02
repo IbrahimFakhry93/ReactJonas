@@ -1,0 +1,11 @@
+body {
+  font-family: sans-serif;
+}
+
+div {
+  margin: 5px;
+}
+
+.counter {
+  padding: 20px;
+}
