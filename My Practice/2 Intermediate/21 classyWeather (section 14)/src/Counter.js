@@ -40,11 +40,11 @@ class Counter extends React.Component {
     //* And the reason for that is simply the way in which JavaScript works.
     //* So when React calls our event handler here,  onClick={this.handleDecrement}
     //* it first actually, behind the scenes, creates a copy  of this function.
-    //* And so then the function call  is just a normal function call,
+    //* And so then the function call is just a normal function call,
     //* which is not bound to any object.  And so because of that, this function then loses the binding
     //* to the current this keyword.
 
-    //? Solution use bind method inside the constructor
+    //? Solution use bind method inside the constructor as above
     this.setState((curState) => {
       return { count: curState.count - 1 };
     });
