@@ -1,10 +1,11 @@
 import styled from "styled-components";
-
+import { createContext, useContext } from "react";
 const StyledTable = styled.div`
   border: 1px solid var(--color-grey-200);
 
   font-size: 1.4rem;
   background-color: var(--color-grey-0);
+
   border-radius: 7px;
   overflow: hidden;
 `;
@@ -58,3 +59,54 @@ const Empty = styled.p`
   text-align: center;
   margin: 2.4rem;
 `;
+
+//* 1) Create context (TableContext)
+const TableContext = createContext();
+
+//* 2) Create Parent Component (Table):
+function Table({ columns, children }) {
+  return (
+    //? use the context here to provide the (columns) to all the child components (Header and Row)
+    <TableContext.Provider value={{ columns }}>
+      <StyledTable role="table">{children}</StyledTable>
+    </TableContext.Provider>
+  );
+}
+
+//* 3) Create Child Components
+function Header({ children }) {
+  //* Header will get access to the passed columns value through context
+
+  const { columns } = useContext(TableContext);
+
+  return (
+    // important part here is the columns prop
+    <StyledHeader role="row" columns={columns} as="header">
+      {children}
+    </StyledHeader>
+  );
+}
+function Row({ children }) {
+  //* Row will get access to the passed columns value through context
+
+  const { columns } = useContext(TableContext);
+
+  return (
+    // important part here is the columns prop
+    <StyledRow role="row" columns={columns}>
+      {children}
+    </StyledRow>
+  );
+}
+function Body({ data, render }) {
+  if (!data.length) return <Empty>No Data to Display</Empty>;
+  return <StyledBody>{data.map(render)}</StyledBody>;
+}
+
+//* 4) Add child components as properties to parent component
+Table.Header = Header;
+Table.Row = Row;
+Table.Body = Body;
+Table.Footer = Footer;
+
+export default Table;

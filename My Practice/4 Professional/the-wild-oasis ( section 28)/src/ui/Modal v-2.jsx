@@ -62,7 +62,7 @@ const Button = styled.button`
 //? 1) Create context (ModalContext)
 const ModalContext = createContext();
 
-//? 2) Create Parent Component (mODAL):
+//? 2) Create Parent Component (Modal):
 //* Parent Component is the modal itself and it needs to accept children
 //* so that then it can display the Windows and the Opens.
 

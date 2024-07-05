@@ -20,31 +20,15 @@
 //* So the select element implements a select box and the option element implements each
 //* of the select options inside the select box.
 
-// as we are going to use in compound components.
+//* as we are going to use in compound components.
 
-// And this will then allow us to implement highly flexible
+//* And this will then allow us to implement highly flexible
 
-// and highly reusable components
+//* and highly reusable components
 
-// with a very, very expressive API.
+//* with a very, very expressive API.
 
-// And all without basically using no props at all.
-
-// So after implementing this example,
-
-// and the next ones in the next few videos,
-
-// you will see the potential for using this everywhere.
-
-// And let me actually start by showing you
-
-// how we are going to use the component that we're going
-
-// to build in practice.
-
-// So that will then show you how this really
-
-// is super flexible and reusable.
+//* And all without basically using no props at all.
 
 //*=====================
 
@@ -65,8 +49,7 @@
 */
 }
 
-// this is just to show (like adding PositionCount as a prop) that without the flexibility
-
+//* this is to show (like adding PositionCount as a prop) that without the flexibility
 //? of a compound component like this one:
 
 {
@@ -75,7 +58,7 @@
             <Counter.Count />
             <Counter.Increase icon="+" />
             <Counter.label>My Super Flexible Counter</Counter.label>
-</Counter>  */
+     </Counter>  */
 }
 
 // we would have to pass in 10 or 20 props to configure it
@@ -83,7 +66,7 @@
 // in the same way that we can easily achieve like this.
 
 //* Usage of context API instead of passing props in Compound components
-//* So  <Counter.count /> can know the state in <Counter></Counter>
+//* So  <Counter.count /> can know the state by useContext in <Counter></Counter>
 //* same for    <Counter.Increase icon="+" />
 
 //? Steps to establish Compound Components:

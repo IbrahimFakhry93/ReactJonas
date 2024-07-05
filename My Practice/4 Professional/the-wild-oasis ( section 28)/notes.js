@@ -1,3 +1,5 @@
+//* check Compound Components section 28
+
 //! 367. Building a Modal Window Using a React Portal
 
 //* Build a simple modal window component using React's portal feature
@@ -6,16 +8,17 @@
 //* we actually want the form to add a new cabin to appear in a modal window.
 //* we want a new window to open on top of the table.
 
-//^ open: Modal.jsx
+//^ open: Modal v-1.jsx
 
-//^ create: AddCabin.jsx inside Cabins folder
+//^ create: AddCabin v-1.jsx inside Cabins folder
 
-//^ open: Cabins v-1.jsx  Cabins.jsx  in Pages folder
+//^ open: Cabins v-1.jsx and Cabins.jsx  in Pages folder
 
-//* let's move all this logic (which is toggle the form render: the open state, toggle button, conditional rendering)
-//* to a separate component (AddCabin)
+//* let's move all this logic from Cabins v-1.jsx  (which is toggle the form render:
+//* the open state, toggle button, conditional rendering of <CreateCabinForm /> )
+//* to a separate component (AddCabin v-1.jsx)
 
-//* because as we said initially we want all of these pages here to be as simple as possible.
+//* because as we said initially we want all of these pages (Cabins) here to be as simple as possible.
 //* So we don't want them to have any state or any effects.
 
 //^=============================================
@@ -64,7 +67,7 @@
 
 //? Using React Portal:
 
-//^ open: Modal.jsx
+//^ open: Modal v-1.jsx
 
 //? What is a React portal?
 //* A React portal is a feature that allows us to render an element outside of the parent component's
@@ -135,7 +138,7 @@
 
 //? Why Convert to a Compound Component?
 //* - The initial modal we built has limitations in state management and rendering.
-//* - We want to avoid making the component which uses the modal, will be responsible for tracking modal state.
+//* - We want to avoid making the component which uses the modal (AddCabin), will be responsible for tracking modal state.
 //* - The AddCabin component shouldn't manage whether the modal is open or closed.
 
 //? Solution: Compound Component
@@ -143,7 +146,7 @@
 //* - Each part of the modal (e.g., content, buttons) will be separate components.
 //* that we actually want to display inside the modal.
 //* So basically we want some button to open the modal, and we want the window itself.
-//* So these two components together should form the Modal component
+//* So these two components together should form the Modal component (Button and Window)
 
 //? the modal component.
 //* - The modal itself will internally manage its open/closed state.
@@ -215,12 +218,13 @@ export default App;```;
 //* And so therefore here, let's pass an prop called opens.
 //^=============================================
 //* we need to give each window a name.
-//* And then we associate each open component (Modal.open) to that name now.
+//* And then we associate each open component (Modal.Open) to that name now.
+//* opens value === name value
 
 //^ Duplicate Modal to: Modal v-1.jsx and work in Modal v-2.jsx
 
 //* A way to add modal open event handler to Button in AddCabin
-//* So use cloneElement Function
+//* So use cloneElement Function inside Modal v-2
 
 //* this technique can still be pretty useful because the clone elements
 //* basically allows us
@@ -229,8 +233,8 @@ export default App;```;
 //* which will solve our problem here in our case.
 
 //^ look at the window function
-// In the window we basically need to check which is the currently open window.
-// And if it's the same as this name here i Modal.Open (opens="cabin-form" )
+//* In the window we basically need to check which is the currently open window.
+//* And if it's the same as this name here i Modal.Open (opens="cabin-form" )
 
 //* if (name !== openName) return null;
 
@@ -287,7 +291,7 @@ export default App;```;
     function handleClick(e) {
 
       //* ref.current is the white modal window
-      if (ref.current && !ref.current.contain(e.target)) {
+      if (ref.current && !ref.current.contains(e.target)) {
         console.log('Click outside')
         close();
       // which is basically where the DOM node
@@ -362,3 +366,61 @@ export default App;```;
   /* <div>{cloneElement(children, { onCloseModal: close })}</div> */
 }
 //* so children here is ConfirmDelete
+
+//*===========================================================================================================
+
+//! 371. Building a Reusable Table
+//^ Duplicate CabinTable to CabinTable v-2
+//^ open: CabinRow.jsx - CabinTable.jsx
+
+//* check: grid-template-columns
+
+//& Title: Reusable Table Component
+//? Problem: Hardcoded columns in CabinRow.jsx and CabinTable.jsx
+//* Solution: Create a compound component for dynamic column definitions
+
+//& Subtitle: The Issue
+//? Issue: Columns are hardcoded in multiple places (CabinRow.jsx and CabinTable.jsx).
+//* Explanation: This approach makes it challenging to reuse the table for other purposes (e.g., bookings).
+
+//& Subtitle: Desired Approach
+//? Approach: Pass column definitions dynamically
+//* Explanation: Instead of hardcoding columns, we want to pass column definitions into the table component. This way, the header and rows can automatically adjust to column sizes.
+
+//& Subtitle: Compound Component Solution
+//? Solution: Use a compound component
+//* Explanation: We can create a compound component that allows users to define columns and customize their behavior.
+//* Example:
+//   <Table>
+//     <Table.Header>
+//       <Table.Column label="Name" accessor="name" />
+//       <Table.Column label="Age" accessor="age" />
+//       {/* ... More columns */}
+//     </Table.Header>
+//     <Table.Rows>
+//       {/* Rows with data */}
+//     </Table.Rows>
+//   </Table>
+
+//! Table.Footer = Footer;
+// Footer is just the styled component
+// because we don't need to add any logic to it
+// So the footer has no columns.
+
+//! Header and Row:
+//* So the ones that do have columns is the header and the row,
+//* and so now we need to give these two components here access to these columns,
+//* since we are using a compound component, so we will achieve this by creating table context
+
+//! Styled Table give some base styles
+//*===========================================================================================================
+
+//! 372. Applying the Render Props Pattern
+
+//* A small use case of the render props pattern to implement our tables body.
+
+//* we also need to pass in basically the instructions
+
+// on how this table.body should actually render the data.
+
+// And so that's where the render prop pattern comes into play,  by render prop,
