@@ -120,10 +120,10 @@ function List({ id, children }) {
   //* so like the modal window where we compared the window name
   //* with the currently opened name.
   //* And so here we now have to do exactly the same thing.
-
   const { openId, position, close } = useContext(MenusContext);
-  const ref = useCloseOutside(close); //* by default is in capturing phase
   if (openId !== id) return null;
+
+  const ref = useCloseOutside(close); //* by default is in capturing phase
 
   //* if the id of the list matches the one that is currently open, then we want to render something.
   //* render a list of buttons
@@ -143,9 +143,9 @@ function List({ id, children }) {
 } //* List will unOrderList
 
 //* Button is an orderedList (li) inside List
-function Button({ children, icon, onClick }) {
+function Button({ children, icon, onDuplicate }) {
   function handleClick() {
-    onClick?.(); //* use Optional chaining to conditionally call onClick function
+    onDuplicate?.(); //* use Optional chaining to conditionally call onClick function
     close(); //* close the list after any click
   }
   return (

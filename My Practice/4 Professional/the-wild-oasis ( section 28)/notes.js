@@ -449,15 +449,9 @@ export default App;```;
 //* We'll wrap the entire table in the menus component.
 //* Then inside the table body inside of each cabin row, we will have a Menus.Menu.
 
-// a menu, as you have seen many times
-
-// on the web already, is always composed of a button.
-
-// And so then when you click on that toggle button,
-
-// a list will open,
-
-// and then that list itself is composed of many buttons.
+// a menu, as you have seen many times on the web already, is always composed of a button.
+// And so then when yu click on that toggle button,
+// a list will open, and then that list itself is composed of many buttons.
 
 //? Menus.Toggle
 //* we can use to open and close the menu.
@@ -467,25 +461,18 @@ export default App;```;
 //* So, Menu.Button. So basically each of them will be one list element of the list.
 
 // just like before with the modal,(Open and Window)
-
 // we will have many of these menus on the page
-
 // and therefore many toggles and many lists.
-
 // And so therefore, we will have to connect this toggle
-
 // with this list again
-
 // so that we know that this exact toggle
-
 // should then open up this list.
 
 // Previously in the model, we used name and prop
-//* here in the Menus we will use ID (cabinId)
+//* here in the Menus we will use id (cabinId)
 // both on the toggle and on the list
 // And then the parent menus component will keep track
-
-// which of the menu ID is currently being displayed
+// which of the menu id is currently being displayed
 
 //^==========
 
@@ -496,8 +483,8 @@ export default App;```;
 //     //* or if the openId (the currently open menu) is different
 //     //* from the (id) of this exact button that is being clicked,
 //     //* then let's open the menu.
-//     //* And we do this (open the menu) by passing in the ID of exactly this button
-//     //* because this button is connected to that menu by this ID.
+//     //* And we do this (open the menu) by passing in the id of exactly this button
+//     //* because this button is connected to that menu by this id.
 
 //     openId === "" || openId !== id ? open(id) : close();
 
@@ -505,31 +492,19 @@ export default App;```;
 //   }
 
 //? positioning of the list.
-//^ look at handleClick function
+//^ look at handleClick function inside Toggle
 // Now this position of the list needs to be calculated
-
 // as soon as this button here is clicked.
-
 // And so let's do that right here in handleClick.
 
 //! use closest method when clicking the toggle button
 // then we want to get the closest button, (toggle button, you will find it in styledToggle)
-
 // so just to make sure that we really get the position
-
 // of the button and not of the SVG icon
 // So this (closest) then basically does some DOM traversing,
-
-// finding the closest button parent.
-
+// finding the closest button parent (toggle button)
 // And then here we can then call another DOM function,
-
-// which is getBoundingClientRect.
-
-// It's a weird name,
-
-// but basically what this will do is to give us some data
-
+// which is getBoundingClientRect that gives us some data
 // about the element's position
 
 //? Data flow of the position:
@@ -537,7 +512,7 @@ export default App;```;
 //* Click on Toggle button, we will get the position inside handleClick
 //* but we need it in the list to identify its position
 //* So in order to pass it from one place to another,
-//* we will store it in the parents state. So let's create position and setPosition,
+//* we will store it in the parents state (Menus). So let's create position and setPosition,
 
 //& Click outside the menu list to close it:
 //* use (useCloseOutside) custom hook.
