@@ -338,7 +338,7 @@ export default App;```;
 
 //! 370. Confirming Cabin Edit and Deletions
 
-//^ Duplicate CabinRow to CabinRow v-3 and open CabinRow
+//^ Duplicate CabinRow to CabinRow v-3 and open CabinRow V-4
 
 //? Edit:
 
@@ -371,7 +371,7 @@ export default App;```;
 
 //! 371. Building a Reusable Table
 //^ Duplicate CabinTable to CabinTable v-2
-//^ open: CabinRow.jsx - CabinTable.jsx
+//^ open: CabinRow V-4.jsx - CabinTable.jsx
 
 //* check: grid-template-columns
 
@@ -424,3 +424,125 @@ export default App;```;
 // on how this table.body should actually render the data.
 
 // And so that's where the render prop pattern comes into play,  by render prop,
+
+//*===========================================================================================================
+
+//! 373. Building a Reusable Context Menu
+
+//& Title: Building a Reusable Context Menu using Compound Component
+
+//? Objective:
+//* Create a context menu for cabin rows with specific actions (duplicate, edit, delete).
+
+//? Approach:
+//* Each cabin row will have a button to trigger the context menu.
+//* The context menu will display actions (duplicate, edit, delete).
+//* Only one menu can be open at a time.
+//* We'll wrap the entire table in the menus component.
+//* And then, inside each of the rows, we will have a menu child component.
+
+//^ open: Menus.jsx
+
+//* Create Menu Component
+
+//^ open: CabinRow V-4.jsx - CabinTable.jsx
+//* We'll wrap the entire table in the menus component.
+//* Then inside the table body inside of each cabin row, we will have a Menus.Menu.
+
+// a menu, as you have seen many times
+
+// on the web already, is always composed of a button.
+
+// And so then when you click on that toggle button,
+
+// a list will open,
+
+// and then that list itself is composed of many buttons.
+
+//? Menus.Toggle
+//* we can use to open and close the menu.
+
+//? Menu.List:
+//* which will then contain a bunch of buttons.
+//* So, Menu.Button. So basically each of them will be one list element of the list.
+
+// just like before with the modal,(Open and Window)
+
+// we will have many of these menus on the page
+
+// and therefore many toggles and many lists.
+
+// And so therefore, we will have to connect this toggle
+
+// with this list again
+
+// so that we know that this exact toggle
+
+// should then open up this list.
+
+// Previously in the model, we used name and prop
+//* here in the Menus we will use ID (cabinId)
+// both on the toggle and on the list
+// And then the parent menus component will keep track
+
+// which of the menu ID is currently being displayed
+
+//^==========
+
+// function Toggle({ id }) {
+//   const { openId, close, open } = useContext(MenusContext);
+//   function handleClick() {
+//     //* if the openId is empty, meaning that there is no ID, (none of menus is opened)
+//     //* or if the openId (the currently open menu) is different
+//     //* from the (id) of this exact button that is being clicked,
+//     //* then let's open the menu.
+//     //* And we do this (open the menu) by passing in the ID of exactly this button
+//     //* because this button is connected to that menu by this ID.
+
+//     openId === "" || openId !== id ? open(id) : close();
+
+//     //* id: is the id of the clicked button
+//   }
+
+//? positioning of the list.
+//^ look at handleClick function
+// Now this position of the list needs to be calculated
+
+// as soon as this button here is clicked.
+
+// And so let's do that right here in handleClick.
+
+//! use closest method when clicking the toggle button
+// then we want to get the closest button, (toggle button, you will find it in styledToggle)
+
+// so just to make sure that we really get the position
+
+// of the button and not of the SVG icon
+// So this (closest) then basically does some DOM traversing,
+
+// finding the closest button parent.
+
+// And then here we can then call another DOM function,
+
+// which is getBoundingClientRect.
+
+// It's a weird name,
+
+// but basically what this will do is to give us some data
+
+// about the element's position
+
+//? Data flow of the position:
+
+//* Click on Toggle button, we will get the position inside handleClick
+//* but we need it in the list to identify its position
+//* So in order to pass it from one place to another,
+//* we will store it in the parents state. So let's create position and setPosition,
+
+//& Click outside the menu list to close it:
+//* use (useCloseOutside) custom hook.
+
+//^ Duplicate CabinRow to CabinRow V-4
+
+//* Place the Menus inside the Modal
+//* the menu buttons should be inside this Modal.Open.
