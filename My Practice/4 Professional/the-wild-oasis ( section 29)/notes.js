@@ -77,3 +77,71 @@
 //* use active prop (look at FilterButton style)
 //* if active is true, display background
 //* To check the boolean value of active (true or false) by using url
+
+//~  disabled={option.value === currentFilter}
+//* to disable the other non selected buttons and make them unclickable
+//*=======================================================================================
+
+//! 376. Client-Side Sorting: Sorting Cabins
+
+//* So besides the filter up the table
+//* we want to have a dropdown menu where we can select
+//* which of these fields here we want to sort the data by.
+
+//^ create: SortBy.jsx Component in UI Folder and include it in CabinTableOperations.jsx
+
+//* Sort component same as Filter component will receive list of options (array)
+
+//^ open: CabinTableOperations.jsx
+
+// { value: "name-asc", label: "Sort by name (A-Z)" },
+// { value: "name-desc", label: "Sort by name (Z-A)" },
+
+//& Title: Sorting Information
+//? We are encoding two types of information inside (value):
+//*   1. The field by which we want to sort (ex. name, regularPrice, maxCapacity )
+//*   2. The direction of sorting (ascending or descending).
+//*   Keeping it simple by combining both in this value.
+
+// { value: "regularPrice-asc", label: "Sort by price (low first)" },
+// { value: "regularPrice-desc", label: "Sort by price (high first)" },
+
+//~ Sort by the price:
+
+//* the name of the fields (regularPrice as in the database (SupaBase Cabin Table),
+//* so as we also receive them  here in our application from the API.
+
+//^ open: Sort.jsx
+
+//* We will have one select element with one option for each of these elements of the array.
+
+//^ Open: select.jsx in UI folder
+//* Since we want select element many times in the application
+//* let's build a reusable one
+
+//* Select will have active value in its parameters
+//* because after all, they are controlled elements
+// function Select({ options, value }) {
+//   return (
+//     <StyledSelect value={value}>
+//       {options.map((option) => (
+//         <option key={option.value} value={option.value}>
+//           {option.label}
+//         </option>
+//       ))}
+//     </StyledSelect>
+//   );
+// }
+
+//^ in SortBy.jsx
+//* After creating the searchParams state and handle the select event in handleChange
+//* we need to read the selected value in the CabinsTable and do the sorting
+
+// const sortedCabins = filteredCabins.sort((a, b) => a[field] - b[field]); //* this sorting by ascending way
+//* But if we want to sort it in a descending way we need to convert the positive number
+//* that this here (field) is gonna create to a negative number or if this is a negative number
+//* then we need to convert it to a positive number
+
+//*==================================================================================
+
+//! 377. Building the Bookings Table
