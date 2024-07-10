@@ -145,3 +145,41 @@
 //*==================================================================================
 
 //! 377. Building the Bookings Table
+
+//* Create another row in guests and booking
+
+//^ open: apiBooking.js
+
+//* Add one service to the apiBooking, to load all the bookings data from supabase
+//* then we want to get the data to the bookings table
+
+//^ open: BookingTable.jsx in bookings folder - Bookings.jsx in pages folder
+
+//^ open: Empty.jsx
+//* when there is no data return Empty component
+// if (!bookings.length) return <Empty resourceName="Bookings" />;
+
+//* add the same to CabinTable
+
+//^ Create: useBookings
+//* Next, we want to connect booking table to getBookings in apiBooking
+//* so we use react query to fetch bookings data and receive it in bookings table.
+
+//& Flexibility of Supabase API:
+
+//* we need to not only load the data about this booking, but also about this cabin, and this guest.
+//* so open: apiBookings
+
+//!   const { data, error } = await supabase.from("bookings").select("*");
+//? rewrite it as follows:
+//!   const { data, error } = await supabase.from("bookings").select("*, cabins(*), guests(*)");
+
+//? or: write only the field or column that we want:
+
+//! const { data, error } = await supabase.from("bookings").select("*, cabins(names), guests(fullName,email)");
+
+//? or:
+
+// const { data, error } = await supabase.from("bookings").select("id,created_at,startDate,endDate,numNights,numGuests,status,totalPrice, cabins(names), guests(fullName,email)");
+
+//^ open Tag and BookingRow
