@@ -1,7 +1,7 @@
 import { getToday } from "../utils/helpers";
 import supabase from "./supabase";
 
-export async function getBookings() {
+export async function getBookings({ filter, sortBy }) {
   console.log("hellooooo");
   // const { data, error } = await supabase.from("bookings").select("*");
 
@@ -12,12 +12,32 @@ export async function getBookings() {
   //   .from("bookings")
   //   .select("*, cabins(names), guests(fullName,email)");
 
-  const { data, error } = await supabase
+  // const { data, error } = await supabase
+  //   .from("bookings")
+  //   .select(
+  //     "id, created_at, startDate, endDate, numNights, numGuests, status, totalPrice, cabins(name), guests(fullName,email)"
+  //   )
+  //   .eq("status", "unconfirmed")
+  //   .gt("totalPrice", 5000);
+
+  //? Build the query there from scratch in multiple parts:
+
+  let query = supabase
     .from("bookings")
     .select(
       "id, created_at, startDate, endDate, numNights, numGuests, status, totalPrice, cabins(name), guests(fullName,email)"
     );
-  console.log(data);
+
+  //* Filter:
+  if (filter) query = query[filter.method || "eq"](filter.field, filter.value);
+
+  if (sortBy)
+    query = query.order(sortBy.field, {
+      ascending: sortBy.direction === "asc",
+    });
+  const { data, error } = await query;
+
+  // console.log(data);
   //* error handling by Jonas
   if (error) {
     console.error(error);

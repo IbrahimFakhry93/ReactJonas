@@ -183,3 +183,82 @@
 // const { data, error } = await supabase.from("bookings").select("id,created_at,startDate,endDate,numNights,numGuests,status,totalPrice, cabins(names), guests(fullName,email)");
 
 //^ open Tag and BookingRow
+
+//*=====================================================================================================================
+
+//! 378. Uploading Sample Data
+
+//^ open: data folder and check uploader file
+//^ open: sidebar.jsx and place uploader there
+
+//* change the policies for the bookings in supabase (insert, update, delete)
+//* same for guests in supabase
+
+//*==============================================================================================
+
+//! 379. API-Side Filtering: Filtering Bookings
+//^ open: Bookings.jsx
+//* place BookingTableOperations in Bookings
+
+//? Filtration of Bookings will be different
+
+//* We received all the data rom our supabase API in the table.
+//* And then in the table is where we did the filtering and the sorting.
+//* the operations happened already on the client side,
+//* Filtration of Bookings will be different
+
+//? Server Side (on API side of the data ) Filtration with the bookings,
+
+//* for example. if I want to filter, for "checked out,"
+//* then I want the API to only send me all the bookings
+//* that have the "checked out" status.
+
+//* So I don't want to receive all of them,
+//* and then just filter them here on the client side.
+//* But instead, really only that filtered data
+//* should get downloaded from supabase.
+
+//^ open: apiSettings.js  and look at getBookings
+
+//? use eq method and gt (greater than) method or lt (less than)
+// const { data, error } = await supabase
+// .from("bookings")
+// .select(
+//   "id, created_at, startDate, endDate, numNights, numGuests, status, totalPrice, cabins(name), guests(fullName,email)"
+// ).eq("status","unconfirmed").gt('totalPrice',5000)
+
+// But now of course, we want to get the data from url.
+// and then filter for these values right here. So not having it hard coded
+
+//* we can't use "use searchparams" hook inside regular function as getBookings
+
+//^ open: useBookings.js
+//* Instead, we can use it right here in "use bookings."
+//* And so this really is the perfect place where we can now read the filtered value,
+//* and then pass it into the "getBookings" function.
+
+//^ go to apiBookings
+//* pass filter object and sortBy object to getBookings function
+//* filter object contains of (filter-field and value)
+
+//* we will build the query there from scratch in multiple parts
+
+//! problem:
+//* it will works but when change the filtration field by clicking on filters buttons
+//* it won't work, it will only show the new data when refreshing the page reloading the page
+
+//! why is that?
+
+//* because queryKey is set to 'bookings' only (depends on booking only)
+
+//! solution:
+//* add another dependent value in queryKey array (for ex. filter)
+//* go to queryKey in useBookings    queryKey: ["bookings",filter],
+
+//* so now, basically whenever this filter changes, then React Query will re-fetch the data.
+//* queryKey is the dependency array of useQuery So this works exactly in the same way
+//* as the dependency array of the use effect hook
+
+//*=======================================================================================================================
+
+//! 380. API-Side Sorting: Sorting Bookings
