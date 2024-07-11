@@ -307,3 +307,39 @@
 
 //*=======================================================================================================================
 //! 383. Prefetching With React Query
+// prefetching is all about fetching some data
+
+// that we know might become necessary
+
+// before we actually need that data to render it
+
+// on the user interface.
+
+// And in the context of pagination, usually that means
+
+// that we fetch the next page before it is actually displayed.
+// So in this case,
+
+// that would mean that here in page number seven,
+
+// we would already have page number eight here in the cache
+
+// and so then when we move there,
+
+// this data from page number eight could simply be get
+
+// from the cache and rendered.
+
+//^======
+
+// the way this works is that we first need to QueryClient
+
+// and then on there we call the Prefetch Query method.
+
+// So to get that QueryClient, we need to use
+
+// the use QueryClient hook.
+
+//*=======================================================================================================================
+
+//! 384. Building the Single Booking Page
