@@ -262,3 +262,48 @@
 //*=======================================================================================================================
 
 //! 380. API-Side Sorting: Sorting Bookings
+//*=======================================================================================================================
+
+//! 381. Building a Reusable Pagination Component
+
+//* Build a reusable pagination
+
+//* Render few buttons to set the current page state to the URL
+
+//^ open: Pagination.jsx and BookingTable.jsx
+
+//* place pagination in BookingTable.jsx under table body in the footer
+
+//* Add Arrow next and previous buttons
+//* Make the pagination get the number of results
+//* so pass count prop to Pagination function
+
+//* create nextPage and PrevPage function
+//* Calculating the next page or the previous page
+//* will always depend on the current page.
+//* the current page is to get from the URL by useSearchParams hook
+//*=======================================================================================================================
+
+//! 382. API-Side Pagination: Paginating Bookings
+
+//^ open: BookingTable.jsx , useBooking, apiBooking
+//* Calculate number of results and pass it as a prop to BookingTable
+
+//* 1) Length of Booking array (in useBooking)
+//? or
+//* 2) use second arg of supabase and pass in it object {count:exact} (in apiBooking)
+
+//* copy currentPage calculation logic to useBooking
+//* pass the current page to queryKey to refetch the data when we change the page
+//* and getBookings
+
+//^ Create: constants.js
+//* move PAGE_SIZE from Pagination to constants file (in case of easy maintenance if we need to modify PAGE_SIZE only from one place)
+//* export and import PAGE_SIZE anywhere it is needed
+//* We need PAGE_SIZE to calculate from and to for range method
+
+//* Use Prefetching for better user experience when we move to a page hasn't fetched yet, but the behind pages
+//* that had already fetched, will be cached
+
+//*=======================================================================================================================
+//! 383. Prefetching With React Query

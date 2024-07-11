@@ -6,9 +6,10 @@ import { useBookings } from "./useBookings";
 import Spinner from "../../ui/Spinner";
 import { useQuery } from "@tanstack/react-query";
 import { getBookings } from "../../services/apiBookings";
+import Pagination from "../../ui/Pagination";
 function BookingTable() {
   // const bookings = [];
-  const { bookings, isLoading } = useBookings();
+  const { bookings, isLoading, count } = useBookings();
   console.log(bookings);
   // console.log(bookings.length);
 
@@ -33,6 +34,9 @@ function BookingTable() {
             <BookingRow key={booking.id} booking={booking} />
           )}
         />
+        <Table.Footer>
+          <Pagination count={count} />
+        </Table.Footer>
       </Table>
     </Menus>
   );
