@@ -12,7 +12,7 @@
 //*   - Add buttons for "All Cabins," "Discounted Cabins," and "Non-Discounted Cabins."
 //*   - Store the selected filter value in the URL for shareability.
 //*   - Update the URL state from a separate filter component.
-//*   - The filter component can be placed anywhere in the component tree.
+//*   - The filter component can be placed anywhere in the component tree. (can be used to filter cabins, bookings)
 //* since we can read that state from everywhere in the app,
 
 //^ open: Cabins.jsx
@@ -23,6 +23,7 @@
 //* As we click on each of FilterButtons,
 //* we need to update the URL state.
 
+//! review the video
 //! add dashes to the values because they will end up in the url
 //! so they shouldn't be dashes in there.
 
@@ -33,53 +34,57 @@
 
 // useSearchParams hook is similar to use state
 // because it also gives us the state.
-// So the searchparams themselves, and then as a second value,
-// it gives us a way to update them.
-
+// So the searchparams themselves,
+// and then as a second value, it gives us a way to update them (setSearchParams)
+//^=============================================
 //* searchParams.set('discount',value);
 //* setSearchParams(searchParams);
 
-// Then here the first value is the name of the state.
-// So of the field in the URL.
-// And so that's gonna be called discount.
-// And then second is the value itself.
-// And so that's the one that we are receiving in the function(handleClick)
+// Then here the first value above is the name of the state.
+// So of the field in the URL.  (discount)
+// And then second is the one (value) that we are receiving in the function(handleClick)
+//^=============================================
 
 //? next step:
 //* Get the data from url into the table and sort the data accordingly
 //^ open: CabinTable.jsx
 //* const [searchParams] = useSearchParams();
 
+//! review the video
 //* But now watch what happens
 //* as we actually come to this page (Cabins) for the first time
-//* (like navigate to bookings then return back), we get null.
+//* (like navigate to bookings then return back), we get null (filterValue is null)
 //* Even what we will want in this situation is to show all the cabins with no filter applied.
 
 //? so use ShortCircuiting:
-//* const filterValue = searchParams.get("discount") || "all";
+//* const filterValue = searchParams.get("discount") || "all";  (in CabinTable)
+//* We assign the filterValue to determine the filtered data that will be displayed
 
 //& make a reusable filter:
 //* so to be used for cabins and bookings
-//* we need to pass all the data that might change as props
+//* we need to pass all the data that might change as props (filterField, options))
 
 //^ look at Filter.jsx
 //* searchParams.set("discount", value);
 //* discount, it is the filterField
-//* options parameter in Filter function will be an array of (in FilterButtons)
+//* options parameter in Filter function inside Filter Component will be an array of (FilterButtons)
 //* value and label (text in UI)
 
 //^ open: CabinTableOperations.jsx
 //* then pass these values( filterField, options) in the CabinTableOperations.jsx
 //* which is where we include this filter component.
 
-//& Display which button or option is selected or active
+//& Read the filter field from the url
+//* const currentFilter = searchParams.get(filterField) || options.at(0).value;
+//& to display which button or option is selected or active
+//*? active={option.value === currentFilter}
 //* selected one will have blue background
 //* use active prop (look at FilterButton style)
 //* if active is true, display background
 //* To check the boolean value of active (true or false) by using url
 
-//~  disabled={option.value === currentFilter}
-//* to disable the other non selected buttons and make them unclickable
+//~ disabled={option.value === currentFilter}
+//* to disable the other non selected buttons and make them unClickable
 //*=======================================================================================
 
 //! 376. Client-Side Sorting: Sorting Cabins
@@ -109,9 +114,9 @@
 //~ Sort by the price:
 
 //* the name of the fields (regularPrice as in the database (SupaBase Cabin Table),
-//* so as we also receive them  here in our application from the API.
+//* so as we also receive them here in our application from the API.
 
-//^ open: Sort.jsx
+//^ open: SortBy.jsx
 
 //* We will have one select element with one option for each of these elements of the array.
 
@@ -121,6 +126,7 @@
 
 //* Select will have active value in its parameters
 //* because after all, they are controlled elements
+
 // function Select({ options, value }) {
 //   return (
 //     <StyledSelect value={value}>
@@ -146,7 +152,7 @@
 
 //! 377. Building the Bookings Table
 
-//* Create another row in guests and booking
+//* Create another row in guests and booking in supabase
 
 //^ open: apiBooking.js
 
@@ -157,9 +163,9 @@
 
 //^ open: Empty.jsx
 //* when there is no data return Empty component
-// if (!bookings.length) return <Empty resourceName="Bookings" />;
+//* if (!bookings?.length) return <Empty resourceName="Bookings" />;
 
-//* add the same to CabinTable
+//* Add the same to CabinTable
 
 //^ Create: useBookings
 //* Next, we want to connect booking table to getBookings in apiBooking
@@ -197,16 +203,17 @@
 //*==============================================================================================
 
 //! 379. API-Side Filtering: Filtering Bookings
-//^ open: Bookings.jsx
+//^ open: Bookings.jsx  - BookingTableOperations
 //* place BookingTableOperations in Bookings
 
-//? Filtration of Bookings will be different
+//? Client side filtration of Cabins
 
-//* We received all the data rom our supabase API in the table.
+//* We received all the data from our supabase API in the table.
 //* And then in the table is where we did the filtering and the sorting.
 //* the operations happened already on the client side,
 //* Filtration of Bookings will be different
 
+//? Filtration of Bookings will be different
 //? Server Side (on API side of the data ) Filtration with the bookings,
 
 //* for example. if I want to filter, for "checked out,"
@@ -257,7 +264,7 @@
 
 //* so now, basically whenever this filter changes, then React Query will re-fetch the data.
 //* queryKey is the dependency array of useQuery So this works exactly in the same way
-//* as the dependency array of the use effect hook
+//* as the dependency array of the useEffect hook
 
 //*=======================================================================================================================
 
@@ -287,11 +294,18 @@
 //! 382. API-Side Pagination: Paginating Bookings
 
 //^ open: BookingTable.jsx , useBooking, apiBooking
-//* Calculate number of results and pass it as a prop to BookingTable
+//* then pass (count) it as a prop to BookingTable
 
 //* 1) Length of Booking array (in useBooking)
 //? or
 //* 2) use second arg of supabase and pass in it object {count:exact} (in apiBooking)
+
+//* So calculate number of results (count) in apiBooking in getBookings function
+// let query = supabase
+// .from("bookings")
+// .select(
+//   "id, created_at, startDate, endDate, numNights, numGuests, status, totalPrice, cabins(name), guests(fullName,email)",
+//!   { count: "exact" }
 
 //* copy currentPage calculation logic to useBooking
 //* pass the current page to queryKey to refetch the data when we change the page

@@ -9,6 +9,7 @@ export async function getBookings({ filter, sortBy, page }) {
   // const { data, error } = await supabase
   //   .from("bookings")
   //   .select("*, cabins(*), guests(*)");
+
   // const { data, error } = await supabase
   //   .from("bookings")
   //   .select("*, cabins(names), guests(fullName,email)");

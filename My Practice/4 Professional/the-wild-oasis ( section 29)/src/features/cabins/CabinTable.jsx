@@ -18,25 +18,30 @@ function CabinTable() {
   console.log(filterValue);
 
   let filteredCabins;
+
   if (filterValue === "all") filteredCabins = cabins;
+
   if (filterValue === "no-discount")
     filteredCabins = cabins.filter((cabin) => cabin.discount === 0);
+
   if (filterValue === "with-discount")
     filteredCabins = cabins.filter((cabin) => cabin.discount > 0);
 
   //!===========================================================
   //* 2) Sort
-  const sortBy = searchParams.get("sortBy") || "startDate-asc";
+  const sortBy = searchParams.get("sortBy") || "name-asc";
   //*  both the field and the direction are encoded in the string
   //*  so we need to split them
 
   const [field, direction] = sortBy.split("-"); //* split and destructing
   console.log(field, direction);
+
   const modifier = direction === "asc" ? 1 : -1;
+
   const sortedCabins = filteredCabins.sort(
-    (a, b) => a[field] - b[field] * modifier
-  ); //* this sorting by ascending way
-  console.log(modifier, sortedCabins); //* -1 , NaN
+    (a, b) => (a[field] - b[field]) * modifier
+  );
+
   return (
     <Menus>
       <Table columns="0.6fr 1.8fr 2.2fr 1fr 1fr 1fr">
