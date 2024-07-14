@@ -19,11 +19,13 @@ import { useCreateCabin } from "./useCreateCabin";
 import { useEditCabin } from "./useEditCabin";
 
 function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
-  const { id: editId, ...editValues } = cabinToEdit;
+  console.log("hello Create");
 
   const { isCreating, createCabin } = useCreateCabin();
   const { isEditing, editCabin } = useEditCabin();
+  const isWorking = isCreating || isEditing;
 
+  const { id: editId, ...editValues } = cabinToEdit;
   const isEditSession = Boolean(editId);
 
   const { register, handleSubmit, reset, getValues, formState } = useForm({
@@ -32,15 +34,14 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
   const { errors } = formState;
   // console.log(errors);
 
-  const isWorking = isCreating || isEditing;
-
   function onSubmit(data) {
     console.log(data);
     const image = typeof data.image === "string" ? data.image : data.image[0];
+
     if (isEditSession)
       // editCabin({ newCabinData: { ...data, image }, id: editId });
       editCabin(
-        { newCabinData: data, id: editId },
+        { newCabinData: { ...data, image }, id: editId },
         {
           onSuccess: (data) => {
             reset();

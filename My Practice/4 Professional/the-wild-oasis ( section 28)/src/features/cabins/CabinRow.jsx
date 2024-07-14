@@ -51,7 +51,7 @@ const Discount = styled.div`
 `;
 //*============================================================================
 function CabinRow({ cabin }) {
-  const [showForm, setShowForm] = useState(false);
+  // const [showForm, setShowForm] = useState(false);
   const {
     id: cabinId,
     name,
@@ -66,9 +66,9 @@ function CabinRow({ cabin }) {
   const { isCreating, createCabin } = useCreateCabin();
 
   // Callback function to toggle showForm
-  const toggleForm = () => {
-    setShowForm((showForm) => !showForm);
-  };
+  // const toggleForm = () => {
+  //   setShowForm((showForm) => !showForm);
+  // };
 
   function handleDuplicate() {
     createCabin({
@@ -97,10 +97,11 @@ function CabinRow({ cabin }) {
           <Modal>
             <Menus.Menu>
               <Menus.Toggle id={cabinId} />
+
               <Menus.List id={cabinId}>
                 <Menus.Button
                   icon={<HiSquare2Stack />}
-                  onDuplicate={handleDuplicate}
+                  onClick={handleDuplicate}
                 >
                   Duplicate
                 </Menus.Button>
@@ -108,6 +109,7 @@ function CabinRow({ cabin }) {
                 <Modal.Open opens="edit">
                   <Menus.Button icon={<HiPencil />}>Edit</Menus.Button>
                 </Modal.Open>
+
                 <Modal.Open opens="delete">
                   <Menus.Button icon={<HiTrash />}>Delete</Menus.Button>
                 </Modal.Open>

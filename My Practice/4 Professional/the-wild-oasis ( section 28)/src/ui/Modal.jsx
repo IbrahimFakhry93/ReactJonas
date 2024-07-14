@@ -1,11 +1,4 @@
-import {
-  cloneElement,
-  createContext,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { cloneElement, createContext, useContext, useState } from "react";
 import { createPortal } from "react-dom";
 import { HiXMark } from "react-icons/hi2";
 import styled from "styled-components";
@@ -67,6 +60,8 @@ const ModalContext = createContext();
 //* so that then it can display the Windows and the Opens.
 
 function Modal({ children }) {
+  console.log("hello modal");
+
   //* write the states
   const [openName, setOpenName] = useState("");
   //* then write the (state updating functions) handle functions
@@ -96,7 +91,9 @@ function Open({ children, opens: opensWindowName }) {
 
 //* we removed onClose props from the Window, not needed anymore
 //* instead we use our internal close function the one we got from the context.
+
 function Window({ children, name }) {
+  // console.log("hello window");
   const { openName, close } = useContext(ModalContext);
 
   //~====================================================
@@ -129,13 +126,16 @@ function Window({ children, name }) {
   //~====================================================
 
   const ref = useCloseOutside(close);
+
   if (name !== openName) return null;
+
   return createPortal(
     <Overlay>
       <StyledModal ref={ref}>
         <Button onClick={close}>
           <HiXMark />
         </Button>
+
         <div>{cloneElement(children, { onCloseModal: close })}</div>
       </StyledModal>
     </Overlay>,

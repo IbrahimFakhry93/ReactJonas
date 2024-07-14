@@ -70,8 +70,8 @@ const MenusContext = createContext();
 
 //* 2) Create Parent Component
 function Menus({ children }) {
-  //* use state to keep track which cabin is currently openID
-  const [openId, setOpenId] = useState(""); //* here startoff with empty string, which means none of the menus is currently opened
+
+  const [openId, setOpenId] = useState(""); 
   const [position, setPosition] = useState(null);
 
   const close = () => setOpenId("");
@@ -89,7 +89,6 @@ function Menus({ children }) {
 //* 3) Create Child Components
 function Toggle({ id }) {
   const { openId, close, open, setPosition } = useContext(MenusContext);
-
   //! handleClick
   function handleClick(e) {
     const rect = e.target.closest("button").getBoundingClientRect();
@@ -98,16 +97,10 @@ function Toggle({ id }) {
       x: window.innerWidth - rect.width - rect.x,
       y: rect.y + rect.height + 8,
     });
-    //* if the openId is empty, meaning that there is no ID, (none of menus is opened)
-    //* or if the openId (the currently open menu) is different
-    //* from the (id) of this exact button that is being clicked,
-    //* then let's open the menu.
-    //* And we do this (open the menu) by passing in the ID of exactly this button
-    //* because this button is connected to that menu by this ID.
-
+   
     openId === "" || openId !== id ? open(id) : close();
 
-    //* id: is the id of the clicked button
+
   }
   return (
     <StyledToggle onClick={handleClick}>
@@ -115,24 +108,12 @@ function Toggle({ id }) {
     </StyledToggle>
   );
 }
-
 function List({ id, children }) {
-  //* we will need the openId from MenuContext,
-  //* because we need to compare that openId with the id of this list,
-  //* so like the modal window where we compared the window name
-  //* with the currently opened name.
-  //* And so here we now have to do exactly the same thing.
+ 
   const { openId, position, close } = useContext(MenusContext);
-  const ref = useCloseOutside(close); //* by default is in capturing phase
+  const ref = useCloseOutside(close); 
   if (openId !== id) return null;
 
-  //* if the id of the list matches the one that is currently open, then we want to render something.
-  //* render a list of buttons
-
-  //? Use createPortal:
-  //* use create portal because this element will also float
-  //* on top of the UI. And so in cases like that,
-  //* it's always a good idea to use a portal.
   return createPortal(
     <StyledList position={position} ref={ref}>
       {children}
@@ -140,17 +121,14 @@ function List({ id, children }) {
     document.body
   );
 
-  //? Children for the list are the buttons look at CabinRow.jsx
-} //* List will unOrderList
 
-//* Button is an the list element (li) inside ul List
-function Button({ children, icon, onClick }) {
+function Button({ children, icon, onDuplicate }) {
   const { close } = useContext(MenusContext);
 
   function handleClick() {
     console.log("button clicked");
-    onClick?.(); //* use Optional chaining to conditionally call onClick function
-    close(); //* close the list after any click
+    onDuplicate?.(); 
+    close(); /
   }
   return (
     <li>
@@ -168,5 +146,3 @@ Menus.List = List;
 Menus.Button = Button;
 
 export default Menus;
-
-//*===============================================================================

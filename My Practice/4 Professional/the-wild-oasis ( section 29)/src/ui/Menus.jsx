@@ -121,9 +121,9 @@ function List({ id, children }) {
   //* with the currently opened name.
   //* And so here we now have to do exactly the same thing.
   const { openId, position, close } = useContext(MenusContext);
-  if (openId !== id) return null;
-
   const ref = useCloseOutside(close); //* by default is in capturing phase
+
+  if (openId !== id) return null;
 
   //* if the id of the list matches the one that is currently open, then we want to render something.
   //* render a list of buttons
@@ -143,9 +143,9 @@ function List({ id, children }) {
 } //* List will unOrderList
 
 //* Button is an orderedList (li) inside List
-function Button({ children, icon, onDuplicate }) {
+function Button({ children, icon, onClick }) {
   function handleClick() {
-    onDuplicate?.(); //* use Optional chaining to conditionally call onClick function
+    onClick?.(); //* use Optional chaining to conditionally call onClick function
     close(); //* close the list after any click
   }
   return (

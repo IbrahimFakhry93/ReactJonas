@@ -357,3 +357,75 @@
 //*=======================================================================================================================
 
 //! 384. Building the Single Booking Page
+
+//*=======================================================================================================================
+
+//! 385. Checking In a Booking
+//& Title: Hotel Check-In and Checkout Process
+//? Confirming Payment and Guest Check-In:
+//* - Hotel employees must verify payment receipt during guest check-in.
+//* - Only after confirming payment can the guest be officially checked in.
+
+//? Breakfast Purchase at Checkout:
+//* - During checkout, guests can buy breakfast for their entire stay.
+//* - If they haven't already purchased breakfast, this option is available.
+
+// Let's proceed with implementing these features.
+// Remember to handle payment confirmation and breakfast purchase logic.
+// Happy coding!
+
+//^=================================================
+
+//& Title: Implementing Guest Check-In and Payment Confirmation
+
+//? Guest Check-In Options:
+//* - Guests can be checked in from the booking detail page.
+//* - Alternatively, check-in can occur directly from the context menu.
+//* - A link will also allow check-in for guests arriving on the same day in DashBoard
+
+//^ File: BookingRow.jsx
+//? Important Consideration:
+//* - Not all bookings are eligible for check-in.
+//* - Already checked-in or checked-out bookings cannot be checked in again.
+//* - Only unconfirmed bookings can be checked in.
+
+//^ File: BookingDetail.jsx
+//* Place the check-in button within this component.
+
+//^ File: App.jsx
+//* Implement the check-in route in app.js.
+
+//^ File: CheckIn.jsx (inside the "page" folder)
+//^ Include CheckinBooking.jsx in CheckIn.jsx.
+//! create confirmPaid state   in checkinBooking,jsx
+//! connect this state to the checkbox
+//*=============
+//? Payment Confirmation Feature:
+//* - Hotel employees must confirm whether a booking has been paid.
+//* - Add a checkbox for payment confirmation.
+//* - The user must check the box before confirming.
+
+//* - Initialize the checkbox state as false.
+//* - Later, update the state with the actual payment status.
+
+//^ File: CheckBox.jsx (in the "UI" folder)
+//* Place the checkbox within the Box component in CheckInBooking.
+//* Manage the checkbox state as a controlled element.
+
+//? Initial State:
+//* - Start with the checkbox unchecked (false).
+//* - Later, an effect can set the value based on actual payment status.
+
+//? Disable Undo:
+//* - Disable the checkbox once payment confirmation is true.
+
+//! Bug Fix:
+//* Data retrieval delay:
+//* - Ensure data arrives promptly.
+//* - Include bookingId in queryKey to refetch data when switching between bookings.
+
+//? Check-In Process:
+//* - Update the booking status from unconfirmed to checked in.
+//* - Set "isPaid" to true.
+
+//^ Custom Hook: useCheckin.js

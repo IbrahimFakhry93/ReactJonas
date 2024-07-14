@@ -100,7 +100,7 @@ function CabinRow({ cabin }) {
               <Menus.List id={cabinId}>
                 <Menus.Button
                   icon={<HiSquare2Stack />}
-                  onDuplicate={handleDuplicate}
+                  onClick={handleDuplicate}
                 >
                   Duplicate
                 </Menus.Button>
