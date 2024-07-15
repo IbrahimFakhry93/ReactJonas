@@ -15,5 +15,6 @@ export function useBooking() {
     retry: false,
   });
 
+  console.log(booking);
   return { isLoading, error, booking };
 }

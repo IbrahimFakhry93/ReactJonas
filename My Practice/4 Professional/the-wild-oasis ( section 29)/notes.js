@@ -393,11 +393,11 @@
 //* Place the check-in button within this component.
 
 //^ File: App.jsx
-//* Implement the check-in route in app.js.
+//* Implement the check-in route in App.js.
 
 //^ File: CheckIn.jsx (inside the "page" folder)
 //^ Include CheckinBooking.jsx in CheckIn.jsx.
-//! create confirmPaid state   in checkinBooking,jsx
+//! create confirmPaid state in checkinBooking,jsx
 //! connect this state to the checkbox
 //*=============
 //? Payment Confirmation Feature:
@@ -415,6 +415,16 @@
 //? Initial State:
 //* - Start with the checkbox unchecked (false).
 //* - Later, an effect can set the value based on actual payment status.
+// useEffect(() => setConfirmPaid(booking?.isPaid ?? false), [booking]);
+
+//! Handling Nullish Values with Nullish Coalescing Operator
+//? Note
+//* The nullish coalescing operator (??) provides a concise way to handle null or undefined values.
+//* It ensures safe access to properties and offers fallbacks when needed.
+//* In the context of our useEffect hook, it guards against potential null or undefined values.
+
+//? Example usage:
+//~ useEffect(() => setConfirmPaid(booking?.isPaid ?? false), [booking]);
 
 //? Disable Undo:
 //* - Disable the checkbox once payment confirmation is true.
@@ -422,6 +432,7 @@
 //! Bug Fix:
 //* Data retrieval delay:
 //* - Ensure data arrives promptly.
+//^ open: useBooking.jsx
 //* - Include bookingId in queryKey to refetch data when switching between bookings.
 
 //? Check-In Process:
@@ -429,3 +440,100 @@
 //* - Set "isPaid" to true.
 
 //^ Custom Hook: useCheckin.js
+//*=======================================================================================================================
+
+//! 386. Adding Optional Breakfast
+
+//^ open: CheckinBooking.jsx
+//* Add new checkbox for breakfast
+//* create new state (addBreakfast)
+
+{
+  /* <Checkbox
+            checked={addBreakfast}
+            onChange={() => {
+            setAddBreakfast((add) => !add);
+            setConfirmPaid(false);
+            }}
+            //* id="breakfast"
+            >
+
+            Want to add breakfast for x?
+</Checkbox> */
+}
+
+//* We should also give Checkbox an ID so we can easily click there on that label as well.
+
+//? Breakfast Price Calculation
+//* Use settings table in supabase to calculate the breakfast price
+// const optionalBreakfastPrice =
+// settings.breakfastPrice * numGuests * numNights;
+
+//*==================================================================================
+
+//! 387. Checking Out a Booking (+ Fixing a Small Bug)
+
+//^ open: BookingRow, BookingDetails, useCheckout
+//& Title: Handling onClick Event for Check Out Button
+//? Note
+//* The onClick event handler for the "Check Out" button can be defined in different ways.
+//* Let's explore the correct approach to ensure the bookingId is properly passed.
+
+// Approach 1 (Problematic):
+{
+  /* <Menus.Button
+  icon={<HiArrowUpOnSquare />}
+  onClick={(bookingId) => checkOut(bookingId)}
+  disabled={isCheckingOut}
+>
+  Check Out
+</Menus.Button> */
+}
+// In this approach, you’re passing a function with an argument (bookingId) => checkOut(bookingId) directly to the onClick prop.
+// The issue is that the bookingId is not being correctly passed to the checkOut function.
+
+// Approach 2 (Working):
+{
+  /* <Menus.Button
+  icon={<HiArrowUpOnSquare />}
+  onClick={() => checkOut(bookingId)}
+  disabled={isCheckingOut}
+>
+  Check Out
+</Menus.Button> */
+}
+
+// In this approach, you’re using an arrow function without any arguments (() => checkOut(bookingId)).
+// The bookingId is correctly captured from the surrounding scope (where it’s defined) and passed to the checkOut function.
+
+// Explanation:
+// When you use (bookingId) => checkOut(bookingId), it creates a new function that expects an argument (bookingId). However, the actual value of bookingId is not being passed to this function.
+// In the working approach, the arrow function () => checkOut(bookingId) captures the correct value of bookingId from the outer scope.
+// To fix the problematic approach, ensure that the bookingId is correctly accessible within the scope where the onClick handler is defined. The working approach should be used to pass the correct value to the checkOut function.
+
+//! Bug Fix:
+//* when clicking on filter buttons we get this error
+//! An offset of 10 was requested, but there are only 5 rows.
+//* solution: set pages to 1
+
+//^ open: Filter
+
+//* add inside handleClick function
+//*  if (searchParams.get("page")) searchParams.set("page", 1);
+//*==================================================================================
+//! 388. Deleting a Booking
+
+//* Use Modal and ConfirmDelete before deleting a booking
+
+//* We can passing onSuccess, onError, onSettled to individual mutation
+{
+  /* <ConfirmDelete
+resourceName="booking"
+onConfirm={() =>
+  deleteBooking(bookingId, { onSettled: () => navigate(-1) })
+}
+disabled={isDeleting}
+/> */
+}
+//*==================================================================================
+//! 389. Authentication: User Login With Supabase

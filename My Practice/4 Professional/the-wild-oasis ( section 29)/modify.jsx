@@ -8,17 +8,11 @@ export function useCheckIn() {
   const navigate = useNavigate();
 
   const { mutate: checkIn, isLoading: isCheckingIn } = useMutation({
-    mutationFn: ({ bookingId, breakfast }) =>
+    mutationFn: (bookingId) =>
       updateBooking(bookingId, {
         status: "checked-in",
         isPaid: true,
-        ...breakfast,
       }),
-    // mutationFn: (bookingId) =>
-    //   updateBooking(bookingId, {
-    //     status: "checked-in",
-    //     isPaid: true,
-    //   }),
 
     onSuccess: (data) => {
       toast.success(`Check in of booking #${data.id} is Successful`);
@@ -26,9 +20,7 @@ export function useCheckIn() {
       navigate("/");
     },
 
-    onError: () => {
-      toast.error("there was error while checking in");
-    },
+    onError: () => toast.error("there was error while checking in"),
   });
 
   return { checkIn, isCheckingIn };
