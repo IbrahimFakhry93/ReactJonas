@@ -523,6 +523,7 @@
 //*==================================================================================
 //! 388. Deleting a Booking
 
+//^ useDeleteBooking.jsx - ConfirmDelete.jsx - BookingDetail.jsx - BookingRow.jsx
 //* Use Modal and ConfirmDelete before deleting a booking
 
 //* We can passing onSuccess, onError, onSettled to individual mutation
@@ -537,3 +538,216 @@ disabled={isDeleting}
 }
 //*==================================================================================
 //! 389. Authentication: User Login With Supabase
+// users actually need to be logged into the application
+
+// in order to use it.
+
+// And so now we're going to use Supabase
+
+// to implement this super important part of this
+
+// and of most other web applications.
+
+// We will also use Supabase
+
+// to sign up users in the first place,
+
+// to update their data and password
+
+// and even to upload a user avatar.
+
+//^ open: LoginForm.jsx - Login.jsx
+
+//* place LoginForm component in Login.jsx
+
+//^ open: Heading.jsx and create h4
+
+//^ Go to supabase and create first user
+//* users are existed in authentication tab in supabase
+//* go to providers tab - email - disable confirm email to ease developing
+//* create the user with email and password then connect it with frontend
+//* go to API docs then select authentication
+
+//? user management:
+//* user sign up
+//* user login with email and password
+//* use OAuth
+//* get current logged in user
+//* password reset
+//* update and log out
+
+//* copy user login logic from supabase
+
+// let { data, error } = await supabase.auth.signInWithPassword({
+//   email: 'someone@email.com',
+//   password: 'IZKAUwcOZtooiBykgsBS'
+// })
+
+//^ open apiAuth and create async login function and paste user login logic from supabase
+
+//! export async function login({ email, password }) {
+//   let { data, error } = await supabase.auth.signInWithPassword({
+//     email: "someone@email.com",
+//     password: "IZKAUwcOZtooiBykgsBS",
+//   });
+// }
+
+//! note:
+//* pass object ({email,password}) to login function
+// in modern front end development it's pretty common to not pass
+// in multiple arguments into a function, but just one object.
+// and immediately destructure it
+
+//* so now we can go use this function to log that user
+
+// that we created initially in.
+
+// Now, in order to do this, we will again use React Query,
+
+//* to test this function let's log it in handleSubmit function
+//* check in console.log(data)
+//* you will find session, user inside it, you will find the login email, and role:authenticated
+
+// And so from now on, on all the next requests
+
+// Supabase will automatically send this data to the server
+
+// to basically let Supabase know
+
+// that we are currently authenticated.
+
+// So Supabase, I believe stores this data auth token (access token - refresh token) in local storage.
+
+//* then direct the user to dashboard
+// we also want to show some indicator here
+
+// that login is actually happening right now.
+
+// And so for all that it's best to again use React Query.
+
+//^ create custom hook useLogin.js
+
+//! use useMutation hook, why:
+// and then here we will use a mutation actually
+
+// to handle this login.
+
+// So it's a mutation
+
+// because actually something changes on the server.
+
+// So basically a user gets authenticated
+
+// and also it's gonna be a lot easier
+
+// to then handle the success
+
+// and error states if this is a mutation.
+
+//*=======================================================================================
+//! 390. Authorization: Protecting Routes
+
+//* Implement authorization so that only logged in users can actually access our application.
+
+//^ Open App: wrap the entire application (AppLayout route) in a protected route component
+
+// that will mean that all of these different routes can only be accessed
+// if the protected layout component determines that there is a currently logged in user.
+
+//^ create in ui folder ProtectedRoute.jsx
+
+//* Protected Route will only return the children components, if only the user is authenticated
+
+//^ open: apiAuth.jsx
+//! why create new function (getCurrentUser) to get user in apiAuth
+
+// to load the authenticated user.
+
+// And so for that, we once again will create a new function
+
+// here in API auth.
+
+// Now you might wonder why we actually need a function
+
+// to load the user from Supabase again
+
+// if we just saw the user here in the console
+
+// right after logging in.
+
+// Now the thing is that the user might want to access
+
+// this page a bit later,
+
+// so not only after they have logged in.
+
+// So in a web application, even if you logged in
+
+// like a day ago and if you then reload the page,
+
+// you will still want to be logged in,
+
+// not only immediately after you do that login process.
+
+// And so then each time that you reload the page,
+
+// for example, a day later, then that user
+
+// will need to be refetched from the Supabase API.
+
+// And so then we can check if that user exists
+
+// and if they are still authenticated.
+
+//^ inside getCurrentUser function
+//*   const { data: session } = await supabase.auth.getSession();
+
+// first we actually need to check
+
+// whether there is an active session.
+
+// So for that we use get session.
+
+// And so this will actually get that data
+
+// from local storage that I showed you earlier.
+
+//^ go to ProtectedRoute and use the useUser custom hook
+
+//* create fullPage styled component to render the loading spinner in the center of the page
+
+// because in the beginning, while we are still loading,
+
+// the user is also not authenticated yet.
+
+// But that doesn't mean
+
+// that we want to redirect them to the login page.
+
+// And so here, let's also say and is not is loading.
+
+// So basically when we are no longer loading
+
+// and then the user is not authenticated,
+
+// then that means that they are not allowed
+
+// into the application.
+
+// And so then we redirect them to the login page.
+
+//! Reset the input field if the password or email are wrong
+//^ so go to LoginForm, where the states and controlled input fields are exist
+//* and remember that login function is a mutation function
+//* so we can pass onSettled, onSuccess, onError
+//* we pass onSettled whether the request is successful or not
+//* so we capture the case where email or password are wrong
+// login(
+//   { email, password },
+//   {
+//     onSettled: () => {
+//       setEmail("");
+//       setPassword("");
+//     },
+//   }
+// );

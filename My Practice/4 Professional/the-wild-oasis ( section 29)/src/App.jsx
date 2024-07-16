@@ -14,6 +14,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Toaster } from "react-hot-toast";
 import CheckIn from "./pages/CheckIn";
+import ProtectedRoute from "./ui/ProtectedRoute";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -31,7 +32,14 @@ function App() {
       <BrowserRouter>
         <Routes>
           {/* this:  <Route element={<AppLayout />}></Route>  it is called Layout route because it doesn't have the path probe  */}
-          <Route element={<AppLayout />}>
+          <Route
+            element={
+              <ProtectedRoute>
+                <AppLayout />
+              </ProtectedRoute>
+            }
+          >
+            {/* <Route element={<AppLayout />}> */}
             {/* Route with index: means the component we want to see when we open the App */}
             {/* <Route index element={<Dashboard />} /> */}
             {/* or more cleaner use the declarative redirect */}
