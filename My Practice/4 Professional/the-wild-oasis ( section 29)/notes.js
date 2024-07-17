@@ -751,3 +751,165 @@ disabled={isDeleting}
 //     },
 //   }
 // );
+
+//*============================================================================================
+
+//! 391. User Logout
+
+//* Button logout in the header
+//* Place Logout Comp in Header
+//^ create Logout.jsx in authentication
+
+//^ open Header.jsx
+
+//^ open apiAuth.js
+//* create function logout
+
+//* navigate("/dashboard", { replace: true });
+//*       navigate("/login", { replace: true });
+// erase the place that we were earlier.
+
+// So otherwise going back,
+
+// using this back button here is not really gonna work.
+
+//^=============================
+// remove the current user
+
+// from the React Query cache.
+
+// So just logging out, we'll of course remove the user here
+
+// from local storage and also from the server
+
+// but they will stay inside the cache.
+
+// So because we stored it right here.
+
+// And so if, for some reason, some malicious actor gets access
+
+// to that, that would be very bad.
+
+// And so we can actually remove all queries.
+
+// So actually not just the user, but really
+
+// all queries that have been accumulated in that cache.
+
+//*==================================================================
+
+//!  392. Fixing an Important Bug
+//*==================================================================
+
+//! 393. Building the Sign Up Form
+// in this application,
+
+// not everyone can create a new account.
+
+// So, not everyone can sign up for this application, unlike,
+
+// for example, something like Twitter or Reddit.
+
+// So here in this app, only employees
+
+// of the hotel should actually be users of this app.
+
+// that these users can only be created inside the application.
+
+// And so this way new users are basically immediately verified
+
+// by the existing hotel staff
+
+// because only that stuff can actually create new users.
+
+//^ open: Users.jsx in pages folder -  SignupForm.jsx
+
+// Use the React hook form library in SignupForm
+
+// So whenever we have a bigger form like this one here
+
+// and which needs some important validation,
+
+// it's a good idea to use a helper library like that one.
+
+//^ use register with input fields
+
+// use the register
+
+// function here in each of these inputs to give them a name
+
+// and basically manage this state.
+
+// So then React hook form will actually manage the state
+
+// and not us manually.
+
+// {...register("fullName", { required: "This field is required" })}
+//* field name is (fullName)
+// calling register function here will basically create a few props
+
+// which we then spread with this onto this input component.
+
+//^ llok at confirm passowrd input field , we will use getValues there
+//*   const { register, formState, getValues, handleSubmit ,reser } = useForm();
+
+//* handleSubmit will us to register our custom handle function
+//* inside handleSubmit is where we call function onSuccess and onError
+
+//*===================================================================
+
+//! 394. User Sign Up
+// use the form that we just created
+
+// in order to sign up users
+
+// to our application and basically to our Superbase database
+
+//* after testing sign up successfully
+//* go to providers in Authentication and make email confirm email
+//* also change all email templates
+
+//* url configuration
+//? site URL
+//* whenever the user gets an email
+//* so they can confirm their account,
+//* we want them to then be redirected
+//* to exactly this URL http://localhost:5173/dashboard instead of http://localhost:3000/
+
+//? redirected URLs:
+//* http://localhost:5173
+
+// Just make sure to update these two URLs (site URL, redirected URLs:) again
+
+// once you deploy this application to a production server.
+
+//^ open site: temp-mail.org
+//* create temp mail then sign up with it
+//* then look this new created user by the temp mail in supabase
+//* then you will find in last sign in column (waiting for verification)
+//* so you can't log in with this email before verification
+//* then return to temp mail site and look up the inbox
+//* you will find confirm mail then confirm it
+//* then return to supabase and reload
+
+//? next video:
+
+// There is just one thing that we need to do now
+
+// which is actually related to Superbase,
+
+// which is to change
+
+// the row level security policies to only allow access
+
+// to all of these resources here
+
+// to users that are actually authenticated.
+
+// So our application itself here is protected,
+
+// but not the resources coming from the Superbase Api.
+
+//*===================================================================
+
+//! 395. Authorization on Supabase: Protecting Database (RLS)
