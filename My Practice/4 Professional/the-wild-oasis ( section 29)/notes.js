@@ -1,5 +1,7 @@
 //! 375. Client-Side Filtering: Filtering Cabins
 
+import { supabaseUrl } from "./src/services/supabase";
+
 //^ open: filter.jsx
 
 //* So basically we want the ability to filter this table here
@@ -910,6 +912,151 @@ disabled={isDeleting}
 
 // but not the resources coming from the Superbase Api.
 
-//*===================================================================
+//*===================================================================================
 
 //! 395. Authorization on Supabase: Protecting Database (RLS)
+// now everyone could still fetch
+
+// and mutate data from our API
+
+// even if they cannot log into the applications UI
+
+// that we have been building.
+
+// And so let's now fix that
+
+// by implementing authorization also on Supabase itself
+
+// by updating all our row level security policies.
+
+// So again, right now, any malicious actor
+
+// could very easily find out the URL to our API
+
+// even if they cannot see this graphical user interface.
+
+// So just from reading our front end code,
+
+// they could figure that out and then they could,
+
+// for example, delete all of our bookings,
+
+// or all of our cabins, and really destroy our entire app.
+
+//? Case example:
+
+//^ open: Login and place CabinTable, then it will be shown
+
+//! solution:
+//* Go to policies and update all of them to only apply to authenticated users
+
+//*===================================================================================
+
+//! 396. Building The App Header
+
+//* let's build our application's header which will contain the username and an avatar and also a small menu.
+
+//^ open Header
+//^ create HeaderMenu in UI
+
+//^ open UserAvatar
+//* in this component, we need to get the current user
+//* so use useUser custom hook
+//* we don't need loading because if the page is loaded, so the user is already loaded as well
+
+//*===================================================================================
+
+//! 397. Updating User Data and Password
+
+//* We are going to build that feature where we allow our users to update their passwords,
+//* their full name, and even upload an avatar image.
+
+//^ open: UpdatePasswordForm - UpdateUserDataForm - Account (in pages)
+//^ place UpdateUserDataForm in the Account
+
+//^ in UpdateUserDataForm
+// const {
+//   user: {
+//     email,
+//     user_metadata: { fullName: currentFullName },
+//   },
+// } = useUser();
+
+// const [fullName, setFullName] = useState(currentFullName);
+// const [avatar, setAvatar] = useState(null);
+//* the default value of the full name
+
+// can actually immediately be set with the current full name
+
+// coming from user data because here in this component,
+
+// we already know that the user will have already been loaded
+
+// and therefore, we don't need any loading states
+
+// and we can immediately use this data right here,
+
+// for example, to set it as a default state value.
+
+//^ open: apiAuth.js
+//^ create async updateCurrentUser()
+
+//* go to supabase to set policy for avatars
+
+//* 3. Update avatar in the user
+//* add the url added to the uploaded image
+const { data: updateUser, error: error2 } = supabase.auth.updateUser({
+  data: {
+    avatar: `${supabaseUrl}/storage/v1/object/public/avatars/${fileName}`,
+  },
+});
+
+//* to know how the url of uploaded image looks like
+//* upload an image to the avatars (bucket) in the supabase
+
+//^ create: useUpdateUser.js
+//* consume updateCurrentUser function in another custom hook (useUpdateUser.js)
+
+//^  UpdateUserDataForm
+{
+  /* <Button
+type="reset"
+variation="secondary"
+disabled={isUpdating}
+onClick={handleCancel}
+> */
+}
+// since this button here actually has the type of reset,
+
+// which is an HTML five attribute,
+
+// this will actually not submit the form automatically.
+
+// So that's the reason why it did clear this file upload here.
+
+// And so we don't even need to do
+
+// any prevent default on this one.
+
+// All we need to do is to set the full name
+
+// back to the current full name
+
+// and set the avatar back to no.
+
+//^ copy from UpdatePasswordForm to SignupForm this:
+{
+  /* <Button onClick={reset} type="reset" variation="secondary">
+Cancel
+</Button> */
+}
+
+// because even though this is a button with a type of reset,
+
+// this will actually only clear all the input fields,
+
+// but not the error messages.
+
+// But this built-in (reset function),from React hook form
+
+// will actually do that as well.
