@@ -1003,13 +1003,26 @@ disabled={isDeleting}
 
 //* go to supabase to set policy for avatars
 
-//* 3. Update avatar in the user
+//! 3. Update avatar in the user
 //* add the url added to the uploaded image
-const { data: updateUser, error: error2 } = supabase.auth.updateUser({
-  data: {
-    avatar: `${supabaseUrl}/storage/v1/object/public/avatars/${fileName}`,
-  },
-});
+export async function updateCurrentUser({ fullName, password, avatar }) {
+  const { data: updatedUser, error: error2 } = supabase.auth.updateUser({
+    data: {
+      avatar: `${supabaseUrl}/storage/v1/object/public/avatars/${fileName}`,
+    },
+  });
+  return updatedUser;
+}
+//! note:
+//* there is an error above that we didn't (await) the updateUser function above
+//* and so we return (updatedUser) as undefined and before calling the updateUser func
+//* so we couldn't destructure the user in onSuccess in useUpdateUser func in useUpdateUser custom hook
+//* so we receive this error in the console:
+//! TypeError: Cannot destructure property 'user' of 'undefined' as it is undefined.
+//! at Object.onSuccess (useUpdateUser.js?t=1721546383655:11:19)
+
+//* so solution:
+//* add await
 
 //* to know how the url of uploaded image looks like
 //* upload an image to the avatars (bucket) in the supabase
@@ -1063,4 +1076,221 @@ Cancel
 
 //*======================================================
 
-//? add function
+//! 398. Implementing Dark Mode With CSS Variables
+
+//^ open: GlobalStyles.js
+
+// what we want to do now in order to implement dark mode
+
+// is to set different CSS variables
+
+// for different class names on the HTML element.
+
+// So basically right here in our elements,
+
+// we will have one class for light mode
+
+// and one class for dark mode.
+
+// And so then according to that class
+
+// these different CSS variables will apply.
+
+//^ create: darkModeToggle in ui folder
+//^ open: HeaderMenu
+//* then add the created toggle button to HeaderMenu
+
+//? Create state for dark-mode
+// But now of course it is time
+
+// to actually make this button work.
+
+// Now we need the information whether dark mode
+
+// is activated or not in multiple places in the application.
+
+// So not just here in this toggle,
+
+// but for example also in this logo.
+
+// So we will have a different logo when we are in dark mode.
+
+// So basically what this means is that
+
+// we want things to change on the screen
+
+// whenever we change to dark mode.
+
+// Not just the colors themselves,
+
+// but really the entire state of the application
+
+// needs to change so that we can then also
+
+// display a different icon here.
+
+// So that means that we need a state variable
+
+// and that state variable needs to be accessible
+
+// in the entire application because, again,
+
+// we actually need that information both here
+
+// and here in the logo.
+
+// And maybe in the future we might even need it
+
+// in some other places.
+
+// And therefore let's now create a new context where
+
+// we will store that state
+
+// and then provide it to our entire application tree.
+
+// So this is in fact gonna be the only piece
+
+// of global state that we're gonna need to manage ourselves
+
+// because all the other state, as we already know,
+
+// is being handled by React Query.
+
+// So all the remote state, which is usually most of the state
+
+// and most of the global state that we're gonna have
+
+// in an application.
+
+//^ create context folder and inside create DarkModeContext.jsx
+
+//^ open useLocalStorage.jsx in Hooks folder
+
+//* Add the provider to the entire application in App.jsx
+//* use the created context in the DarkModeToggle.jsx
+
+//^ open: logo
+//* add the isDarkMode state
+
+//*==================================================================================
+
+//! 399. Building the Dashboard Layout
+
+//^ open: DashboardLayout.jsx in Dashboard folder in features
+//^ open: Dashboard in pages folder
+
+//^ open: DashboardFilter
+//* We will need filter, because we will statistics for data in different intervals for 7, 30, 90 days
+
+//*=========================================================
+
+//! 400. Computing Recent Bookings and Stays
+
+// before we can start building
+
+// our statistics and charts
+
+// we first need to compute the latest bookings
+
+// and stays from our super base bookings table.
+
+//? Difference between booking and stays;
+
+// it's really, really important to distinguish
+
+// between these two types of data.
+
+// So between bookings and stays.
+
+// So the bookings are the actual sales.
+
+// So for example, in the last 30 days
+
+// the hotel might have sold 50 bookings online,
+
+// but maybe 30 of these guests will only arrive
+
+// and check into the hotel in the far future like month
+
+// or even a year after they have booked the booking.
+// on the other hand, we have the stays.
+
+// So stays are the actual check-ins
+
+// of guests as they arrive for their bookings
+
+// in our hotel that we can identify stays simply
+
+// by their start date together
+
+// with the status of either checked in or checked out.
+
+//^ open: apiBooking.js
+
+//^ look at getBookingsAfterDate
+// const { data, error } = await supabase
+// .from("bookings")
+// .select("created_at, totalPrice, extrasPrice")
+// .gte("created_at", date)
+// .lte("created_at", getToday({ end: true }));
+
+//? gte and lte are filters to get the date between today (current day) and the selected data (ex. last 30 days)
+// .gte("created_at", date)
+// .lte("created_at", getToday({ end: true }));
+
+// const { data, error } = await supabase
+// .from("bookings")
+// .select("*, guests(fullName)")
+// .gte("startDate", date)
+// .lte("startDate", getToday());
+
+//* startDate when the user started to check-in
+
+//^ useRecentBooking.js
+//* As always we will get this data by consuming these two function by ReactQuery inside a custom hook
+
+//* All these bookings data will be stored in cache after they received
+//* so we won't see the spinner again after clicking between the tabs
+
+//*===================================================================
+
+//! 401. Displaying Statistics
+// let's now calculate and display statistics
+
+// on recent bookings, recent sales, check-ins
+
+// and the total occupancy rate.
+
+//^ open: Stats.jsx - stat.jsx  - DashboardLayout.jsx - useCabins
+
+//* place Stats in DashboardLayout
+//*===================================================================
+//! 402. Displaying a Line Chart With the Recharts Library
+
+//* there are many chart libraries in the React ecosystem but one of the most popular ones
+//* and the most easy-to-use one as well is called Recharts.
+//*  npm i recharts@2
+
+//^ open: SalesChart.jsx in Dashboard folder and place it in DashboardLayout.jsx
+//* dataKey is the data that Area should be based on
+
+//* fakeData are 30 objects for 30 days
+//* label is the state
+//* extrasSales: breakfast
+
+// what we need to do now is to basically
+
+// compute a data structure like this one.
+
+// So an array which contains one object for each day.
+
+// And that might include even days where they are
+
+// no sales at all.
+
+// But we still will want this chart here to have
+
+// basically one entry for each of the days
+
+// so that it really is like a time series.
