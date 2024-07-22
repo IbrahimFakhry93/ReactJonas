@@ -13,7 +13,7 @@ export function useRecentBookings() {
     : Number(searchParams.get("last"));
 
   //* use function from FNS package to calculate the date
-  const queryDate = subDays(new Date(), numDays).toISOString();
+  const queryDate = subDays(new Date(), numDays).toISOString(); //* subDays returns a Date
 
   const { isLoading, data: bookings } = useQuery({
     queryFn: () => getBookingsAfterDate(queryDate),

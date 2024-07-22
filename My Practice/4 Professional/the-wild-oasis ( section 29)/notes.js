@@ -1268,6 +1268,7 @@ Cancel
 //*===================================================================
 //! 402. Displaying a Line Chart With the Recharts Library
 
+//? Sales Chart
 //* there are many chart libraries in the React ecosystem but one of the most popular ones
 //* and the most easy-to-use one as well is called Recharts.
 //*  npm i recharts@2
@@ -1294,3 +1295,128 @@ Cancel
 // basically one entry for each of the days
 
 // so that it really is like a time series.
+
+//*===================================================================
+
+//! 403. Displaying a Pie Chart
+
+//^ open: SalesChart.jsx
+//* add dates (from - to) to the title or the Heading of the chart
+
+//? Duration Chart
+//^ open: DurationChart.jsx
+
+//* startDataLight and startDataDark are data objects, that will be updated based
+//* on the space that we get into the component
+
+//* the value property will updated by some functions down
+
+//^ open: DashboardLayout.jsx
+
+//* place DurationChart in DashboardLayout.jsx
+
+//* Duration is the nameKey
+//* value is the dataKey
+
+//* nameKey="duration" dataKey="value"
+
+// you could call all these different
+
+// fields anything that you wanted,
+
+// and the same in the area chart
+
+// that we built in the previous lecture.
+
+// the function that we have here even removes all the objects that have zero nights,
+
+// and so they don't appear in the pie chart.
+
+//*===================================================================
+
+//! 404. Displaying Stays for Current Day
+
+// we will list all the guests
+
+// that arrive at the hotel for check-in at the current day
+
+// or that leave the hotel and need to check-out.
+
+//^ open: TodayActivity in check-in-out folder
+
+//* place TodayActivity in DashboardLayout.jsx
+
+//* in our application, an activity basically means that
+//* there is a guest arriving or leaving at that day.
+
+//^====================================
+
+//^ open: apiBooking.js
+
+//^ look at getStaysTodayActivity
+// the activity is either this  (stay.status === 'unconfirmed' && isToday(new Date(stay.startDate))) or
+
+// this.  // (stay.status === 'checked-in' && isToday(new Date(stay.endDate)))
+
+// So basically a guest arriving
+
+// with a booking that isn't checked-in yet
+
+// is one where the status is unconfirmed
+
+// and the start date is today.
+
+// So it's the current day right now.
+
+// And so this here means a guest ready to arrive
+
+// and check-in at the current day.
+
+// So that's one of the possible activities.
+
+// And the other one is the check-out,
+
+// which is a booking that is currently checked-in, but the end date is today.
+
+//* But by querying this, we only download the data we actually need, otherwise we would need ALL bookings ever created
+
+// const { data, error } = await supabase
+// .from("bookings")
+// .select("*, guests(fullName, nationality, countryFlag)")
+//! .or(
+//!   `and(status.eq.unconfirmed,startDate.eq.${getToday()}),and(status.eq.checked-in,endDate.eq.${getToday()})`
+//! )
+// .order("created_at");
+
+//? or method eqv to this down
+// (stay.status === 'unconfirmed' && isToday(new Date(stay.startDate))) ||
+// (stay.status === 'checked-in' && isToday(new Date(stay.endDate)))
+
+//^ create useTodayActivity
+//* manage the data or the state that we will receive using ReactQuery in a custom hook.
+//^ go to TodayActivity.jsx
+//* then use (useTodayActivity) in the TodayActivity comp
+
+//^ open: TodayItem
+//* inside TodayList, we want to render one <TodayItem/> for each of the activities
+
+//! note: activity at the end is a booking
+
+//* we need to render a tag here whether the user is arriving or departing
+//*so that tag is going to depend on whether the status is unconfirmed or checked-in.
+
+//? Check in and Check out button:
+
+// {status === "unconfirmed" && (
+//   <Button
+//     type="small"
+//     variation="primary"
+//     as={Link}
+//     to={`/checkin/${id}`}
+//   >
+//     Check in
+//   </Button>
+
+//* use (as) to convert button to anchor link (a) by passing as={Link}
+
+//^ open: CheckoutButton

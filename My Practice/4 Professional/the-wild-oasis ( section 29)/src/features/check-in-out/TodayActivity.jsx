@@ -2,6 +2,9 @@ import styled from "styled-components";
 
 import Heading from "../../ui/Heading";
 import Row from "../../ui/Row";
+import { useTodayActivity } from "./useTodayActivity";
+import Spinner from "../../ui/Spinner";
+import TodayItem from "./TodayItem";
 
 const StyledToday = styled.div`
   /* Box */
@@ -36,14 +39,45 @@ const NoActivity = styled.p`
   margin-top: 0.8rem;
 `;
 
-function Today() {
+function TodayActivity() {
+  const { activities, isLoading } = useTodayActivity();
+  console.log(activities);
   return (
     <StyledToday>
       <Row type="horizontal">
         <Heading as="h2">Today</Heading>
       </Row>
+
+      {!isLoading ? (
+        activities?.length > 0 ? (
+          <TodayList>
+            {activities.map((activity) => (
+              <TodayItem key={activity.id} activity={activity} />
+            ))}
+          </TodayList>
+        ) : (
+          <NoActivity></NoActivity>
+        )
+      ) : (
+        <Spinner />
+      )}
     </StyledToday>
   );
 }
 
-export default Today;
+export default TodayActivity;
+
+// now here below this row, <Row></Row>
+
+// let's then actually render that list.
+
+// Now here, actually while the data is loading,
+
+// we still want to show this part. <StyledToday></StyledToday>
+// the whole component
+
+// So we will not as usual here return the spinner
+
+// if we are still loading, but instead do that here.
+
+// So if we are not loading, then we do something and else,
