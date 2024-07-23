@@ -122,7 +122,7 @@ function prepareData(startData, stays) {
       obj.duration === field ? { ...obj, value: obj.value + 1 } : obj
     );
   }
-
+  //* stays === confirmedStays (and eventually confirmedStays are booking objects)
   const data = stays
     .reduce((arr, cur) => {
       const num = cur.numNights;

@@ -1181,50 +1181,39 @@ Cancel
 //^ open: Dashboard in pages folder
 
 //^ open: DashboardFilter
-//* We will need filter, because we will statistics for data in different intervals for 7, 30, 90 days
+//* We will need filter, because we will need statistics for data in different intervals for 7, 30, 90 days
 
 //*=========================================================
 
 //! 400. Computing Recent Bookings and Stays
 
-// before we can start building
-
-// our statistics and charts
-
-// we first need to compute the latest bookings
-
-// and stays from our super base bookings table.
+// before we can start building our statistics and charts
+// we first need to compute the latest bookings and stays
+// from our super base bookings table.
 
 //? Difference between booking and stays;
 
-// it's really, really important to distinguish
+//& Distinguishing Bookings and Stays
+//? Understanding the Difference
+//* - Bookings represent actual sales.
+//* - Stays are guest check-ins at the hotel.
+//* - Bookings may occur well in advance.
+//* - Stays are identified by start date and check-in or checkout status.
 
-// between these two types of data.
+// Example:
+const booking1 = {
+  id: 1,
+  guestName: "John Doe",
+  bookingDate: "2023-05-01",
+  checkInDate: "2023-06-15", // Future check-in
+};
 
-// So between bookings and stays.
-
-// So the bookings are the actual sales.
-
-// So for example, in the last 30 days
-
-// the hotel might have sold 50 bookings online,
-
-// but maybe 30 of these guests will only arrive
-
-// and check into the hotel in the far future like month
-
-// or even a year after they have booked the booking.
-// on the other hand, we have the stays.
-
-// So stays are the actual check-ins
-
-// of guests as they arrive for their bookings
-
-// in our hotel that we can identify stays simply
-
-// by their start date together
-
-// with the status of either checked in or checked out.
+const stay1 = {
+  id: 101,
+  guestName: "Jane Smith",
+  startDate: "2023-06-15",
+  status: "checkedIn", // Guest has arrived
+};
 
 //^ open: apiBooking.js
 
@@ -1235,34 +1224,36 @@ Cancel
 // .gte("created_at", date)
 // .lte("created_at", getToday({ end: true }));
 
-//? gte and lte are filters to get the date between today (current day) and the selected data (ex. last 30 days)
+//? gte and lte are filters to get the date between today (current day)
+//? and the selected data (ex. last 30 days)
 // .gte("created_at", date)
 // .lte("created_at", getToday({ end: true }));
 
+//^ look at getStaysAfterDate
 // const { data, error } = await supabase
 // .from("bookings")
-// .select("*, guests(fullName)")
-// .gte("startDate", date)
-// .lte("startDate", getToday());
+//! .select("*, guests(fullName)")
+//! .gte("startDate", date)
+//! .lte("startDate", getToday());
 
 //* startDate when the user started to check-in
 
-//^ useRecentBooking.js
-//* As always we will get this data by consuming these two function by ReactQuery inside a custom hook
+//^ open: useRecentBooking.js
+//* As always we will get this data
+//* by consuming these two function by ReactQuery inside a custom hook
 
 //* All these bookings data will be stored in cache after they received
 //* so we won't see the spinner again after clicking between the tabs
 
+//* we will use these booking later in the Stats, see next lecture (Displaying Statistics)
+
 //*===================================================================
 
 //! 401. Displaying Statistics
-// let's now calculate and display statistics
+//* let's now calculate and display statistics
+//* on recent bookings, recent sales, check-ins and the total occupancy rate.
 
-// on recent bookings, recent sales, check-ins
-
-// and the total occupancy rate.
-
-//^ open: Stats.jsx - stat.jsx  - DashboardLayout.jsx - useCabins
+//^ open: Stats.jsx - stat.jsx  - DashboardLayout.jsx - useCabins.jsx
 
 //* place Stats in DashboardLayout
 //*===================================================================
@@ -1271,7 +1262,7 @@ Cancel
 //? Sales Chart
 //* there are many chart libraries in the React ecosystem but one of the most popular ones
 //* and the most easy-to-use one as well is called Recharts.
-//*  npm i recharts@2
+//!  npm i recharts@2
 
 //^ open: SalesChart.jsx in Dashboard folder and place it in DashboardLayout.jsx
 //* dataKey is the data that Area should be based on
@@ -1280,21 +1271,18 @@ Cancel
 //* label is the state
 //* extrasSales: breakfast
 
-// what we need to do now is to basically
+//& Creating a Time Series Data Structure
+//? Objective: Compute an array with one object per day.
+//* - Each object represents a day, even if there are no sales.
+//* - Ensure one entry per day for consistent time series representation.
 
-// compute a data structure like this one.
-
-// So an array which contains one object for each day.
-
-// And that might include even days where they are
-
-// no sales at all.
-
-// But we still will want this chart here to have
-
-// basically one entry for each of the days
-
-// so that it really is like a time series.
+//! Just example
+const dailySalesData = [
+  { date: "2023-05-01", sales: 10 },
+  { date: "2023-05-02", sales: 0 }, // No sales on this day
+  { date: "2023-05-03", sales: 5 },
+  // ... more entries ...
+];
 
 //*===================================================================
 
@@ -1336,9 +1324,7 @@ Cancel
 
 //! 404. Displaying Stays for Current Day
 
-// we will list all the guests
-
-// that arrive at the hotel for check-in at the current day
+// we will list all the guests that arrive at the hotel for check-in at the current day
 
 // or that leave the hotel and need to check-out.
 
@@ -1378,8 +1364,12 @@ Cancel
 
 // which is a booking that is currently checked-in, but the end date is today.
 
+//? Problem:
 //* But by querying this, we only download the data we actually need, otherwise we would need ALL bookings ever created
+// (stay.status === 'unconfirmed' && isToday(new Date(stay.startDate))) ||
+// (stay.status === 'checked-in' && isToday(new Date(stay.endDate)))
 
+//? Solution
 // const { data, error } = await supabase
 // .from("bookings")
 // .select("*, guests(fullName, nationality, countryFlag)")
@@ -1388,7 +1378,11 @@ Cancel
 //! )
 // .order("created_at");
 
-//? or method eqv to this down
+//! comma , and() as above are eqv to:
+//* and() === &&
+//* , === ||
+
+//? (or) method eqv to this down
 // (stay.status === 'unconfirmed' && isToday(new Date(stay.startDate))) ||
 // (stay.status === 'checked-in' && isToday(new Date(stay.endDate)))
 
@@ -1403,7 +1397,7 @@ Cancel
 //! note: activity at the end is a booking
 
 //* we need to render a tag here whether the user is arriving or departing
-//*so that tag is going to depend on whether the status is unconfirmed or checked-in.
+//* so that tag is going to depend on whether the status is unconfirmed or checked-in.
 
 //? Check in and Check out button:
 

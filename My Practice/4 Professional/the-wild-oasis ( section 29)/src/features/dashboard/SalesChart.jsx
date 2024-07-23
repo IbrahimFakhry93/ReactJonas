@@ -67,6 +67,8 @@ function SalesChart({ bookings, numDays }) {
 
   console.log(allDates);
 
+  //* map over (allDates) to create array of objects
+
   const data = allDates.map((date) => {
     return {
       label: format(date, "MMM dd"),
@@ -92,6 +94,7 @@ function SalesChart({ bookings, numDays }) {
         totalSales: { stroke: "#4f46e5", fill: "#c7d2fe" },
         extrasSales: { stroke: "#16a34a", fill: "#dcfce7" },
         text: "#374151",
+        textLine: "red",
         background: "#fff",
       };
 
@@ -101,12 +104,13 @@ function SalesChart({ bookings, numDays }) {
         Sales from {format(allDates.at(0), "MMM dd yyyy")} to &mdash;{" "}
         {format(allDates.at(-1), "MMM dd yyyy")}
       </Heading>
+
       <ResponsiveContainer height={300} width="100%">
         <AreaChart data={data}>
           <XAxis
             dataKey="label"
             tick={{ fill: colors.text }}
-            tickLine={{ stroke: colors.text }}
+            tickLine={{ stroke: colors.textLine }}
           />
           <YAxis unit="$" />
           <CartesianGrid strokeDasharray="4" />
