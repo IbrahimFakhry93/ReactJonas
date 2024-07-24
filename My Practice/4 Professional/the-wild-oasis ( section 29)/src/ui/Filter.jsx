@@ -35,6 +35,16 @@ const FilterButton = styled.button`
   }
 `;
 
+//? Filter comp in CabinTableOperations
+// <Filter
+// filterField="discount"
+// options={[
+//   { value: "all", label: "All" },
+//   { value: "no-discount", label: "No discount" },
+//   { value: "with-discount", label: "With discount" },
+// ]}
+// />
+
 function Filter({ filterField, options }) {
   const [searchParams, setSearchParams] = useSearchParams();
 

@@ -3,6 +3,8 @@ import Select from "./Select";
 
 //*===============================================================
 
+//* {} are curly braces for destructing
+
 function SortBy({ options }) {
   const [searchParams, setSearchParams] = useSearchParams();
 

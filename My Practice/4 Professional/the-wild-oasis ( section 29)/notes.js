@@ -2,24 +2,47 @@
 
 import { supabaseUrl } from "./src/services/supabase";
 
-//^ open: filter.jsx
+//^ open: Filter.jsx
 
 //* So basically we want the ability to filter this table here
 
 //& Title: Filtering Cabins by Discount
 
-//? Objective: Allow users to filter cabins or (Table in general) based on whether they have a discount.
+//? Objective:
+//* Allow users to filter cabins or (Table in general)
+//* based on whether they have a discount.
 
 //~ Approach:
 //*   - Add buttons for "All Cabins," "Discounted Cabins," and "Non-Discounted Cabins."
 //*   - Store the selected filter value in the URL for shareability.
 //*   - Update the URL state from a separate filter component.
-//*   - The filter component can be placed anywhere in the component tree. (can be used to filter cabins, bookings)
-//* since we can read that state from everywhere in the app,
+//*   - The filter component can be placed anywhere in the component tree.
+//*  (can be used to filter cabins, bookings) since we can read that state from everywhere in the app,
+
+//? Note:
+//* URL state is the filterField
+//* filterField in cabins is discount
+//* filterField in bookings is status
+
+//? const [searchParams, setSearchParams] = useSearchParams();
+//* to store this value in the url, we use (useSearchParams hook)
+//* This hook comes from ReactRouter
+
+//* useSearchParams hook is similar to use state
+//* because it also gives us the state.
+//* So the searchparams themselves are the state
+//* and then as a second value, it gives us a way to update them (setSearchParams)
+
+//* searchParams.set('discount',value);
+//* setSearchParams(searchParams);
+
+//* Then here the first value above is the name of the state.
+//* So of the field in the URL.  (discount)
+//* And then second is the one (value) that we are receiving in the function(handleClick)
 
 //^ open: Cabins.jsx
-//* and place at  <p>Filter / Sort</p> another component called
-//* cabin table operations. So operations because we're gonna have filter and sort here.
+//* and place at  <p>Filter / Sort</p> another component called (cabin table operations.)
+//* So operations because we're gonna have filter and sort here.
 
 //^ create: CabinTableOperations.jsx
 //* As we click on each of FilterButtons,
@@ -29,27 +52,11 @@ import { supabaseUrl } from "./src/services/supabase";
 //! add dashes to the values because they will end up in the url
 //! so they shouldn't be dashes in there.
 
-//^ open: Filter:
-// const [searchParams, setSearchParams] = useSearchParams();
-//* to store this value in the url, we use (useSearchParams hook)
-//* This hook comes from ReactRouter
-
-// useSearchParams hook is similar to use state
-// because it also gives us the state.
-// So the searchparams themselves,
-// and then as a second value, it gives us a way to update them (setSearchParams)
-//^=============================================
-//* searchParams.set('discount',value);
-//* setSearchParams(searchParams);
-
-// Then here the first value above is the name of the state.
-// So of the field in the URL.  (discount)
-// And then second is the one (value) that we are receiving in the function(handleClick)
 //^=============================================
 
-//? next step:
-//* Get the data from url into the table and sort the data accordingly
 //^ open: CabinTable.jsx
+//? next step:
+//* Get the data from url into the table and filter the data accordingly
 //* const [searchParams] = useSearchParams();
 
 //! review the video
@@ -70,13 +77,15 @@ import { supabaseUrl } from "./src/services/supabase";
 //* searchParams.set("discount", value);
 //* discount, it is the filterField
 //* options parameter in Filter function inside Filter Component will be an array of (FilterButtons)
-//* value and label (text in UI)
+//* value (will pass to handleClick) and label (text in UI)
 
 //^ open: CabinTableOperations.jsx
 //* then pass these values( filterField, options) in the CabinTableOperations.jsx
 //* which is where we include this filter component.
 
+//^  open: Filter
 //& Read the filter field from the url
+//! current filter is used for activation after clicking
 //* const currentFilter = searchParams.get(filterField) || options.at(0).value;
 //& to display which button or option is selected or active
 //*? active={option.value === currentFilter}
@@ -101,15 +110,14 @@ import { supabaseUrl } from "./src/services/supabase";
 
 //^ open: CabinTableOperations.jsx
 
-// { value: "name-asc", label: "Sort by name (A-Z)" },
-// { value: "name-desc", label: "Sort by name (Z-A)" },
-
 //& Title: Sorting Information
 //? We are encoding two types of information inside (value):
 //*   1. The field by which we want to sort (ex. name, regularPrice, maxCapacity )
 //*   2. The direction of sorting (ascending or descending).
-//*   Keeping it simple by combining both in this value.
+//*   Keeping it simple by combining both in this value. (value: "regularPrice-asc")
 
+// { value: "name-asc", label: "Sort by name (A-Z)" },
+// { value: "name-desc", label: "Sort by name (Z-A)" },
 // { value: "regularPrice-asc", label: "Sort by price (low first)" },
 // { value: "regularPrice-desc", label: "Sort by price (high first)" },
 
@@ -145,6 +153,7 @@ import { supabaseUrl } from "./src/services/supabase";
 //* After creating the searchParams state and handle the select event in handleChange
 //* we need to read the selected value in the CabinsTable and do the sorting
 
+//^ Open: CabinTable.jsx
 // const sortedCabins = filteredCabins.sort((a, b) => a[field] - b[field]); //* this sorting by ascending way
 //* But if we want to sort it in a descending way we need to convert the positive number
 //* that this here (field) is gonna create to a negative number or if this is a negative number
@@ -169,7 +178,7 @@ import { supabaseUrl } from "./src/services/supabase";
 
 //* Add the same to CabinTable
 
-//^ Create: useBookings
+//^ Create: useBookings.js
 //* Next, we want to connect booking table to getBookings in apiBooking
 //* so we use react query to fetch bookings data and receive it in bookings table.
 
@@ -179,6 +188,7 @@ import { supabaseUrl } from "./src/services/supabase";
 //* so open: apiBookings
 
 //!   const { data, error } = await supabase.from("bookings").select("*");
+
 //? rewrite it as follows:
 //!   const { data, error } = await supabase.from("bookings").select("*, cabins(*), guests(*)");
 
@@ -191,6 +201,15 @@ import { supabaseUrl } from "./src/services/supabase";
 // const { data, error } = await supabase.from("bookings").select("id,created_at,startDate,endDate,numNights,numGuests,status,totalPrice, cabins(names), guests(fullName,email)");
 
 //^ open Tag and BookingRow
+
+//! in bookingRow
+// const statusToTagName = {
+//   unconfirmed: "blue",
+//   "checked-in": "green",
+//   "checked-out": "silver",
+// };
+
+//* <Tag type={statusToTagName[status]}>{status.replace("-", " ")}</Tag>
 
 //*=====================================================================================================================
 

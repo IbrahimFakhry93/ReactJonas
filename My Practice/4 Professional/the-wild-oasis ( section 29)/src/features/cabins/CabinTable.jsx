@@ -10,6 +10,7 @@ import Empty from "../../ui/Empty";
 function CabinTable() {
   const { isLoading, cabins } = useCabins();
   const [searchParams] = useSearchParams();
+
   if (!cabins?.length) return <Empty resourceName="Cabins" />;
   if (isLoading) return <Spinner />;
 
@@ -28,6 +29,7 @@ function CabinTable() {
     filteredCabins = cabins.filter((cabin) => cabin.discount > 0);
 
   //!===========================================================
+
   //* 2) Sort
   const sortBy = searchParams.get("sortBy") || "name-asc";
   //*  both the field and the direction are encoded in the string
