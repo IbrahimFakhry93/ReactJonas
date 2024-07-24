@@ -10,17 +10,19 @@ export function useBookings() {
   //* Filter:
 
   const filterValue = searchParams.get("status");
+  console.log(filterValue);
   const filter =
     !filterValue || filterValue === "all"
       ? null
-      : { field: "totalPrice", value: 6000, method: "gt" }; //* pass this object (filter) to getBookings
+      : { field: "status", value: filterValue }; //* pass this object (filter) to getBookings
 
+  console.log(filter);
   //!=============================================
   //* Sort:
 
   const sortByRaw = searchParams.get("sortBy") || "startDate-desc";
   const [field, direction] = sortByRaw.split("-");
-  const sortBy = { field, direction };
+  const sortBy = { field, direction }; //* pass this object (sortBy) to getBookings
 
   //!=============================================
   //* Pagination:
@@ -30,7 +32,7 @@ export function useBookings() {
 
   //* Query
   const {
-    //* use empty object because initially the data is not existed so to avoid undefined error, so concept of using optional chaining
+    //* use empty object because initially the data is not existed so to avoid undefined error, same concept of using optional chaining
     data: { data: bookings, count } = {},
     isLoading,
     error,
@@ -41,7 +43,7 @@ export function useBookings() {
   //!=============================================
   //* Prefetching:
   const pageCount = Math.ceil(count / PAGE_SIZE);
-  if (page === pageCount)
+  if (page < pageCount)
     queryClient.prefetchQuery({
       queryKey: ["bookings", filter, sortBy, page + 1],
       queryFn: () => getBookings({ filter, sortBy, page: page + 1 }),

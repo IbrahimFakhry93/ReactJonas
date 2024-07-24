@@ -24,12 +24,10 @@ export async function getBookings({ filter, sortBy, page }) {
 
   //? Build the query there from scratch in multiple parts:
 
-  let query = supabase
-    .from("bookings")
-    .select(
-      "id, created_at, startDate, endDate, numNights, numGuests, status, totalPrice, cabins(name), guests(fullName,email)",
-      { count: "exact" }
-    );
+  let query = supabase.from("bookings").select(
+    "id, created_at, startDate, endDate, numNights, numGuests, status, totalPrice, cabins(name), guests(fullName,email)",
+    { count: "exact" } //* count is sth relates to pagination
+  );
 
   //* Filter:
   if (filter) query = query[filter.method || "eq"](filter.field, filter.value);

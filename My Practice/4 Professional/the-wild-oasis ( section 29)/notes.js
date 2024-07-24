@@ -246,7 +246,7 @@ import { supabaseUrl } from "./src/services/supabase";
 //* But instead, really only that filtered data
 //* should get downloaded from supabase.
 
-//^ open: apiSettings.js  and look at getBookings
+//^ open: apiBookings.js  and look at getBookings
 
 //? use eq method and gt (greater than) method or lt (less than)
 // const { data, error } = await supabase
@@ -259,9 +259,9 @@ import { supabaseUrl } from "./src/services/supabase";
 // and then filter for these values right here. So not having it hard coded
 
 //* we can't use "use searchparams" hook inside regular function as getBookings
+//* Instead, we can use it right here in "useBookings.js" custom hook
 
 //^ open: useBookings.js
-//* Instead, we can use it right here in "use bookings."
 //* And so this really is the perfect place where we can now read the filtered value,
 //* and then pass it into the "getBookings" function.
 
@@ -273,7 +273,7 @@ import { supabaseUrl } from "./src/services/supabase";
 
 //! problem:
 //* it will works but when change the filtration field by clicking on filters buttons
-//* it won't work, it will only show the new data when refreshing the page reloading the page
+//* it won't work, it will only show the new data just when refreshing the page reloading the page
 
 //! why is that?
 
@@ -290,6 +290,22 @@ import { supabaseUrl } from "./src/services/supabase";
 //*=======================================================================================================================
 
 //! 380. API-Side Sorting: Sorting Bookings
+//^ apiBookings.js
+
+//^ look at getBookings function , sort part
+
+//& In Supabase, the .order() method
+//* It is used to sort the results of a query in either ascending or descending order.
+
+// You specify the column you want to sort by (e.g., "id" in your example).
+// You can choose whether the sorting direction is ascending (smallest to largest) or descending (largest to smallest).
+// For instance, in your code snippet:
+
+// const { data: cabinsIds } = await supabase
+//   .from("cabins")
+//   .select("id")
+//   .order("id", { ascending: false });
+
 //*=======================================================================================================================
 
 //! 381. Building a Reusable Pagination Component
@@ -298,7 +314,7 @@ import { supabaseUrl } from "./src/services/supabase";
 
 //* Render few buttons to set the current page state to the URL
 
-//^ open: Pagination.jsx and BookingTable.jsx
+//^ open: Pagination.jsx and BookingTable.jsx - constants in utils
 
 //* place pagination in BookingTable.jsx under table body in the footer
 
@@ -310,6 +326,11 @@ import { supabaseUrl } from "./src/services/supabase";
 //* Calculating the next page or the previous page
 //* will always depend on the current page.
 //* the current page is to get from the URL by useSearchParams hook
+
+//^ look at nextPage:
+
+//* const next = currentPage === pageCount  (means last page in next direction)
+//* const prev = currentPage === 1   (means first page in back direction)
 //*=======================================================================================================================
 
 //! 382. API-Side Pagination: Paginating Bookings
@@ -342,38 +363,39 @@ import { supabaseUrl } from "./src/services/supabase";
 
 //*=======================================================================================================================
 //! 383. Prefetching With React Query
-// prefetching is all about fetching some data
+//^ open: useBooking.js and look at Prefetching part
 
-// that we know might become necessary
+//& Prefetching Data for Pagination
 
-// before we actually need that data to render it
+//? Overview:
+//* Prefetching involves fetching data in advance, even before it's needed for rendering on the user interface.
+//* This strategy is commonly used in pagination scenarios.
 
-// on the user interface.
+//! Example Scenario:
+//* Imagine we're on page number seven of a paginated list.
+//* By prefetching, we already have data for page number eight in our cache.
+//* When the user navigates to page eight, we can simply retrieve the data from the cache and render it.
 
-// And in the context of pagination, usually that means
+//^ How It Works:
+//* 1. We start by obtaining the QueryClient (usually via the useQueryClient hook).
+//* 2. Next, we call the Prefetch Query method on the QueryClient.
+//*    This fetches the data in the background, making it available for future use.
 
-// that we fetch the next page before it is actually displayed.
-// So in this case,
+//? Key Takeaways:
+//* - Prefetching optimizes performance by reducing wait times when transitioning between pages.
+//* - It ensures smoother user experiences by having necessary data ready ahead of time.
 
-// that would mean that here in page number seven,
+//& Implementation Steps:
+//* 1. Obtain the QueryClient using the useQueryClient hook.
+//* 2. Call the Prefetch Query method to fetch data for the next page.
+//* 3. When the user navigates to that page, use the cached data for rendering.
 
-// we would already have page number eight here in the cache
+//? Example Usage:
+//* const queryClient = useQueryClient();
+//* queryClient.prefetchQuery("myPaginationKey", fetchNextPageData);
 
-// and so then when we move there,
-
-// this data from page number eight could simply be get
-
-// from the cache and rendered.
-
-//^======
-
-// the way this works is that we first need to QueryClient
-
-// and then on there we call the Prefetch Query method.
-
-// So to get that QueryClient, we need to use
-
-// the use QueryClient hook.
+//* Note: Replace "myPaginationKey" with an appropriate key for your pagination data.
+//* Replace fetchNextPageData with your actual data-fetching function.
 
 //*=======================================================================================================================
 

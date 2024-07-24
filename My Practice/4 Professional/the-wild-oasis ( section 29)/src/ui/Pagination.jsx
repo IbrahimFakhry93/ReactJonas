@@ -70,7 +70,7 @@ function Pagination({ count }) {
   function nextPage() {
     const next = currentPage === pageCount ? currentPage : currentPage + 1;
     searchParams.set("page", next);
-    setSearchParams(searchParams);
+    setSearchParams(searchParams); //* then we will use the params info in useBookings custom hook and getBookings function
   }
 
   function prevPage() {
