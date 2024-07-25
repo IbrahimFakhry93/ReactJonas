@@ -401,9 +401,45 @@ import { supabaseUrl } from "./src/services/supabase";
 
 //! 384. Building the Single Booking Page
 
+//^ App.jsx
+
+//*  <Route path="bookings/:bookingId" element={<Booking />} />
+
+//^ Booking.jsx
+
+//* place BookingDetail.jsx in Booking.jsx
+
+//^ BookingDetail
+//* It needs booking data to display or render it by passing booking data
+//* to
+//* so it retrieves booking data from useBooking custom hook
+// const { booking, isLoading } = useBooking();
+
+//^ useBooking
+
+// export function useBooking() {
+// const { bookingId } = useParams();
+
+// const {
+//   isLoading,
+//   data: booking,
+//   error,
+// } = useQuery({
+//   queryKey: ["booking", bookingId],
+//   queryFn: () => getBooking(bookingId),
+// retry: false,
+// });
+
+// return { isLoading, booking, error };
+// }
+
+//* useBooking use (useParams) to get the bookingId
+//* and pass it to getBooking function by useQuery to get the booking data
+//* from supabase database
 //*=======================================================================================================================
 
 //! 385. Checking In a Booking
+
 //& Title: Hotel Check-In and Checkout Process
 //? Confirming Payment and Guest Check-In:
 //* - Hotel employees must verify payment receipt during guest check-in.
@@ -413,18 +449,12 @@ import { supabaseUrl } from "./src/services/supabase";
 //* - During checkout, guests can buy breakfast for their entire stay.
 //* - If they haven't already purchased breakfast, this option is available.
 
-// Let's proceed with implementing these features.
-// Remember to handle payment confirmation and breakfast purchase logic.
-// Happy coding!
-
-//^=================================================
-
 //& Title: Implementing Guest Check-In and Payment Confirmation
 
 //? Guest Check-In Options:
-//* - Guests can be checked in from the booking detail page.
-//* - Alternatively, check-in can occur directly from the context menu.
-//* - A link will also allow check-in for guests arriving on the same day in DashBoard
+//* 1) Guests can be checked in from the booking detail page.
+//* 2) Alternatively, check-in can occur directly from the context menu.
+//* 3) Or also by Dashboard, a link will allow check-in for guests arriving on the same day.
 
 //^ File: BookingRow.jsx
 //? Important Consideration:
@@ -439,6 +469,8 @@ import { supabaseUrl } from "./src/services/supabase";
 //* Implement the check-in route in App.js.
 
 //^ File: CheckIn.jsx (inside the "page" folder)
+//* <Route path="checkin/:bookingId" element={<CheckIn />} />
+
 //^ Include CheckinBooking.jsx in CheckIn.jsx.
 //! create confirmPaid state in checkinBooking,jsx
 //! connect this state to the checkbox
@@ -465,7 +497,7 @@ import { supabaseUrl } from "./src/services/supabase";
 //* The nullish coalescing operator (??) provides a concise way to handle null or undefined values.
 //* It ensures safe access to properties and offers fallbacks when needed.
 //* In the context of our useEffect hook, it guards against potential null or undefined values.
-
+//* the bottom line, it converts (undefined or null to false value)
 //? Example usage:
 //~ useEffect(() => setConfirmPaid(booking?.isPaid ?? false), [booking]);
 
@@ -478,34 +510,53 @@ import { supabaseUrl } from "./src/services/supabase";
 //^ open: useBooking.jsx
 //* - Include bookingId in queryKey to refetch data when switching between bookings.
 
+//^ Custom Hook: useCheckin.js
 //? Check-In Process:
 //* - Update the booking status from unconfirmed to checked in.
 //* - Set "isPaid" to true.
 
-//^ Custom Hook: useCheckin.js
+//* and this process is a mutation so we use (useMutation)
+
+//& Invalidate the Queries:
+//~!  queryClient.invalidateQueries({ active: true });
+//* previously what we did here in invalidateQueries was to pass in the Query key,
+//* but we can also do it in another way, which is simply to pass active: true.
+//* And so this will then invalidate all the queries that are currently active on the page.
+//* So, this is a bit easier, because then we don't have to remember any Query keys.
+
+//& Navigate from BookingDetail to checkIn:
+//
+// const { booking, isLoading } = useBooking();
+// const { status, id: bookingId } = booking;
+// <Button onClick={() => navigate(`/checkin/${bookingId}`)}>Check In</Button>;
+
 //*=======================================================================================================================
 
 //! 386. Adding Optional Breakfast
 
-//^ open: CheckinBooking.jsx
+//^ open: CheckinBooking.jsx - apiBooking (updateBooking)
 //* Add new checkbox for breakfast
 //* create new state (addBreakfast)
 
-{
-  /* <Checkbox
-            checked={addBreakfast}
-            onChange={() => {
-            setAddBreakfast((add) => !add);
-            setConfirmPaid(false);
-            }}
-            //* id="breakfast"
-            >
+//*   {!hasBreakfast && (
+//     <Box>
+//  <Checkbox
+//            //* checked={addBreakfast}
+//             onChange={() => {
+//           //*   setAddBreakfast((add) => !add);
+//             setConfirmPaid(false); //* so cancel the payment confirmation because there is a new fee (breakfast payment) is added
+//             }}
+//             //* id="breakfast"
+//             >
 
-            Want to add breakfast for x?
-</Checkbox> */
-}
+//            //* Want to add breakfast for x?
+// </Checkbox>
+// </Box>
+//       )}
 
-//* We should also give Checkbox an ID so we can easily click there on that label as well.
+//* And this box is conditionally rendered by hasBreakfast and it's property in the booking object
+
+//* We should also give Checkbox an ID so we can easily click there on its label ( Want to add breakfast for x?)
 
 //? Breakfast Price Calculation
 //* Use settings table in supabase to calculate the breakfast price
@@ -516,17 +567,17 @@ import { supabaseUrl } from "./src/services/supabase";
 
 //! 387. Checking Out a Booking (+ Fixing a Small Bug)
 
-//^ open: BookingRow, BookingDetails, useCheckout
+//^ open: BookingRow, BookingDetails, useCheckout, apiBooking (updateBooking)
 //& Title: Handling onClick Event for Check Out Button
 //? Note
 //* The onClick event handler for the "Check Out" button can be defined in different ways.
 //* Let's explore the correct approach to ensure the bookingId is properly passed.
 
-// Approach 1 (Problematic):
+//? Approach 1 (Problematic):
 {
   /* <Menus.Button
   icon={<HiArrowUpOnSquare />}
-  onClick={(bookingId) => checkOut(bookingId)}
+  //* onClick={(bookingId) => checkOut(bookingId)}
   disabled={isCheckingOut}
 >
   Check Out
@@ -535,7 +586,7 @@ import { supabaseUrl } from "./src/services/supabase";
 // In this approach, you’re passing a function with an argument (bookingId) => checkOut(bookingId) directly to the onClick prop.
 // The issue is that the bookingId is not being correctly passed to the checkOut function.
 
-// Approach 2 (Working):
+//? Approach 2 (Working):
 {
   /* <Menus.Button
   icon={<HiArrowUpOnSquare />}
@@ -562,7 +613,7 @@ import { supabaseUrl } from "./src/services/supabase";
 //^ open: Filter
 
 //* add inside handleClick function
-//*  if (searchParams.get("page")) searchParams.set("page", 1);
+//!  if (searchParams.get("page")) searchParams.set("page", 1);
 //*==================================================================================
 //! 388. Deleting a Booking
 
@@ -574,30 +625,22 @@ import { supabaseUrl } from "./src/services/supabase";
   /* <ConfirmDelete
 resourceName="booking"
 onConfirm={() =>
-  deleteBooking(bookingId, { onSettled: () => navigate(-1) })
+ //* deleteBooking(bookingId, { onSettled: () => navigate(-1) })
 }
 disabled={isDeleting}
 /> */
 }
 //*==================================================================================
 //! 389. Authentication: User Login With Supabase
-// users actually need to be logged into the application
 
-// in order to use it.
+//& Authentication Definition:
+//* Process of verifying the identity of the user.
+//* Answer of question: (Who are you?)
 
-// And so now we're going to use Supabase
-
-// to implement this super important part of this
-
-// and of most other web applications.
-
-// We will also use Supabase
-
-// to sign up users in the first place,
-
-// to update their data and password
-
-// and even to upload a user avatar.
+//* users actually need to be logged into the application in order to use it.
+//* And so now we're going to use Supabase to apply this feature
+//* We will also use Supabase to sign up users in the first place,
+//* to update their data and password and even to upload a user avatar.
 
 //^ open: LoginForm.jsx - Login.jsx
 
@@ -619,83 +662,82 @@ disabled={isDeleting}
 //* password reset
 //* update and log out
 
-//* copy user login logic from supabase
+//* copy user login logic from supabase and paste inside login function in apiAuth
+//^ open apiAuth and create async login function and paste user login logic from supabase
 
 // let { data, error } = await supabase.auth.signInWithPassword({
 //   email: 'someone@email.com',
 //   password: 'IZKAUwcOZtooiBykgsBS'
 // })
 
-//^ open apiAuth and create async login function and paste user login logic from supabase
-
 //! export async function login({ email, password }) {
 //   let { data, error } = await supabase.auth.signInWithPassword({
-//     email: "someone@email.com",
-//     password: "IZKAUwcOZtooiBykgsBS",
+//     email,
+//    password,
 //   });
 // }
 
 //! note:
-//* pass object ({email,password}) to login function
-// in modern front end development it's pretty common to not pass
-// in multiple arguments into a function, but just one object.
-// and immediately destructure it
+//? pass object ({email,password}) to login function
+//* in modern front end development it's pretty common to not pass
+//* in multiple arguments into a function, but just one object.
+//* and immediately destructure it
 
 //* so now we can go use this function to log that user
+//* that we created initially in.
+//* Now, in order to do this, we will again use React Query,
 
-// that we created initially in.
-
-// Now, in order to do this, we will again use React Query,
-
+//^ open LoginForm
 //* to test this function let's log it in handleSubmit function
 //* check in console.log(data)
 //* you will find session, user inside it, you will find the login email, and role:authenticated
 
-// And so from now on, on all the next requests
+//* And so from now on, on all the next requests
+//* Supabase will automatically send this data to the server
+//* to basically let Supabase know that we are currently authenticated.
+//* So Supabase stores this data auth token (access token - refresh token) in local storage.
 
-// Supabase will automatically send this data to the server
-
-// to basically let Supabase know
-
-// that we are currently authenticated.
-
-// So Supabase, I believe stores this data auth token (access token - refresh token) in local storage.
-
+//^ open: useLogin.js
 //* then direct the user to dashboard
-// we also want to show some indicator here
+// navigate("/dashboard", { replace: true });
 
-// that login is actually happening right now.
-
-// And so for all that it's best to again use React Query.
+//* we also want to show some indicator here
+//* that login is actually happening right ow.
+//* And so for all that it's best to again use React Query.
 
 //^ create custom hook useLogin.js
 
 //! use useMutation hook, why:
-// and then here we will use a mutation actually
-
-// to handle this login.
-
-// So it's a mutation
-
-// because actually something changes on the server.
-
-// So basically a user gets authenticated
-
-// and also it's gonna be a lot easier
-
-// to then handle the success
-
-// and error states if this is a mutation.
+//* and then here we will use a mutation actually
+//* to handle this login. So it's a mutation
+//* because actually something changes on the server.
+//* So basically a user gets authenticated
+//* and also it's gonna be a lot easier
+//* to then handle the success and error states if this is a mutation.
 
 //*=======================================================================================
 //! 390. Authorization: Protecting Routes
 
-//* Implement authorization so that only logged in users can actually access our application.
+//& Authorization Definition:
+//* Process of granting or denying access to specific resources.
+//* once your identity is confirmed
+//* Answer to question: (What can you do?)
+
+//* Implement authorization so (that only logged in users) can actually access our application.
 
 //^ Open App: wrap the entire application (AppLayout route) in a protected route component
+{
+  /* <Route
+element={
+  <ProtectedRoute>
+    <AppLayout />
+  </ProtectedRoute>
+}
+> */
+}
 
-// that will mean that all of these different routes can only be accessed
-// if the protected layout component determines that there is a currently logged in user.
+//* that will mean that all of these different routes can only be accessed
+//* if the protected layout component determines that there is a currently logged in user.
 
 //^ create in ui folder ProtectedRoute.jsx
 
@@ -704,87 +746,72 @@ disabled={isDeleting}
 //^ open: apiAuth.jsx
 //! why create new function (getCurrentUser) to get user in apiAuth
 
-// to load the authenticated user.
+//& Loading Authenticated User
 
-// And so for that, we once again will create a new function
+//? Purpose:
+//* To load the authenticated user, we create a function in apiAuth
+//* This function ensures that even if the user accesses a page later (not immediately after login),
+//* their authentication status remains intact.
 
-// here in API auth.
+//? Scenario:
+//* Imagine a web application where a user logs in and then reloads the page a day later.
+//* In such cases, we need to refetch the user from the Supabase API to verify their existence
+//* and authentication status.
 
-// Now you might wonder why we actually need a function
-
-// to load the user from Supabase again
-
-// if we just saw the user here in the console
-
-// right after logging in.
-
-// Now the thing is that the user might want to access
-
-// this page a bit later,
-
-// so not only after they have logged in.
-
-// So in a web application, even if you logged in
-
-// like a day ago and if you then reload the page,
-
-// you will still want to be logged in,
-
-// not only immediately after you do that login process.
-
-// And so then each time that you reload the page,
-
-// for example, a day later, then that user
-
-// will need to be refetched from the Supabase API.
-
-// And so then we can check if that user exists
-
-// and if they are still authenticated.
+//^ Implementation Steps:
+//* 1. Create a function (e.g., `getCurrentUser`) in apiAuth
+//* 2. This function fetches the user data from Supabase.
+//* 3. Use the fetched data to check if the user exists and is still authenticated.
 
 //^ inside getCurrentUser function
-//*   const { data: session } = await supabase.auth.getSession();
+//* const { data: session } = await supabase.auth.getSession();
 
-// first we actually need to check
-
-// whether there is an active session.
-
-// So for that we use get session.
-
-// And so this will actually get that data
-
+// first we actually need to check whether there is an active session.
+// So for that we use get session. And so this will actually get that data
 // from local storage that I showed you earlier.
 
 //^ go to ProtectedRoute and use the useUser custom hook
 
-//* create fullPage styled component to render the loading spinner in the center of the page
+//* create fullPage styled component in ProtectedRoute.jsx
+//* to render the loading spinner in the center of the page
 
-// because in the beginning, while we are still loading,
+//& Handling User Authentication and Redirection
 
-// the user is also not authenticated yet.
+//? Scenario:
+// When loading a web application, the user might not be authenticated immediately after login.
+// However, we don't want to redirect them to the login page again during this initial loading phase.
 
-// But that doesn't mean
+//* Approach:
+// - Check if the user is no longer loading (i.e., data has been fetched).
+// - If the user is not authenticated, redirect them to the login page.
 
-// that we want to redirect them to the login page.
+//^ Implementation Steps:
+// 1. Consider both loading state and authentication status.
+// 2. If not loading and not authenticated, perform redirection.
 
-// And so here, let's also say and is not is loading.
+//* 2. If there is No authenticated user, redirect to the /login
+//! useEffect(
+//   function () {
+//     if (!isAuthenticated && !isLoading) {
+//!       navigate("/login");
+//     }
+//   },
+//!   [isAuthenticated, isLoading, navigate]
+// );
 
-// So basically when we are no longer loading
-
-// and then the user is not authenticated,
-
-// then that means that they are not allowed
-
-// into the application.
-
-// And so then we redirect them to the login page.
+//! note:
+//! why using useEffect?
+//* const navigate = useNavigate();
+//* we are only allowed to call this function (Navigate)
+//* inside some other function like in: a callback or in a use effect.
+//! So not at the top level of the ProtectedRoute component.
 
 //! Reset the input field if the password or email are wrong
 //^ so go to LoginForm, where the states and controlled input fields are exist
 //* and remember that login function is a mutation function
 //* so we can pass onSettled, onSuccess, onError
 //* we pass onSettled whether the request is successful or not
-//* so we capture the case where email or password are wrong
+//* so we can capture the case where email or password are wrong
 // login(
 //   { email, password },
 //   {
@@ -799,45 +826,35 @@ disabled={isDeleting}
 
 //! 391. User Logout
 
+//^ open Header.jsx
 //* Button logout in the header
 //* Place Logout Comp in Header
 //^ create Logout.jsx in authentication
-
-//^ open Header.jsx
 
 //^ open apiAuth.js
 //* create function logout
 
 //* navigate("/dashboard", { replace: true });
-//*       navigate("/login", { replace: true });
-// erase the place that we were earlier.
-
-// So otherwise going back,
-
-// using this back button here is not really gonna work.
+//* navigate("/login", { replace: true });  --- { replace: true } to deactivate browser back button
+//* erase the place that we were earlier.
+//* So otherwise going back, using this back button here is not really gonna work.
 
 //^=============================
-// remove the current user
 
-// from the React Query cache.
+//& Clearing User Data from React Query Cache
+// onSuccess: () => {
+//!   queryClient.removeQueries();
+//   navigate("/login", { replace: true }); //* to deactivate browser back button
+// },
 
-// So just logging out, we'll of course remove the user here
+//? Purpose:
+//* When logging out a user, we need to remove their data from the React Query cache.
+//* Simply logging them out removes the user from local storage and the server,
+//* but their data remains in the cache.
 
-// from local storage and also from the server
-
-// but they will stay inside the cache.
-
-// So because we stored it right here.
-
-// And so if, for some reason, some malicious actor gets access
-
-// to that, that would be very bad.
-
-// And so we can actually remove all queries.
-
-// So actually not just the user, but really
-
-// all queries that have been accumulated in that cache.
+//? Approach:
+//* - To prevent unauthorized access, we should clear all queries related to the user.
+//* - This ensures that no sensitive information is retained in the cache.
 
 //*==================================================================
 

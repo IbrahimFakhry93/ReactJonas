@@ -13,7 +13,8 @@ export function useLogin() {
     onSuccess: (user) => {
       console.log(user);
       queryClient.setQueryData(["user"], user); //* set data in the query cache
-      navigate("/dashboard", { replace: true });
+      navigate("/dashboard", { replace: true }); //*  { replace: true } to deactivate browser back button
+    },
     },
     onError: (err) => {
       console.log("ERROR", err);
@@ -23,9 +24,8 @@ export function useLogin() {
   return { login, isLoading };
 }
 
-//* err is the same error.message in login in apiAuth
+//* err is the same error.message in login function in apiAuth
 //* user in onSuccess is the data received (returned) from login function in apiAuth
 
-//* onSuccess received the data returned from mutate function (ex. login) as input in its arrow function
-
-//*
+//* onSuccess received the data returned from mutate function (ex. login)
+//* as input or argument (ex. user) in its arrow function

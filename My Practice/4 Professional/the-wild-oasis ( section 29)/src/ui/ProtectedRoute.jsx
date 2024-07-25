@@ -45,7 +45,7 @@ export default ProtectedRoute;
 //* if we reload the dashboard page, we will see the spinner because the user is being fetched again from supabase
 
 //! note:
-
+//! why using useEffect?
 //* const navigate = useNavigate();
 //* we are only allowed to call this function navigate
 //* inside some other function like in a callback or in a use effect.

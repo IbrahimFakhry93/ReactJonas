@@ -10,7 +10,7 @@ export function useLogout() {
 
     onSuccess: () => {
       queryClient.removeQueries();
-      navigate("/login", { replace: true });
+      navigate("/login", { replace: true }); //* to deactivate browser back button
     },
     onError: (err) => {
       console.log("ERROR", err);
