@@ -1,9 +1,8 @@
-//* 1. Create new context:
-
 import { createContext, useContext, useEffect } from "react";
 
 import { useLocalStorageState } from "../hooks/useLocalStorageState";
 
+//* 1. Create new context:
 const DarkModeContext = createContext();
 
 //* 2. Create Custom Provider (where we will store the state)

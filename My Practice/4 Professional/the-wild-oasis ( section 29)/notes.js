@@ -989,7 +989,7 @@ element={
 //^ open Header
 //^ create HeaderMenu in UI
 
-//^ open UserAvatar
+//^ open UserAvatar in authentication folder
 //* in this component, we need to get the current user
 //* so use useUser custom hook
 //* we don't need loading because if the page is loaded, so the user is already loaded as well
@@ -1002,7 +1002,20 @@ element={
 //* their full name, and even upload an avatar image.
 
 //^ open: UpdatePasswordForm - UpdateUserDataForm - Account (in pages)
-//^ place UpdateUserDataForm in the Account
+//^ place UpdateUserDataForm.jsx in the Account
+
+//^ open: App.jsx - Header.jsx - HeaderMenu.jsx
+//? Note:
+//* Account page has path in App.jsx
+//* Navigate to account page which contain UpdateUserDataForm and UpdatePasswordForm
+//* through HeaderMenu which contains button icon that navigate to account
+
+{
+  /* 
+  //* <ButtonIcon onClick={() => navigate("/account")}>
+        <HiOutlineUser />
+  //* </ButtonIcon> */
+}
 
 //^ in UpdateUserDataForm
 // const {
@@ -1012,21 +1025,16 @@ element={
 //   },
 // } = useUser();
 
-// const [fullName, setFullName] = useState(currentFullName);
-// const [avatar, setAvatar] = useState(null);
+//! const [fullName, setFullName] = useState(currentFullName);
+//* const [avatar, setAvatar] = useState(null);
+
 //* the default value of the full name
-
-// can actually immediately be set with the current full name
-
-// coming from user data because here in this component,
-
-// we already know that the user will have already been loaded
-
-// and therefore, we don't need any loading states
-
-// and we can immediately use this data right here,
-
-// for example, to set it as a default state value.
+//* can actually immediately be set with the current full name
+//* coming from user data because here in this component,
+//* we already know that the user will have already been loaded
+//* and therefore, we don't need any loading states
+//* and we can immediately use this data right here,
+//* for example, to set it as a default state value.
 
 //^ open: apiAuth.js
 //^ create async updateCurrentUser()
@@ -1043,17 +1051,20 @@ export async function updateCurrentUser({ fullName, password, avatar }) {
   });
   return updatedUser;
 }
+
 //! note:
 //* there is an error above that we didn't (await) the updateUser function above
 //* and so we return (updatedUser) as undefined and before calling the updateUser func
 //* so we couldn't destructure the user in onSuccess in useUpdateUser func in useUpdateUser custom hook
 //* so we receive this error in the console:
+
 //! TypeError: Cannot destructure property 'user' of 'undefined' as it is undefined.
 //! at Object.onSuccess (useUpdateUser.js?t=1721546383655:11:19)
 
-//* so solution:
+//? so solution:
 //* add await
 
+//? image uploading
 //* to know how the url of uploaded image looks like
 //* upload an image to the avatars (bucket) in the supabase
 
@@ -1069,138 +1080,93 @@ disabled={isUpdating}
 onClick={handleCancel}
 > */
 }
-// since this button here actually has the type of reset,
 
-// which is an HTML five attribute,
-
-// this will actually not submit the form automatically.
-
-// So that's the reason why it did clear this file upload here.
-
-// And so we don't even need to do
-
-// any prevent default on this one.
-
-// All we need to do is to set the full name
-
-// back to the current full name
-
-// and set the avatar back to no.
+//& Handling Form Reset Button
+//? Explanation:
+//* The button in question has the 'type' attribute set to 'reset',
+//* which is an HTML5 attribute. As a result, clicking this button
+//* will not automatically submit the form.
+//* Since the button clears the file upload field, there's no need
+//* to prevent the default behavior (e.g., using preventDefault()).
+//* Our task is straightforward: reset the full name input field
+//* to its original value and set the avatar selection back to 'none'.
 
 //^ copy from UpdatePasswordForm to SignupForm this:
 {
   /* <Button onClick={reset} type="reset" variation="secondary">
-Cancel
+         Cancel
 </Button> */
 }
 
-// because even though this is a button with a type of reset,
+//* even though this is a button with a type of reset,
+//* it will actually only clear all the input fields, but not the error messages as down
 
-// this will actually only clear all the input fields,
+{
+  /* <FormRow
+label="New Password (min 8 chars)"
+! error={errors?.password?.message}
+>
+<Input
+  type="password"
+  id="password"
+  autoComplete="current-password"
+  disabled={isUpdating}
+  {...register("password", {
+    required: "This field is required",
+    minLength: {
+      value: 8,
+      message: "Password needs a minimum of 8 characters",
+    },
+  })}
+/>
+</FormRow> */
+}
 
-// but not the error messages.
-
-// But this built-in (reset function),from React hook form
-
-// will actually do that as well.
+//* But this built-in (reset function) (onClick={reset}) from React hook form
+//* will actually do that as well.
+//* const { register, handleSubmit, formState, getValues, reset } = useForm();
 
 //*======================================================
 
 //! 398. Implementing Dark Mode With CSS Variables
 
 //^ open: GlobalStyles.js
-
-// what we want to do now in order to implement dark mode
-
-// is to set different CSS variables
-
-// for different class names on the HTML element.
-
-// So basically right here in our elements,
-
-// we will have one class for light mode
-
-// and one class for dark mode.
-
-// And so then according to that class
-
-// these different CSS variables will apply.
+//& Title: Implementing Dark Mode
+//? Overview:
+//* To implement dark mode, we'll define CSS variables
+//* for different class names on the HTML element.
+//?
+//? Steps:
+//* 1. Create a class for light mode and another for dark mode.
+//* 2. Set CSS variables (e.g., --background-color, --text-color)
+//*    differently for each mode.
+//* 3. Apply the appropriate class to the HTML element.
+//* 4. The CSS variables will adjust based on the active class.
 
 //^ create: darkModeToggle in ui folder
 //^ open: HeaderMenu
 //* then add the created toggle button to HeaderMenu
 
 //? Create state for dark-mode
-// But now of course it is time
+//& Title: Managing Dark Mode State
+//? Overview:
+//* To implement dark mode, we need to manage a state variable
+//* that indicates whether dark mode is active or not.
 
-// to actually make this button work.
-
-// Now we need the information whether dark mode
-
-// is activated or not in multiple places in the application.
-
-// So not just here in this toggle,
-
-// but for example also in this logo.
-
-// So we will have a different logo when we are in dark mode.
-
-// So basically what this means is that
-
-// we want things to change on the screen
-
-// whenever we change to dark mode.
-
-// Not just the colors themselves,
-
-// but really the entire state of the application
-
-// needs to change so that we can then also
-
-// display a different icon here.
-
-// So that means that we need a state variable
-
-// and that state variable needs to be accessible
-
-// in the entire application because, again,
-
-// we actually need that information both here
-
-// and here in the logo.
-
-// And maybe in the future we might even need it
-
-// in some other places.
-
-// And therefore let's now create a new context where
-
-// we will store that state
-
-// and then provide it to our entire application tree.
-
-// So this is in fact gonna be the only piece
-
-// of global state that we're gonna need to manage ourselves
-
-// because all the other state, as we already know,
-
-// is being handled by React Query.
-
-// So all the remote state, which is usually most of the state
-
-// and most of the global state that we're gonna have
-
-// in an application.
+//? Steps:
+//* 1. Create a context to store the dark mode state.
+//* 2. Provide this context to the entire application tree.
+//* 3. Use the context to toggle dark mode and update UI elements.
+//* 4. This global UI state is separate from React Query's remote state.
 
 //^ create context folder and inside create DarkModeContext.jsx
 
 //^ open useLocalStorage.jsx in Hooks folder
-
+//^ open: App.jsx
 //* Add the provider to the entire application in App.jsx
 //* use the created context in the DarkModeToggle.jsx
 
-//^ open: logo
+//^ open: Logo
 //* add the isDarkMode state
 
 //*==================================================================================

@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 export function useLogin() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+
   const { mutate: login, isLoading } = useMutation({
     mutationFn: ({ email, password }) => {
       loginApi({ email, password });
@@ -14,7 +15,6 @@ export function useLogin() {
       console.log(user);
       queryClient.setQueryData(["user"], user); //* set data in the query cache
       navigate("/dashboard", { replace: true }); //*  { replace: true } to deactivate browser back button
-    },
     },
     onError: (err) => {
       console.log("ERROR", err);
