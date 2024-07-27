@@ -862,67 +862,48 @@ element={
 //*==================================================================
 
 //! 393. Building the Sign Up Form
-// in this application,
 
-// not everyone can create a new account.
-
-// So, not everyone can sign up for this application, unlike,
-
-// for example, something like Twitter or Reddit.
-
-// So here in this app, only employees
-
-// of the hotel should actually be users of this app.
-
-// that these users can only be created inside the application.
-
-// And so this way new users are basically immediately verified
-
-// by the existing hotel staff
-
-// because only that stuff can actually create new users.
-
+//& Managing User Creation and Verification
 //^ open: Users.jsx in pages folder -  SignupForm.jsx
+//? Context:
+//* In this application, not everyone can create a new account.
+//* Only hotel employees should be users of this app.
+//* New users must be verified by existing hotel staff.
 
-// Use the React hook form library in SignupForm
+//? Implementation Steps:
+//* 1. Open Users.jsx in the pages folder.
+//* 2. Look for SignupForm.jsx.
+//* 3. Utilize the React Hook Form library for form handling.
+//*    It's especially useful for larger forms with validation needs.
+//* 4. Use the register function for each input field to manage state.
+//*    React Hook Form will handle state management automatically.
 
-// So whenever we have a bigger form like this one here
+{
+  /* <Input
+  type="text"
+//*  id="fullName"
+  disabled={isLoading}
+//*  {...register("fullName", { required: "This field is required" })}
+/>; */
+}
 
-// and which needs some important validation,
-
-// it's a good idea to use a helper library like that one.
-
-//^ use register with input fields
-
-// use the register
-
-// function here in each of these inputs to give them a name
-
-// and basically manage this state.
-
-// So then React hook form will actually manage the state
-
-// and not us manually.
-
-// {...register("fullName", { required: "This field is required" })}
 //* field name is (fullName)
-// calling register function here will basically create a few props
+//* calling register function here will basically create a few props
+//* which we then spread with this onto this input component.
 
-// which we then spread with this onto this input component.
+//^ look at confirm password input field , we will use getValues there
+//* const { register, formState, getValues, handleSubmit ,reset} = useForm();
 
-//^ llok at confirm passowrd input field , we will use getValues there
-//*   const { register, formState, getValues, handleSubmit ,reser } = useForm();
-
-//* handleSubmit will us to register our custom handle function
+//* handleSubmit will help us to register our custom handle function
 //* inside handleSubmit is where we call function onSuccess and onError
 
-//*===================================================================
+//*=============================================================================
 
 //! 394. User Sign Up
-// use the form that we just created
 
-// in order to sign up users
+//^ apiAuth.js - useSignUp
 
+// Use the form that we just created in order to sign up users
 // to our application and basically to our Superbase database
 
 //* after testing sign up successfully
@@ -939,9 +920,8 @@ element={
 //? redirected URLs:
 //* http://localhost:5173
 
-// Just make sure to update these two URLs (site URL, redirected URLs:) again
-
-// once you deploy this application to a production server.
+//* Just make sure to update these two URLs (site URL, redirected URLs:) again
+//* once you deploy this application to a production server.
 
 //^ open site: temp-mail.org
 //* create temp mail then sign up with it
@@ -955,51 +935,43 @@ element={
 //? next video:
 
 // There is just one thing that we need to do now
-
 // which is actually related to Superbase,
-
-// which is to change
-
-// the row level security policies to only allow access
-
-// to all of these resources here
-
-// to users that are actually authenticated.
-
+// which is to change the row level security policies to only allow access
+// to all of these resources here to users that are actually authenticated.
 // So our application itself here is protected,
-
 // but not the resources coming from the Superbase Api.
 
 //*===================================================================================
 
 //! 395. Authorization on Supabase: Protecting Database (RLS)
-// now everyone could still fetch
 
-// and mutate data from our API
+//& Implementing Row Level Security (RLS) for API Protection
 
-// even if they cannot log into the applications UI
-
-// that we have been building.
-
-// And so let's now fix that
-
-// by implementing authorization also on Supabase itself
-
-// by updating all our row level security policies.
-
-// So again, right now, any malicious actor
-
-// could very easily find out the URL to our API
-
+//? Context:
+// Currently, anyone can fetch and modify data from our API, even if they can't log into the UI.
+// We need to enhance security by implementing authorization directly in Supabase using RLS.
+// RLS (row level security) ensures that even if malicious actors discover the API URL, they can't compromise data.
 // even if they cannot see this graphical user interface.
-
 // So just from reading our front end code,
-
-// they could figure that out and then they could,
-
-// for example, delete all of our bookings,
+// They could for example, delete all of our bookings,
 
 // or all of our cabins, and really destroy our entire app.
+
+//* Implementation Steps:
+// 1. Enable RLS on relevant tables using the "enable row level security" clause.
+//    This prevents data access via the public anon key until policies are created.
+// 2. Create policies that define who can access or modify data.
+//    Policies act like WHERE clauses for every query.
+// 3. Map requests to Postgres roles (anon for unauthenticated, authenticated for logged-in users).
+//    Use these roles within policies to control access.
+
+// Example Usage:
+// - Enable RLS: alter table "table_name" enable row level security;
+// - Create a policy allowing authenticated users to view profiles:
+//   create policy "Profiles are viewable by everyone"
+//   on profiles for select to authenticated using (true);
+
+// Note: Customize policies based on your specific use case.
 
 //? Case example:
 
