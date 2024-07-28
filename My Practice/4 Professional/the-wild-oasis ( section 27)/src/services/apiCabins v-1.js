@@ -28,11 +28,14 @@ export async function deleteCabin(id) {
 }
 
 export async function createCabin(newCabin) {
+  //* first create cabin then if successful create the image
+
   const imageName = `${Math.random()}-${newCabin.image.name}`.replaceAll(
     "/",
     ""
   ); //*  remove the slash: because if this cabin name contains any slashes, then super base will create folders based on that.
 
+  //* `${supabaseUrl}/storage/v1/object/public/cabins-images/ is the path or url to the bucket
   const imagePath = `${supabaseUrl}/storage/v1/object/public/cabins-images/${imageName}`; //* cabins-images: name of the bucket
   //* imagePath url form, we get from the url in the created bucket in Supabase then we make it generic as above
 

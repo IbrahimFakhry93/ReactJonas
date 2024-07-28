@@ -13,7 +13,7 @@ export function useCloseOutside(handler, listenCapturing = true) {
           // that references this element (StyledModal) here will be stored
         }
       }
-      document.addEventListener("click", handleClick, true);
+      document.addEventListener("click", handleClick, listenCapturing);
       //* remove the event when the component unmount
       return () =>
         document.removeEventListener("click", handleClick, listenCapturing);

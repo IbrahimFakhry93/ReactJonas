@@ -100,6 +100,10 @@ function CreateCabinForm({ cabinToEdit = {}, onCancel }) {
           id="regularPrice"
           {...register("regularPrice", {
             required: "This Field is required",
+            min: {
+              value: 100,
+              message: "regularPrice should be at least 100",
+            },
           })}
           disabled={isWorking}
         />
@@ -112,9 +116,15 @@ function CreateCabinForm({ cabinToEdit = {}, onCancel }) {
           defaultValue={0}
           {...register("discount", {
             required: "This Field is required",
-            validate: (value) =>
-              value <= getValues().regularPrice ||
-              "Discount should be less than regular price",
+            validate: (value) => {
+              const regularPrice = Number(getValues().regularPrice);
+              const discount = Number(value);
+
+              return (
+                discount <= regularPrice ||
+                "Discount should be less than regular price"
+              );
+            },
           })}
           disabled={isWorking}
         />

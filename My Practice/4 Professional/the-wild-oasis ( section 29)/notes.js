@@ -1410,3 +1410,164 @@ const dailySalesData = [
 //* use (as) to convert button to anchor link (a) by passing as={Link}
 
 //^ open: CheckoutButton
+
+//*======================================================================================
+
+//! 405. Error Boundaries
+
+//* learn how to handle errors that might occur during React rendering.
+
+// So error boundaries are like try-catch
+
+// but for React rendering,
+
+// which basically allows us
+
+// to react to JavaScript errors in our render code,
+
+// so in React render logic.
+
+// error boundaries are actually
+
+// quite hard to use in React because for some reason
+
+// they're still implemented using class components
+
+// and in a very weird and hard to use way.
+
+// And therefore, everyone just uses this package
+
+// called React error boundary,
+
+//*  npm i react-error-boundary
+
+// this package now all it does
+
+// is to give us an error boundary component
+
+// where we can pass in a fallback
+
+// and also a function to reset the application,
+
+// so whenever an error has occurred.
+
+// And so to use this,
+
+// we basically wrap our entire application
+
+// into that error boundary.
+
+//^ open: main.jsx  - ErrorFallback.jsx
+
+//* we could wrap the application in the App.jsx
+//* but App component is not part of our tree
+//* so it's better to wrap the application in the main.jsx
+
+// that these error boundaries really only catch errors
+
+// while React is rendering.
+
+// So bugs that occur in some event handlers
+
+// or in an effect or in some asynchronous code
+
+// will not be caught by the error boundary.
+
+// But for those, we many times have some other mechanisms,
+
+// like for example, those errors that are usually returned
+
+// from use Query, but for all the bugs that might happen
+
+// in rendering
+
+//*===========================================================
+
+//! 406. Final Touches + Fixing Bugs
+
+//? Problem:
+//* Click once again on toggle button to close the menu after open it
+//* but it doesn't close again
+
+//^ open: Menus.jsx  - useCloseOutside.js
+//* look at handleClick function and List function
+
+//! in console.log:
+//* Click
+//* close from click outside
+//* Click
+
+// So we basically, whenever we click there,
+// we first close the menu, and then here, in this next millisecond, it is opened again,
+
+//* set second argument in useCloseOutside to false to cancel capturing phase
+
+// So instead of listening in the capturing phase,
+
+// which is where the event goes from the DOM
+
+// onto the target element,
+
+// we now need to listen in the bubbling phase
+
+// where the event goes from the target element
+
+// back up to the document,
+
+// and this is actually the default way
+
+// in which the addEventListener works.
+
+//! in console.log:
+//* Click
+//* close from click outside
+
+//? Solution:
+
+// e.stopPropagation,
+
+// and so with this, the event will then never
+
+// travel up further in the DOM,
+
+// and can then therefore not be detected as a click outside,
+
+// so this part here should then no longer happen (close from click outside)
+
+//^================
+//& Second Bug:
+//^ open: BookingDetail.jsx
+//* if a booking is not existed
+//* return empty comp
+//*   if (!booking) return <Empty resourceName="booking" />;
+
+//& Third Bug:
+//^ open: DarkModeContext.jsx
+//*  const [isDarkMode, setIsDarkMode] = useLocalStorageState(false, "isDarkMode");
+
+//* by default, we set isDarkMode to false
+
+// let's come here to our, well, actually to our context,
+
+// to our dark mode context,
+
+// because remember how initially we set the dark mode here
+
+// to false by default, but instead of doing that,
+
+// we can actually use as a default value the setting
+
+// that the user set in their operating system.
+
+// So for example, I have dark mode by default
+
+// on here in my operating system,
+
+// and so we can get access to that,
+
+// basically using a media query,
+
+// const [isDarkMode, setIsDarkMode] = useLocalStorageState(
+//   window.matchMedia("(prefers-color-scheme: dark)").matches,
+//   "isDarkMode"
+// );

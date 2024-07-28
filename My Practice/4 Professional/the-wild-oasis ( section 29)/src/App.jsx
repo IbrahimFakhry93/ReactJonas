@@ -45,7 +45,7 @@ function App() {
               {/* Route with index: means the component we want to see when we open the App */}
               {/* <Route index element={<Dashboard />} /> */}
               {/* or more cleaner use the declarative redirect */}
-              <Route index element={<Navigate replace to="login" />} />
+              <Route index element={<Navigate replace to="dashboard" />} />
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="bookings" element={<Bookings />} />
               <Route path="bookings/:bookingId" element={<Booking />} />

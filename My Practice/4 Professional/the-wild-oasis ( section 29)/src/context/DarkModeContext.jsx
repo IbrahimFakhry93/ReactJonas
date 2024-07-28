@@ -8,7 +8,11 @@ const DarkModeContext = createContext();
 //* 2. Create Custom Provider (where we will store the state)
 
 function DarkModeProvider({ children }) {
-  const [isDarkMode, setIsDarkMode] = useLocalStorageState(false, "isDarkMode"); //* isDarkMode is the key in local storage
+  const [isDarkMode, setIsDarkMode] = useLocalStorageState(
+    window.matchMedia("(prefers-color-scheme: dark)").matches,
+    "isDarkMode"
+  );
+  //* isDarkMode is the key in local storage
 
   useEffect(
     function () {

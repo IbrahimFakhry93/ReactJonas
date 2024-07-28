@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { HiEllipsisVertical } from "react-icons/hi2";
 import styled from "styled-components";
 import { useCloseOutside } from "../hooks/useCloseOutside";
+import { useScroll } from "../hooks/useScroll";
 
 const Menu = styled.div`
   display: flex;
@@ -30,8 +31,9 @@ const StyledToggle = styled.button`
 `;
 
 const StyledList = styled.ul`
+  /* overflow: scroll; */
   position: fixed;
-
+  display: ${(props) => (props.showMenu ? "block" : "none")};
   background-color: var(--color-grey-0);
   box-shadow: var(--shadow-md);
   border-radius: var(--border-radius-md);
@@ -73,6 +75,7 @@ function Menus({ children }) {
   //* use state to keep track which cabin is currently openID
   const [openId, setOpenId] = useState(""); //* here startoff with empty string, which means none of the menus is currently opened
   const [position, setPosition] = useState(null);
+  // const showMenu = useScroll();
 
   const close = () => setOpenId("");
   const open = setOpenId;
@@ -88,11 +91,16 @@ function Menus({ children }) {
 
 //* 3) Create Child Components
 function Toggle({ id }) {
+  console.log("click");
   const { openId, close, open, setPosition } = useContext(MenusContext);
+
   //! handleClick
   function handleClick(e) {
+    e.stopPropagation();
+
     const rect = e.target.closest("button").getBoundingClientRect();
     console.log(rect);
+    // console.log(e.target.closest("ul"));
     setPosition({
       x: window.innerWidth - rect.width - rect.x,
       y: rect.y + rect.height + 8,
@@ -115,13 +123,17 @@ function Toggle({ id }) {
   );
 }
 function List({ id, children }) {
+  const showMenu = useScroll();
   //* we will need the openId from MenuContext,
   //* because we need to compare that openId with the id of this list,
   //* so like the modal window where we compared the window name
   //* with the currently opened name.
   //* And so here we now have to do exactly the same thing.
   const { openId, position, close } = useContext(MenusContext);
-  const ref = useCloseOutside(close); //* by default is in capturing phase
+  const ref = useCloseOutside(() => {
+    console.log("close from click outside");
+    close();
+  }, false); //* by default is in capturing phase
 
   if (openId !== id) return null;
 
@@ -133,7 +145,7 @@ function List({ id, children }) {
   //* on top of the UI. And so in cases like that,
   //* it's always a good idea to use a portal.
   return createPortal(
-    <StyledList position={position} ref={ref}>
+    <StyledList position={position} ref={ref} showMenu={showMenu}>
       {children}
     </StyledList>,
     document.body

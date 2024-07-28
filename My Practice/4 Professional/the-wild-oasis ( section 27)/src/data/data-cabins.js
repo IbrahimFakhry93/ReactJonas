@@ -1,6 +1,6 @@
 import { supabaseUrl } from "../services/supabase";
 
-const imageUrl = `${supabaseUrl}/storage/v1/object/public/cabin-images/`;
+const imageUrl = `${supabaseUrl}/storage/v1/object/public/cabins-images/`;
 
 export const cabins = [
   {
@@ -8,7 +8,7 @@ export const cabins = [
     maxCapacity: 2,
     regularPrice: 250,
     discount: 0,
-    image: imageUrl + "cabin-001.jpg",
+    image: imageUrl + `cabin-001.jpg`,
     description:
       "Discover the ultimate luxury getaway for couples in the cozy wooden cabin 001. Nestled in a picturesque forest, this stunning cabin offers a secluded and intimate retreat. Inside, enjoy modern high-quality wood interiors, a comfortable seating area, a fireplace and a fully-equipped kitchen. The plush king-size bed, dressed in fine linens guarantees a peaceful nights sleep. Relax in the spa-like shower and unwind on the private deck with hot tub.",
   },
@@ -17,7 +17,7 @@ export const cabins = [
     maxCapacity: 2,
     regularPrice: 350,
     discount: 25,
-    image: imageUrl + "cabin-002.jpg",
+    image: imageUrl + `cabin-002.jpg`,
     description:
       "Escape to the serenity of nature and indulge in luxury in our cozy cabin 002. Perfect for couples, this cabin offers a secluded and intimate retreat in the heart of a picturesque forest. Inside, you will find warm and inviting interiors crafted from high-quality wood, a comfortable living area, a fireplace and a fully-equipped kitchen. The luxurious bedroom features a plush king-size bed and spa-like shower. Relax on the private deck with hot tub and take in the beauty of nature.",
   },

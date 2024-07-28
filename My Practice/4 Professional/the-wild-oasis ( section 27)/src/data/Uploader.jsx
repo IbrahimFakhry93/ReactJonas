@@ -7,7 +7,7 @@ import { subtractDates } from "../utils/helpers";
 import { bookings } from "./data-bookings";
 import { cabins } from "./data-cabins";
 import { guests } from "./data-guests";
-
+import { supabaseUrl } from "../services/supabase";
 // const originalSettings = {
 //   minBookingLength: 3,
 //   maxBookingLength: 30,
@@ -35,10 +35,137 @@ async function createGuests() {
   if (error) console.log(error.message);
 }
 
-async function createCabins() {
-  const { error } = await supabase.from("cabins").insert(cabins);
-  if (error) console.log(error.message);
+// async function createCabins() {
+//   const { error } = await supabase.from("cabins").insert(cabins);
+//   if (error) console.log(error.message);
+// }
+
+// async function createCabins() {
+//   // Upload images and get their URLs
+//   const cabinsWithImageUrls = await Promise.all(
+//     cabins.map(async (cabin) => {
+//       const imageName = `${Math.random()}-${cabin.image.name}`.replaceAll(
+//         "/",
+//         ""
+//       );
+//       console.log(cabin.image);
+//       const { error: storageError } = await supabase.storage
+//         .from("cabins-images") // Use your storage bucket name
+//         .upload(imageName, cabin.image);
+
+//       if (storageError) {
+//         await supabase.from("cabins").delete().eq("id", cabin.id); //* the data that we received from supabase will already contain the new ID
+
+//         console.error(storageError);
+//         throw new Error(
+//           "Cabin image could not be upload and cabin wasn't created"
+//         );
+//       }
+//     })
+//   );
+//   console.log(cabinsWithImageUrls);
+//   // Insert cabins with image URLs
+//   const { error: insertError } = await supabase
+//     .from("cabins")
+//     .insert(cabinsWithImageUrls);
+//   if (insertError) {
+//     console.error("Error inserting cabins:", insertError.message);
+//   } else {
+//     console.log("Cabins inserted successfully");
+//   }
+// }
+
+// async function createCabins() {
+//   try {
+//     const cabinsWithImageUrls = await Promise.all(
+//       cabins.map(async (cabin) => {
+//         const imageName = `${Math.random()}-${cabin.image}`.replaceAll("/", "");
+//         const imageUrl = `${supabaseUrl}/storage/v1/object/public/cabins-images/${imageName}`;
+
+//         cabin.image = imageUrl;
+//         console.log(cabin.image);
+//         const { error: storageError } = await supabase.storage
+//           .from("cabins-images")
+//           .upload(imageName, cabin.image);
+
+//         if (storageError) {
+//           await supabase.from("cabins").delete().eq("id", cabin.id);
+//           console.error(storageError);
+//           throw new Error(
+//             "Cabin image could not be uploaded, and cabin wasn't created"
+//           );
+//         }
+
+//         return cabin; // Return the cabin object with the updated image URL
+//       })
+//     );
+
+//     const { error: insertError } = await supabase
+//       .from("cabins")
+//       .insert(cabinsWithImageUrls);
+//     if (insertError) {
+//       console.error("Error inserting cabins:", insertError.message);
+//     } else {
+//       console.log("Cabins inserted successfully");
+//     }
+//   } catch (e) {
+//     console.error("An error occurred:", e.message);
+//   }
+// }
+
+async function createCabins(cabins) {
+  try {
+    const createdCabins = [];
+
+    for (const newCabin of cabins) {
+      const imageName = `${Math.random()}-${newCabin.image.name}`.replaceAll(
+        "/",
+        ""
+      );
+      const imagePath = `${supabaseUrl}/storage/v1/object/public/cabins-images/${imageName}`;
+
+      // Create Cabin
+      const { data, error } = await supabase
+        .from("cabins")
+        .insert([{ ...newCabin, image: imagePath }])
+        .select();
+
+      if (error) {
+        console.error(error);
+        throw new Error("Cabin could not be created");
+      }
+
+      // Upload image
+      const { error: storageError } = await supabase.storage
+        .from("cabins-images")
+        .upload(imageName, newCabin.image);
+
+      // Delete the cabin if there was an error uploading the image
+      if (storageError) {
+        await supabase.from("cabins").delete().eq("id", data.id);
+        console.error(storageError);
+        throw new Error(
+          "Cabin image could not be uploaded, and cabin wasn't created"
+        );
+      }
+
+      createdCabins.push(data);
+    }
+
+    console.log("All cabins created successfully:", createdCabins);
+    return createdCabins;
+  } catch (e) {
+    console.error("An error occurred:", e.message);
+    throw e;
+  }
 }
+
+// Usage example:
+const cabinsToCreate = [
+  // Array of cabins here...
+];
+
+createCabins(cabinsToCreate);
 
 async function createBookings() {
   // Bookings need a guestId and a cabinId. We can't tell Supabase IDs for each object, it will calculate them on its own. So it might be different for different people, especially after multiple uploads. Therefore, we need to first get all guestIds and cabinIds, and then replace the original IDs in the booking data with the actual ones from the DB
@@ -94,7 +221,7 @@ async function createBookings() {
     };
   });
 
-  console.log(finalBookings);
+  // console.log(finalBookings);
 
   const { error } = await supabase.from("bookings").insert(finalBookings);
   if (error) console.log(error.message);
@@ -112,7 +239,7 @@ function Uploader() {
 
     // Bookings need to be created LAST
     await createGuests();
-    await createCabins();
+    await createCabins(cabins);
     await createBookings();
 
     setIsLoading(false);

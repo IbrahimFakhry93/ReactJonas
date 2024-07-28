@@ -13,8 +13,13 @@ function BookingTable() {
   console.log(bookings);
   // console.log(bookings.length);
 
-  if (!bookings?.length) return <Empty resourceName="Bookings" />;
   if (isLoading) return <Spinner />;
+  if (!bookings.length) return <Empty resourceName="Bookings" />;
+
+  //? or:
+
+  // if (!bookings?.length) return <Empty resourceName="Bookings" />;
+  // if (isLoading) return <Spinner />;
 
   return (
     <Menus>
