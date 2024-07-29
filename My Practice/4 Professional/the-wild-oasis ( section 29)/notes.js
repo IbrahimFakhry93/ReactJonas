@@ -1687,3 +1687,53 @@ const dailySalesData = [
 //* git push -u origin main
 
 //* .gitignore: ignores public and dist folders
+
+//? git command flow:
+
+//* git init: transform the folder into git local repo
+//* git add -A
+//* git commit -m 'commit message'
+//* -u: upstream
+//* git push -u origin main
+
+//* .gitignore: ignores public and dist folders
+//*=================================================================================
+
+//! 410. Deploying to Vercel
+
+// let's use our GitHub repo that we just created
+
+// to set up a very simple continuous integration on Vercel,
+
+// which is another very popular free,
+
+// at least for small projects,
+
+// and also very easy-to-use
+
+// hosting provider for React applications.
+
+//*======================================================
+// Vercel will do that for us each time that it detects
+
+// a change in the GitHub repo.
+
+// And so that's why we call this a continuous integration.
+
+// So, again, with this project set up,
+
+// each time that we commit something new to our repo
+
+// and then push it to get up, Vercel will automatically detect
+
+// that a change has happened, will run this command,
+
+// and then deploy our application from the dist folder.
+
+// So in Jonas's opinion, this is actually,  the preferred way
+
+// of deploying a project
+
+// because it just makes it so simple
+
+// to push updates to our application.
