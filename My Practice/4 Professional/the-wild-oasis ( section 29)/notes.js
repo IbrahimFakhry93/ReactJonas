@@ -1571,3 +1571,119 @@ const dailySalesData = [
 //   window.matchMedia("(prefers-color-scheme: dark)").matches,
 //   "isDarkMode"
 // );
+
+//*===========================================================================
+
+//! 408. Deploying to Netlify
+
+// it is time to build our actual application bundle.
+
+// So remember how we learned earlier
+
+// that our development tool, so in this case,
+
+// that Vite will take all the files that we have created here
+
+// during development and will all bundle them
+
+// into one single file.
+
+// And so that file is what we then deploy to production.
+
+//^ open: package.json
+//*  "build": "vite build",
+
+//* go to terminal: npm run build
+//* our bundle: dist/assets/index-4d484b2c.js    889.26 kB │ gzip: 257.27 kB
+
+//* the bundle file is huge
+
+// in the previous World Wise Project, we actually did code splitting
+
+// in order to avoid this problem.
+
+// However, this application will be fully hidden
+
+// behind a login,
+
+// and also only a few users will ever use this application
+
+// which remember is also the reason why we're not
+
+// doing server side rendering as well.
+
+// And so in this situation, this is actually perfectly fine.
+
+//^ the folder created after production is dist
+
+//* we need to deploy this folder to Netlify service
+//* Netlify is one of the many hosting providers where you can very
+//* easily host React projects no matter how large they are.
+
+//^ create netlify.toml in dist folder and copy and paste it also in Public
+//* To make the single page application work on Netlify
+//* create a new file called netlify.toml (special data format)
+//!  copy and paste netlify.toml also in Public, so whenever will be a new production
+//* it will be created again in the new created dist folder after production
+//* Drag and drop folder in Netlify Drop
+// So this is the very easy way
+
+// of very quickly getting your site up and running
+
+// on a real domain ready to be shared with the world.
+
+// Now, if you want more of a real world approach
+
+// then you would use something called continuous integration.
+
+// And for that, you will have to upload your code
+
+// into a GitHub repository and then connect
+
+// that repository with your deploy right here.
+
+// So here in Netlify or also
+
+// in some other service like Vercel.
+
+// And so in order to show you how to do that
+
+// in the next lecture, we will set up
+
+// a Git repository and upload your code to GitHub.
+
+//*=======================================
+
+//! 409. Setting Up a Git and GitHub Repository
+
+// In this video,
+
+// I will show you how to install Git version control
+
+// on your local computer,
+
+// how to set up a Git repository
+
+// and commit your project to it,
+
+// and then how we can basically upload
+
+// that repository to a remote GitHub repo.
+// And a Git repository is basically
+
+// just a special kind of folder,
+
+// which will track every single change
+
+// that you do to every single file in this folder,
+
+// so inside this Git repository.
+
+//! set up access token to connect between local and remote repository
+//* treat it as password
+//* git remote add origin https://github.com/IbrahimFakhry93/wild-oasis93.git
+
+//* -u: upstream
+//* git push -u origin main
+
+//* .gitignore: ignores public and dist folders
